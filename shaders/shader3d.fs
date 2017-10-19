@@ -1,8 +1,14 @@
+#version 300 es
 
-varying lowp vec2 uv;
+precision highp float;
+precision highp int;
 
-uniform sampler2D texture;
+in lowp vec2 uv;
+
+uniform sampler2D sampler0;
+
+out vec4 color;
 
 void main(){
-	gl_FragColor = texture2D(texture, uv);
+	color = texture(sampler0, uv);
 }

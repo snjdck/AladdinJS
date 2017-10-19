@@ -1,5 +1,13 @@
-attribute vec2 inputPosition;
-attribute vec4 inputMargin;
+#version 300 es
+
+precision highp float;
+precision highp int;
+
+layout(location=0)
+in vec2 inputPosition;
+
+layout(location=1)
+in vec4 inputMargin;
 
 uniform vec4 screenMatrix;
 uniform vec3 worldMatrixX;
@@ -9,7 +17,7 @@ uniform vec4 textureAdd;
 uniform vec4 rectSize;		//w,rw,h,rh
 uniform vec4 scale9grid;	//lm,rm,tm,bm
 
-varying lowp vec2 uv;
+out vec2 uv;
 
 void main()
 {

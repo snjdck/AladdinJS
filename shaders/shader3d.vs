@@ -1,5 +1,13 @@
-attribute vec3 inputPosition;
-attribute vec2 inputUV;
+#version 300 es
+
+precision highp float;
+precision highp int;
+
+layout(location=0)
+in vec3 inputPosition;
+
+layout(location=1)
+in vec2 inputUV;
 
 uniform vec3 screenMatrix;
 uniform mat4 cameraMatrix;
@@ -7,7 +15,7 @@ uniform mat4 worldMatrix;
 
 //uniform vec4 boneList[100];
 
-varying lowp vec2 uv;
+out lowp vec2 uv;
 
 void main()
 {
