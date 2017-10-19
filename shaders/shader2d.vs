@@ -9,6 +9,17 @@ in vec2 inputPosition;
 layout(location=1)
 in vec4 inputMargin;
 
+uniform ConstData {
+	vec4 screenMatrix;
+	vec3 worldMatrixX;
+	vec3 worldMatrixY;
+	vec4 textureMul;
+	vec4 textureAdd;
+	vec4 rectSize;		//w,rw,h,rh
+	vec4 scale9grid;	//lm,rm,tm,bm
+};
+
+/*
 uniform vec4 screenMatrix;
 uniform vec3 worldMatrixX;
 uniform vec3 worldMatrixY;
@@ -16,7 +27,7 @@ uniform vec4 textureMul;
 uniform vec4 textureAdd;
 uniform vec4 rectSize;		//w,rw,h,rh
 uniform vec4 scale9grid;	//lm,rm,tm,bm
-
+*/
 out vec2 uv;
 
 void main()
