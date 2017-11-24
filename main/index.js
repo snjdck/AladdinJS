@@ -15,11 +15,11 @@ const load = require("utils/loader");
 async function onInit(){
 	var view3d = new View3D();
 	var gl = view3d.gl;
-	//console.log(gl.getSupportedExtensions());
+	console.log(gl.getSupportedExtensions());
 	//console.log(gl.getExtension("OES_vertex_array_object") === gl.getExtension("OES_vertex_array_object"))
 	//ext.createVertexArrayOES,ext.bindVertexArrayOES
 
-	view3d.registerProgram("shader2d", "shader3d");
+	view3d.registerProgram("shader2d&normal", "shader3d&normal", "shader2d&pick", "shader3d&pick");
 
 	var bitmap = new Bitmap();
 	bitmap.texture = gl.createDomTexture("texture");
@@ -38,12 +38,12 @@ async function onInit(){
 	box.scale = 0.1;
 
 	var data = await load("/assets/test.mesh", "arraybuffer");
-
+//*
 	var meshEntity = new MeshEntity();
 	meshEntity.mesh = parse(data);
 	meshEntity.texture = gl.createDomTexture("texture3");
 	view3d.scene3d.root.addChild(meshEntity);
-
+//*/
 	box.on("enterFrame", () => {
 		box.rotation += 1;
 		bmp2.rotation -= 2;
