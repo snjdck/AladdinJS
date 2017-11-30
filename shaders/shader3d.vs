@@ -9,7 +9,7 @@ in vec3 inputPosition;
 layout(location=1)
 in vec2 inputUV;
 
-uniform vec3 screenMatrix;
+uniform mat4 screenMatrix;
 uniform mat4 cameraMatrix;
 uniform mat4 worldMatrix;
 
@@ -22,9 +22,9 @@ void main()
 	vec4 localPosition = vec4(inputPosition, 1);
 	vec4 worldPosition = worldMatrix * localPosition;
 	vec4 cameraPosition = cameraMatrix * worldPosition;
-	vec3 screenPosition = cameraPosition.xyz * screenMatrix;
+	vec4 screenPosition = screenMatrix * cameraPosition;
 
-	gl_Position = vec4(screenPosition, 1);
+	gl_Position = screenPosition;
 	uv = inputUV;
 }
 
