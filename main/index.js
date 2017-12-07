@@ -7,7 +7,7 @@ const Quaternion = require("Quaternion");
 const Bitmap = require("Bitmap");
 const MeshEntity = require("MeshEntity");
 const View3D = require("View3D");
-const DisplayObjectContainer2D = require("DisplayObjectContainer2D");
+const DisplayObject2D = require("DisplayObject2D");
 
 const parse = require("./bmd");
 const load = require("utils/loader");
@@ -16,6 +16,7 @@ const DirectionLight3D = require("lights/DirectionLight3D");
 const {Camera3D, Lens} = require("cameras");
 
 const Terrain = require("terrains");
+const {TextureMaterial, TextureHitTestMaterial} = require("materials");
 
 async function onInit(){
 	let canvas = document.getElementById("canvas")
@@ -43,7 +44,7 @@ async function onInit(){
 	bmp2.x = 480;
 	bmp2.texture = gl.createDomTexture("texture2");
 
-	var box = new DisplayObjectContainer2D();
+	var box = new DisplayObject2D();
 	box.addChild(bitmap);
 	box.addChild(bmp2);
 
@@ -55,7 +56,10 @@ async function onInit(){
 	var meshEntity = new MeshEntity();
 	meshEntity.mouseEnabled = true;
 	meshEntity.mesh = parse(data);
-	meshEntity.texture = gl.createDomTexture("texture3");
+	let texture3 = gl.createDomTexture("texture3");
+	meshEntity.materials.push(new TextureMaterial(texture3));
+	meshEntity.hitTestMaterial = new TextureHitTestMaterial(texture3);
+	//meshEntity.texture = gl.createDomTexture("texture3");
 	view3d.scene3d.root.addChild(meshEntity);
 
 	var terrain = new Terrain();
@@ -66,9 +70,14 @@ async function onInit(){
 	//lens = Lens.PerspectiveFieldOfViewLH(Math.PI / 180 * 70, canvas.height/canvas.width, 0.001, 100000);
 	view3d.scene3d.root.addChild(new Camera3D(lens));
 //*/
-	box.on("enterFrame", () => {
+	let angle = 0;
+	box.addListener("enterFrame", function(){
 		box.rotation += 1;
 		bmp2.rotation -= 2;
+		let rotation = meshEntity.rotation;
+		rotation.fromEulerAngles(angle++ * Math.PI / 180, 0, 0);
+		//rotation.fromAxisAngle({x:1,y:0,z:0}, angle++ * Math.PI / 180);
+		meshEntity.rotation = rotation;
 	});
 }
 

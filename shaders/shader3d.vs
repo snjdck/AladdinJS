@@ -10,22 +10,23 @@ layout(location=1)
 in vec2 inputUV;
 
 uniform mat4 screenMatrix;
-uniform mat4 cameraMatrix;
-uniform mat4 worldMatrix;
+uniform vec4 cameraMatrix[2];
+uniform vec4 worldMatrix[2];
 
 //uniform vec4 boneList[100];
 
 out lowp vec2 uv;
 
-void main()
+vec4 concat(vec4 a, vec4 b)
 {
-	vec4 localPosition = vec4(inputPosition, 1);
-	vec4 worldPosition = worldMatrix * localPosition;
-	vec4 cameraPosition = cameraMatrix * worldPosition;
-	vec4 screenPosition = screenMatrix * cameraPosition;
-
-	gl_Position = screenPosition;
-	uv = inputUV;
+	vec4 t0 = b.w * a;
+	vec4 t1 = b.x * a.wzyx;
+	vec4 t2 = b.y * a.zwxy;
+	vec4 t3 = b.z * a.yxwz;
+	t1.yw = -t1.yw;
+	t2.zw = -t2.zw;
+	t3.xw = -t3.xw;
+	return t0 + t1 + t2 + t3;
 }
 
 vec3 rotate(vec4 quaternion, vec3 point)
@@ -38,4 +39,19 @@ vec3 rotate(vec4 quaternion, vec3 point)
 	result += result;
 	result += point * (t2.xyz + t2.www - t2.yzx - t2.zxy);
 	return result;
+}
+
+vec3 transform2(vec4 matrix[2], vec3 point)
+{
+	return rotate(matrix[0], point) + matrix[1].xyz;
+}
+
+void main()
+{
+	vec3 worldPosition = transform2(worldMatrix, inputPosition);
+	vec3 cameraPosition = transform2(cameraMatrix, worldPosition);
+	vec4 screenPosition = screenMatrix * vec4(cameraPosition, 1);
+
+	gl_Position = screenPosition;
+	uv = inputUV;
 }
