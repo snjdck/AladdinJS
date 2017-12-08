@@ -22,7 +22,7 @@ vec3 rotate(vec4 quaternion, vec3 point)
 	return result;
 }
 
-vec3 transform2(vec4 matrix[2], vec3 point)
+vec3 transform2(vec4 quaternion, vec4 translation, vec3 point)
 {
-	return rotate(matrix[0], point) + matrix[1].xyz;
+	return rotate(quaternion, point) + translation.xyz;
 }
