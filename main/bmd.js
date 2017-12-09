@@ -77,8 +77,8 @@ function parse(data){
 	var subMeshList = doList(ba, ba => {
 		var texture = ba.readString1();
 		var vertexCount = ba.readU16();
-		var data32PerVertex = ba.readU8();
-		var count = vertexCount * data32PerVertex * 4;
+		var byteSizePerVertex = ba.readU8();
+		var count = vertexCount * byteSizePerVertex;
 		var vertexData = data.slice(ba.offset, ba.offset + count);
 		ba.offset += count;
 		var indexCount = ba.readU32();
@@ -89,7 +89,7 @@ function parse(data){
 		for(var i=0; i<boneCount; ++i){
 			boneData[i] = ba.readU8();
 		}
-		return {vertexData, indexData, data32PerVertex, boneData};
+		return {vertexCount, byteSizePerVertex, vertexData, indexData, boneData};
 	});
 	var boneList = doList(ba, ba => {
 		var boneName = ba.readString1();
