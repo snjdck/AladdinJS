@@ -27,7 +27,7 @@ void main()
 {
 	vec3 worldPosition = vec3(0);
 	for(int i=0; i<4; ++i){
-		int index = boneIndex[i] * 2;
+		int index = boneIndex[i];
 		worldPosition += transform2(boneList[index], boneList[index+1], inputPosition) * boneWeight[i];
 	}
 	vec3 cameraPosition = transform2(cameraMatrix[0], cameraMatrix[1], worldPosition);

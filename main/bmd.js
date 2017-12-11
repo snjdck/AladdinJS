@@ -68,11 +68,12 @@ function doList(ba, handler){
 
 function parse(data){
 	var ba = new ByteArray(data);
-	var formatList = doList(ba, ba => {
+	var formatList = {};
+	doList(ba, ba => {
 		var name = ba.readString1();
 		var format = ba.readString1();
 		var offset = ba.readU8();
-		return {name, format, offset};
+		formatList[name] = {name, format, offset};
 	});
 	var subMeshList = doList(ba, ba => {
 		var texture = ba.readString1();
