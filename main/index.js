@@ -51,35 +51,50 @@ async function onInit(){
 	view3d.scene2d.root.addChild(box);
 	box.scale = 0.1;
 
-	var data = await load("/assets/test.mesh", "arraybuffer");
-//*
-	var meshEntity = new MeshEntity();
-	meshEntity.mouseEnabled = true;
-	meshEntity.mesh = parse(data);
+	var fileList = await loadFiles(["Spear10", "ArmorCls", "BootCls", "GloveCls","HelmCls","PantCls"]);
+//*	
 	let texture3 = gl.createDomTexture("texture3");
-	meshEntity.materials.push(new TextureMaterial(texture3));
-	meshEntity.hitTestMaterial = new TextureHitTestMaterial(texture3);
-	//meshEntity.texture = gl.createDomTexture("texture3");
-	view3d.scene3d.root.addChild(meshEntity);
+	let tx = -400;
+	for(let data of fileList){
+		let meshEntity = new MeshEntity();
+		meshEntity.mouseEnabled = true;
+		meshEntity.mesh = parse(data);
+		meshEntity.x = tx;
+		tx += 200
+		
+		meshEntity.materials.push(new TextureMaterial(texture3));
+		//meshEntity.hitTestMaterial = new TextureHitTestMaterial(texture3);
+		//meshEntity.texture = gl.createDomTexture("texture3");
+		view3d.scene3d.root.addChild(meshEntity);
+	}
+	
 
 	var terrain = new Terrain();
 	terrain.texture = gl.createDomTexture("map_tile");
 	view3d.scene3d.root.addChild(terrain);
 
 	let lens = Lens.OrthoLH(canvas.width, canvas.height, -1000, 1000);
+	let camera = new Camera3D(lens);
+	let rotation = camera.rotation;
+	rotation.rotateAxisX(120 * Math.PI / 180);
+	rotation.rotateAxisZ(-45 * Math.PI / 180);
+	camera.rotation = rotation;
 	//lens = Lens.PerspectiveFieldOfViewLH(Math.PI / 180 * 70, canvas.height/canvas.width, 0.001, 100000);
-	view3d.scene3d.root.addChild(new Camera3D(lens));
+	view3d.scene3d.root.addChild(camera);
 //*/
 	let angle = 0;
 	box.addListener("enterFrame", function(){
 		box.rotation += 1;
 		bmp2.rotation -= 2;
-		let rotation = meshEntity.rotation;
-		rotation.fromEulerAngles(angle++ * Math.PI / 180, 0, 0);
+		//let rotation = meshEntity.rotation;
+		//rotation.fromEulerAngles(0, angle++ * Math.PI / 180, 0);
 		//rotation.fromAxisAngle({x:1,y:0,z:0}, angle++ * Math.PI / 180);
-		meshEntity.rotation = rotation;
+		//meshEntity.rotation = rotation;
 	});
 }
 
+function loadFiles(fileList){
+	return Promise.all(fileList.map(name => load(`/assets/${name}.bmd.mesh`, "arraybuffer")));
+}
 
 //document.onmousemove = evt => console.log(evt.clientX, evt.clientY)
