@@ -9,25 +9,15 @@ in vec2 inputPosition;
 layout(location=1)
 in vec4 inputMargin;
 
-uniform ConstData {
+uniform _ {
 	vec4 screenMatrix;
-	vec3 worldMatrixX;
-	vec3 worldMatrixY;
+	mat2x3 worldMatrix;
 	vec4 textureMul;
 	vec4 textureAdd;
 	vec4 rectSize;		//w,rw,h,rh
 	vec4 scale9grid;	//lm,rm,tm,bm
 };
 
-/*
-uniform vec4 screenMatrix;
-uniform vec3 worldMatrixX;
-uniform vec3 worldMatrixY;
-uniform vec4 textureMul;
-uniform vec4 textureAdd;
-uniform vec4 rectSize;		//w,rw,h,rh
-uniform vec4 scale9grid;	//lm,rm,tm,bm
-*/
 out vec2 uv;
 
 void main()
@@ -39,9 +29,7 @@ void main()
 	xyuv.yw /= rectSize.yw;
 	xyuv = xyuv.xzyw * textureMul + textureAdd;
 
-	vec3 position = vec3(xyuv.xy, 1);
-	xyuv.x = dot(position, worldMatrixX);
-	xyuv.y = dot(position, worldMatrixY);
+	xyuv.xy = transpose(worldMatrix) * vec3(xyuv.xy, 1);
 	xyuv.xy = xyuv.xy * screenMatrix.xy + screenMatrix.zw;
 
 	gl_Position = vec4(xyuv.xy, 0, 1);
