@@ -90,7 +90,7 @@ function parse(data){
 		for(var i=0; i<boneCount; ++i){
 			boneData[i] = ba.readU8();
 		}
-		return {vertexCount, byteSizePerVertex, vertexData, indexData, boneData};
+		return {vertexCount, byteSizePerVertex, vertexData, indexData, boneData, texture};
 	});
 	var boneList = doList(ba, ba => {
 		var boneName = ba.readString1();
