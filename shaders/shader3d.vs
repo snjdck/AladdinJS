@@ -18,8 +18,10 @@ in vec4 boneWeight;
 uniform mat4 screenMatrix;
 uniform vec4 cameraMatrix[2];
 uniform vec4 boneList[100];
+uniform int uid;
 
-out lowp vec2 uv;
+out vec2 uv;
+flat out int InstanceID;
 
 #include <quaternion.glsl>
 
@@ -35,4 +37,5 @@ void main()
 
 	gl_Position = screenPosition;
 	uv = inputUV;
+	InstanceID = uid;
 }
