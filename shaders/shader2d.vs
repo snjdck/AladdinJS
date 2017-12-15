@@ -18,13 +18,15 @@ struct Object {
 };
 
 uniform _ {
-	vec4 screenMatrix;
+	vec2 screenMatrix;
+	int InstanceIDBase;
 	Object objectList[10];
 };
 
 #define object objectList[gl_InstanceID]
 
 out vec2 uv;
+flat out int InstanceID;
 
 void main()
 {
@@ -36,8 +38,10 @@ void main()
 	xyuv = xyuv.xzyw * object.textureMul + object.textureAdd;
 
 	xyuv.xy = transpose(object.worldMatrix) * vec3(xyuv.xy, 1);
-	xyuv.xy = xyuv.xy * screenMatrix.xy + screenMatrix.zw;
+	xyuv.xy *= screenMatrix.xy;
+	xyuv.xy += vec2(-1, 1);
 
 	gl_Position = vec4(xyuv.xy, 0, 1);
 	uv = xyuv.zw;
+	InstanceID = InstanceIDBase + gl_InstanceID;
 }
