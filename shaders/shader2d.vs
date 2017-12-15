@@ -1,7 +1,5 @@
-#version 300 es
-
-precision highp float;
-precision highp int;
+#include <_Header>
+#include <_VertexOut>
 
 layout(location=0)
 in vec2 inputPosition;
@@ -25,9 +23,6 @@ uniform _ {
 
 #define object objectList[gl_InstanceID]
 
-out vec2 uv;
-flat out int InstanceID;
-
 void main()
 {
 	vec4 margin = inputMargin * object.scale9grid;
@@ -43,5 +38,6 @@ void main()
 
 	gl_Position = vec4(xyuv.xy, 0, 1);
 	uv = xyuv.zw;
-	InstanceID = InstanceIDBase + gl_InstanceID;
+	InstanceID = gl_InstanceID;
+	InstanceIndex = InstanceIDBase + gl_InstanceID;
 }
