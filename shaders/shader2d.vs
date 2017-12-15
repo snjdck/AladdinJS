@@ -1,6 +1,9 @@
 #include <_Header>
 #include <_VertexOut>
 
+layout(row_major)
+uniform;
+
 layout(location=0)
 in vec2 inputPosition;
 
@@ -8,7 +11,7 @@ layout(location=1)
 in vec4 inputMargin;
 
 struct Object {
-	mat2x3 worldMatrix;
+	mat3x2 worldMatrix;
 	vec4 textureMul;
 	vec4 textureAdd;
 	vec4 rectSize;		//w,rw,h,rh
@@ -32,7 +35,7 @@ void main()
 	xyuv.yw /= object.rectSize.yw;
 	xyuv = xyuv.xzyw * object.textureMul + object.textureAdd;
 
-	xyuv.xy = transpose(object.worldMatrix) * vec3(xyuv.xy, 1);
+	xyuv.xy = object.worldMatrix * vec3(xyuv.xy, 1);
 	xyuv.xy *= screenMatrix.xy;
 	xyuv.xy += vec2(-1, 1);
 
