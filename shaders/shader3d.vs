@@ -14,11 +14,13 @@ in ivec4 boneIndex;//multipy 2 already
 layout(location=3)
 in vec4 boneWeight;
 
-uniform mat4 screenMatrix;
-uniform vec4 cameraMatrix[2];
-uniform vec4 boneList[100];
-uniform int boneCount;//multipy 2 already
-uniform int InstanceIDBase;
+uniform _ {
+	mat4 screenMatrix;
+	vec4 cameraMatrix[2];
+	int InstanceIDBase;
+	int boneCount;//multipy 2 already
+	vec4 boneList[100];
+};
 
 void main()
 {
