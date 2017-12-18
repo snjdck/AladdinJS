@@ -43,18 +43,24 @@ async function onInit(){
 	view3d.scene2d.root.addChild(box);
 	box.scale = 0.1;
 
-	let playerEntity = new MeshEntity(parse(await assetMgr.loadFile("player.bmd.mesh")));
-	view3d.scene3d.root.addChild(playerEntity);
+	let playerMesh = parse(await assetMgr.loadFile("player.bmd.mesh"));
+	let weaponMesh = parse(await assetMgr.loadFile("Spear10.bmd.mesh"));
+	let fileList = await assetMgr.loadFiles(["ArmorCls", "BootCls", "GloveCls","HelmCls","PantCls"].map(v => v + ".bmd.mesh"));
+	fileList = fileList.map(v => parse(v));
 
-	let weaponEntity = new MeshEntity(parse(await assetMgr.loadFile("Spear10.bmd.mesh")));
-	playerEntity.bindObjectToBone("knife_gdf", weaponEntity);
+	for(let i=0; i<3; ++i){
+		let playerEntity = new MeshEntity(playerMesh);
+		view3d.scene3d.root.addChild(playerEntity);
+		playerEntity.x = i * 100 - 200;
 
-	var fileList = await assetMgr.loadFiles(["ArmorCls", "BootCls", "GloveCls","HelmCls","PantCls"].map(v => v + ".bmd.mesh"));
-	let tx = -400;
-	for(let data of fileList){
-		let meshEntity = new MeshEntity(parse(data), false);
-		meshEntity.shareSkeletonWith(playerEntity);
-		view3d.scene3d.root.addChild(meshEntity);
+		let weaponEntity = new MeshEntity(weaponMesh);
+		playerEntity.bindObjectToBone("knife_gdf", weaponEntity);
+
+		for(let data of fileList){
+			let meshEntity = new MeshEntity(data, false);
+			meshEntity.shareSkeletonWith(playerEntity);
+			view3d.scene3d.root.addChild(meshEntity);
+		}
 	}
 
 	var terrain = new Terrain();

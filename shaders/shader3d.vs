@@ -18,6 +18,7 @@ uniform _ {
 	mat4 screenMatrix;
 	vec4 cameraMatrix[2];
 	int InstanceIDBase;
+	int bindCount;
 	int boneCount;//multipy 2 already
 	vec4 boneList[100];
 };
@@ -25,7 +26,7 @@ uniform _ {
 void main()
 {
 	vec3 worldPosition = vec3(0);
-	for(int i=0; i<4; ++i){
+	for(int i=0; i<bindCount; ++i){
 		int index = boneIndex[i] + boneCount * gl_InstanceID;
 		worldPosition += transform2(boneList[index], boneList[index+1], inputPosition) * boneWeight[i];
 	}
