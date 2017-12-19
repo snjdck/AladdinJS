@@ -18,10 +18,12 @@ struct Object {
 	vec4 scale9grid;	//lm,rm,tm,bm
 };
 
+#define MAX_OBJECTS (MAX_VERTEX_UNIFORM_VECTORS - 1) / 6
+
 uniform _ {
 	vec2 screenMatrix;
 	int InstanceIDBase;
-	Object objectList[10];
+	Object objectList[MAX_OBJECTS];
 };
 
 #define object objectList[gl_InstanceID]

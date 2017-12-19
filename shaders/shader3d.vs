@@ -14,13 +14,15 @@ in ivec4 boneIndex;//multipy 2 already
 layout(location=3)
 in vec4 boneWeight;
 
+#define MAX_BONES ((MAX_VERTEX_UNIFORM_VECTORS - 7) >> 1) << 1
+
 uniform _ {
 	mat4 screenMatrix;
 	vec4 cameraMatrix[2];
 	int InstanceIDBase;
 	int bindCount;
 	int boneCount;//multipy 2 already
-	vec4 boneList[100];
+	vec4 boneList[MAX_BONES];
 };
 
 void main()
