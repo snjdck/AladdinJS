@@ -24,5 +24,5 @@ vec3 rotate(vec4 quaternion, vec3 point)
 
 vec3 transform2(vec4 quaternion, vec4 translation, vec3 point)
 {
-	return rotate(quaternion, point) + translation.xyz;
+	return rotate(quaternion, point * translation.w) + translation.xyz;
 }
