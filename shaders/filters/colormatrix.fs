@@ -1,10 +1,10 @@
 #include <_Header>
-#include <_FragmentIn>
 
 uniform sampler2D sampler0;
 uniform mat4 matrix;
 uniform vec4 offset;
 
+in vec2 uv;
 out vec4 color;
 
 void main(){
