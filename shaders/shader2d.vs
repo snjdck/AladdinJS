@@ -18,7 +18,7 @@ struct Object {
 	vec4 scale9grid;	//lm,rm,tm,bm
 };
 
-#define MAX_OBJECTS (MAX_VERTEX_UNIFORM_VECTORS - 1) / 6
+#define MAX_OBJECTS (gl_MaxVertexUniformVectors - 1) / 6
 
 uniform _ {
 	vec2 screenMatrix;

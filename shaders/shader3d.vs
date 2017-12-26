@@ -14,7 +14,7 @@ in ivec4 boneIndex;//multipy 2 already
 layout(location=3)
 in vec4 boneWeight;
 
-#define MAX_BONES ((MAX_VERTEX_UNIFORM_VECTORS - 7) >> 1) << 1
+#define MAX_BONES ((gl_MaxVertexUniformVectors - 7) >> 1) << 1
 
 uniform _ {
 	mat4 screenMatrix;
