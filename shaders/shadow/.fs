@@ -1,7 +1,7 @@
 #include <_Header>
 
 uniform sampler2D sampler0;
-uniform lowp sampler2DShadow sampler1;
+uniform sampler2DShadow sampler1;
 
 flat in mat4 matrix;
 in vec2 uv;
