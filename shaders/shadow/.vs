@@ -5,9 +5,11 @@
 out vec2 uv;
 flat out mat4 matrix;
 
-uniform mat4 screenMatrix1;
-uniform vec4 cameraMatrix[4];
-uniform mat4 screenMatrix2;
+uniform _ {
+	mat4 screenMatrix1;
+	vec4 cameraMatrix[4];
+	mat4 screenMatrix2;
+};
 
 const float bias = 0.005;
 const mat4 tex2clip = mat4(2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2, 0, -1, -1, -1, 1);
