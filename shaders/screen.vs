@@ -1,12 +1,11 @@
 #include <_Header>
-
-layout(location=0)
-in vec2 inputPosition;
+#include <_QuadVertexList>
 
 out vec2 uv;
 
 void main()
 {
-	gl_Position = vec4(inputPosition * 2.0 - 1.0, 0, 1);
-	uv = inputPosition;
+	vec4 vertex = QuadVertexList[gl_VertexID];
+	gl_Position = vec4(vertex.xy, 0, 1);
+	uv = vertex.zw;
 }
