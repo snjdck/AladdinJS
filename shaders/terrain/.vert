@@ -1,6 +1,6 @@
-#include <_Header>
-#include <_VertexOut>
-#include <quaternion>
+#include <headers/Header>
+#include <headers/VertexOut>
+#include <libs/quaternion>
 
 layout(location=0)
 in vec2 inputPosition;

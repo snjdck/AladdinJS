@@ -1,6 +1,6 @@
-#include <_Header>
-#include <_QuadVertexList>
-#include <quaternion>
+#include <headers/Header>
+#include <headers/QuadVertexList>
+#include <libs/quaternion>
 
 out vec2 uv;
 flat out mat4 matrix;

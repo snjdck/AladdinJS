@@ -1,5 +1,5 @@
-#include <_Header>
-#include <_QuadVertexList>
+#include <headers/Header>
+#include <headers/QuadVertexList>
 
 out vec2 uv;
 

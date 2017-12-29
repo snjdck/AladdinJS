@@ -1,5 +1,5 @@
-#include <_Header>
-#include <_FragmentIn>
+#include <headers/Header>
+#include <headers/FragmentIn>
 
 uniform sampler2D sampler0;
 uniform int radius;
