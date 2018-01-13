@@ -10,15 +10,18 @@ in vec2 inputPosition;
 layout(location=1)
 in vec4 inputMargin;
 
+flat out vec4 fgColor;
+
 struct Object {
 	mat3x2 worldMatrix;
 	vec4 textureMul;
 	vec4 textureAdd;
 	vec4 rectSize;		//w,rw,h,rh
 	vec4 scale9grid;	//lm,rm,tm,bm
+	vec4 fgColor;
 };
 
-#define MAX_OBJECTS (gl_MaxVertexUniformVectors - 1) / 6
+#define MAX_OBJECTS (gl_MaxVertexUniformVectors - 1) / 7
 
 uniform _ {
 	vec2 screenMatrix;
@@ -45,4 +48,5 @@ void main()
 	uv = xyuv.zw;
 	InstanceID = gl_InstanceID;
 	InstanceIndex = InstanceIDBase + gl_InstanceID;
+	fgColor = object.fgColor;
 }
