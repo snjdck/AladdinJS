@@ -32,6 +32,7 @@ void main()
 		int index = boneIndex[i] + boneCount * gl_InstanceID;
 		worldPosition += transform2(boneList[index], boneList[index+1], inputPosition) * boneWeight[i];
 	}
+	Position = worldPosition;
 	vec3 cameraPosition = transform2(cameraMatrix[0], cameraMatrix[1], worldPosition);
 	vec4 screenPosition = screenMatrix * vec4(cameraPosition, 1);
 

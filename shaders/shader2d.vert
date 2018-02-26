@@ -41,6 +41,7 @@ void main()
 	xyuv = xyuv.xzyw * object.textureMul + object.textureAdd;
 
 	xyuv.xy = object.worldMatrix * vec3(xyuv.xy, 1);
+	Position = vec3(xyuv.xy, 0);
 	xyuv.xy *= screenMatrix.xy;
 	xyuv.xy += vec2(-1, 1);
 
