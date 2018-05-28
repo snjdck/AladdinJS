@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>WeeeCode</title>
+		<style type="text/css">
+			.scratchCategoryMenuItem.categorySelected {
+    background: #E9EEF2;
+}
+.scratchCategoryMenuItem {
+    padding: 0.375rem 0px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.scratchCategoryMenu {
+    width: 52px;
+    background: #FFFFFF;
+    color: #575E75;
+    font-size: .7rem;
+    float: left;
+    }
+.scratchCategoryItemBubble {
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 1px solid;
+    border-radius: 100%;
+    margin: 0 auto 0.125rem;
+}
+.scratchCategoryMenuItemLabel{
+	user-select: none;
+}
+.blocklyHtmlInput {
+    border: none;
+    font-family: "Helvetica Neue", Helvetica, sans-serif;
+    font-size: 12pt;
+    height: 100%;
+    margin: 0;
+    outline: none;
+    box-sizing: border-box;
+    width: 100%;
+    text-align: center;
+    color: #575E75;
+    font-weight: 500;
+}
+.blocklyWidgetDiv.fieldTextInput {
+    overflow: hidden;
+    border: 1px solid;
+    box-sizing: border-box;
+    transform-origin: 0 0;
+    -ms-transform-origin: 0 0;
+    -moz-transform-origin: 0 0;
+    -webkit-transform-origin: 0 0;
+}
+
+.blocklyWidgetDiv {
+    display: none;
+    position: absolute;
+    z-index: 99999;
+}
+
+
+.alex::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+.alex::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: #999999;
+}
+
+html,body{
+	width: 100%;
+	height: 100%;
+}
+body,td{
+	margin: 0px;
+	padding: 0px;
+}
+.table{
+	display: table;
+	width: 100%;
+	height: 100%;
+}
+
+
+		</style>
+	</head>
+	<body class="table">
+			<div id="header" style="display: table-row; height: 60px;">header</div>
+			<div style="display: table-row;">
+				<div class="table">
+					<div id="stage" style="display: table-cell;width:500px;">stage</div>
+					<div style="display: table-cell;vertical-align: top;">
+						<div id="blocks" class="table" style="user-select: none;">
+							<div style="display: table-cell;width:60px;background-color: pink;position: relative;">
+								<div id="menu" style="color: #575e75; font-size: 12px;width: 100%;"></div>
+								<div id="deleteArea" style="position: absolute;top: 0px;right: 0px;bottom: 0px;left: 0px;display: none;"></div>
+							</div>
+							<div style="display: table-cell;position: relative;">
+								<div style="position: absolute;top:1px;bottom: 1px;left:0px;right:1px;">
+									<div id="blockEditAreaContainer" class="alex" style="width: 100%;height: 100%;overflow: auto;"></div>
+									<div id="blockList" class="alex" style="position: absolute;left:0px;top:0px;bottom: 0px;overflow: auto;padding: 6px 0px 6px 0px;background-color: rgba(255,193,107,0.6);"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		<script type="text/javascript" src="main.js"></script>
+	</body>
+</html>
