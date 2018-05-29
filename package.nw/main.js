@@ -81,13 +81,93 @@ blocks.style.userSelect = "none";
 //root.appendChild(stage);
 root.appendChild(blocks);
 */
+/*
+let topView = document.getElementById("top_view");
+topView.addEventListener("scroll", function(evt){
+	console.log(topView.scrollTop, topView);
+	let line_number = document.getElementById("line_number");
+	line_number.style.left = topView.scrollLeft + "px";
+});
+*/
+function _replace(input, index){
+	switch(input){
+		case "<": return "&lt;";
+		case ">": return "&gt;";
+		case "&": return "&amp;";
+	}
+	return null;
+}
+function escapeHtmlChar(input){
+	return input.replace(/[<>&]/g, _replace);
+}
+function renderColor(code){
+	code = replaceColor(code, /(setup|loop)(?=\(\))/g, 0x996600);
+	code = replaceColor(code, /for|if|else|while/g, 0x996600);
+	code = replaceColor(code, /(?=^|\s)(void|String|int|char|double|boolean|true|false|#include)(?= )/gm, 0x990000);
+	code = replaceColor(code, /(PORT|SLOT)_\d/g, 0x996600);
+	return code;
+}
+function replaceColor(code, pattern, color){
+	return code.replace(pattern, '<font color="#' + color.toString(16) + '">$&</font>');
+}
+function setCode(code){
+	code = code.replace(/^\s+|\s+$/g, "");
+	code = code.replace(/(\t+|\x20+)\n/g, "");
+	code = code.replace(/\n{3,}/g, "\n\n");
+	code = escapeHtmlChar(code);
+	code = renderColor(code);
+	document.getElementById("code_view").innerHTML = "<pre>" + code + "</pre>";
+	var lineList = code.split("\n");
+	var lineCount = lineList.length;
+	var lineText = [];
+	for(var i=0; i<lineCount; ++i){
+		lineText.push((i + 1).toString());
+	}
+	document.getElementById("line_number").innerHTML = "<pre>" + lineText.join("\n") + "</pre>";
+}
+//*
+setCode(`#include <WeELF328P.h>
 
+WeDCMotor dc;
+Servo servo_9;
+WeLEDPanelModuleMatrix7_21 ledPanel_12(12);
+
+void setup(){
+    servo_9.attach(9);
+    dc.move(1,0);
+    dc.reset(1);
+    dc.run(0);
+    servo_9.write(90);
+    servo_9.write(90);
+    dc.move(1,0);
+    ledPanel_12.showClock(12,30,strcmp(":",":")==0);
+    ledPanel_12.showBitmap2(0,0,0,0,0,0,0,0,0,0,0,64,0,0,0,0,0,0,0,0,0,0,0);
+    ledPanel_12.turnOffDot(0,0);
+}
+
+void loop(){
+    servo_9.write(90);
+    dc.move(1,0);
+    ledPanel_12.showClock(12,30,strcmp(":",":")==0);
+    ledPanel_12.showBitmap2(0,0,0,0,0,0,0,0,0,0,0,64,0,0,0,0,0,0,0,0,0,0,0);
+    ledPanel_12.turnOffDot(0,0);
+    _loop();
+}
+
+void _delay(float seconds){
+    long endTime = millis() + seconds * 1000;
+    while(millis() < endTime)_loop();
+}
+
+void _loop(){
+}`);
+//*/
 let blocks = document.getElementById("blocks");
 
 let blockEditAreaContainer = document.getElementById("blockEditAreaContainer");
-let blockList = document.getElementById("blockList");
+//let blockList = document.getElementById("blockList");
 //let scratchCategoryMenu = document.getElementById("scratchCategoryMenu");
-let deleteArea = document.getElementById("deleteArea");
+//let deleteArea = document.getElementById("deleteArea");
 
 (function(stage){
 	let offset;
@@ -106,6 +186,14 @@ let deleteArea = document.getElementById("deleteArea");
 	});
 })(document.getElementById("stage"));
 
+(function(svg_scaler){
+	svg_scaler.addEventListener("change", function(evt){
+		let scale = parseFloat(this.value);
+		blockEditArea.dataset.scale = scale;
+		blockEditArea.setAttribute("transform", `scale(${scale})`);
+	});
+})(document.getElementById("svg_scaler"));
+
 
 /*
 let blockEditAreaContainer = document.createElement("div");
@@ -120,8 +208,9 @@ blockEditAreaContainer.style.left = "60px";
 */
 
 let blockEditArea = SVG.createElement("svg");
-blockEditArea.setAttribute("width","2000");
-blockEditArea.setAttribute("height","2000");
+blockEditArea.setAttribute("width","1000");
+blockEditArea.setAttribute("height","1000");
+blockEditArea.setAttribute("style","transform-origin:left top;");
 createEditAreaContextMenu(blockEditArea);
 /*
 let blockList = document.createElement("div");
@@ -227,7 +316,7 @@ blockList.onmousedown = () => ;
 */
 
 
-(function(){
+(function(deleteArea){
 	let deleteFlag = false;
 	blockEditArea.addEventListener("block_drag_begin", function(evt){
 		deleteArea.style.display = null;
@@ -247,7 +336,7 @@ blockList.onmousedown = () => ;
 		this.style.backgroundColor = "rgba(0,0,0,0.5)";
 		deleteFlag = false;
 	}
-})();
+})(document.getElementById("deleteArea"));
 
 
 
