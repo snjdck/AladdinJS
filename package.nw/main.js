@@ -4,6 +4,25 @@ const SVG = require("fileformats/svg");
 const Spec = require("blockly/graphic/Spec");
 const BlockBase = require("blockly/graphic/BlockBase");
 const BlockListDef = require("./BlockListDef");
+const BlockEditor = require("./libs/BlockEditor");
+const {
+	BLOCK_TYPE_EXPRESSION,
+	BLOCK_TYPE_STATEMENT,
+	BLOCK_TYPE_BREAK,
+	BLOCK_TYPE_CONTINUE,
+	BLOCK_TYPE_FOR,
+	BLOCK_TYPE_IF,
+	BLOCK_TYPE_ELSE_IF,
+	BLOCK_TYPE_ELSE,
+
+	BLOCK_TYPE_ARDUINO,
+
+	INSERT_PT_BELOW,
+	INSERT_PT_ABOVE,
+	INSERT_PT_SUB,
+	INSERT_PT_WRAP,
+	INSERT_PT_CHILD
+} = require("blockly/graphic/BlockConst");
 
 function createBlockContextMenu(block){
 	let menu = new nw.Menu();
@@ -25,6 +44,8 @@ function createEditAreaContextMenu(target){
 	}
 }
 
+const offlineDict = Object.create(null);
+
 function setBlockList(parent, blockInfoList){
 	while(parent.hasChildNodes()){
 		parent.removeChild(parent.childNodes[0]);
@@ -34,6 +55,9 @@ function setBlockList(parent, blockInfoList){
 		parent.appendChild(span);
 		span.innerHTML = group.name;
 		for(let blockInfo of group.items){
+			if(blockInfo.id){
+				offlineDict[blockInfo.id] = blockInfo.cpp;
+			}
 			let svg = SVG.createElement("svg");
 			parent.appendChild(svg);
 			svg.setAttribute("style","display:block;margin:6px 0px 6px 0px;");
@@ -50,45 +74,8 @@ function setBlockList(parent, blockInfoList){
 	}
 }
 
-const headerHeight = 60;
-const stageWidth = 500;
 
-const root = document.body;
-/*
-let header = document.createElement("div");
-header.style.position = "absolute";
-header.style.width = "100%";
-header.style.height = headerHeight + "px";
-header.style.backgroundColor = "rgb(0,0,255)";
 
-let stage = document.createElement("div");
-stage.style.position = "absolute";
-stage.style.width = stageWidth + "px";
-stage.style.top = headerHeight + "px";
-stage.style.bottom = "0px";
-stage.style.backgroundColor = "rgb(0,255,255)";
-
-let blocks = document.createElement("div");
-blocks.style.position = "absolute";
-blocks.style.top = headerHeight + "px";
-blocks.style.left = stageWidth + "px";
-blocks.style.bottom = "0px";
-blocks.style.right = "0px";
-blocks.style.userSelect = "none";
-//blocks.style.backgroundColor = "rgb(255,0,255)";
-
-//root.appendChild(header);
-//root.appendChild(stage);
-root.appendChild(blocks);
-*/
-/*
-let topView = document.getElementById("top_view");
-topView.addEventListener("scroll", function(evt){
-	console.log(topView.scrollTop, topView);
-	let line_number = document.getElementById("line_number");
-	line_number.style.left = topView.scrollLeft + "px";
-});
-*/
 function _replace(input, index){
 	switch(input){
 		case "<": return "&lt;";
@@ -116,15 +103,21 @@ function setCode(code){
 	code = code.replace(/\n{3,}/g, "\n\n");
 	code = escapeHtmlChar(code);
 	code = renderColor(code);
-	document.getElementById("code_view").innerHTML = "<pre>" + code + "</pre>";
 	var lineList = code.split("\n");
 	var lineCount = lineList.length;
 	var lineText = [];
 	for(var i=0; i<lineCount; ++i){
 		lineText.push((i + 1).toString());
 	}
-	document.getElementById("line_number").innerHTML = "<pre>" + lineText.join("\n") + "</pre>";
+	let codeView = document.getElementById("code_view");
+	let lineNumberView = codeView.previousElementSibling;
+	codeView.innerHTML = "<pre>" + code + "</pre>";
+	lineNumberView.innerHTML = "<pre>" + lineText.join("\n") + "</pre>";
 }
+
+(function(){
+	
+})();
 //*
 setCode(`#include <WeELF328P.h>
 
@@ -195,23 +188,17 @@ let blockEditAreaContainer = document.getElementById("blockEditAreaContainer");
 })(document.getElementById("svg_scaler"));
 
 
-/*
-let blockEditAreaContainer = document.createElement("div");
-blockEditAreaContainer.setAttribute("class", "alex");
-blockEditAreaContainer.style.position = "absolute";
-blockEditAreaContainer.style.overflow = "auto";
-blockEditAreaContainer.style.top = "1px";
-blockEditAreaContainer.style.bottom = "1px";
-blockEditAreaContainer.style.right = "1px";
-blockEditAreaContainer.style.left = "60px";
-//blockEditAreaContainer.style.backgroundColor = "rgb(255,255,255)";
-*/
-
 let blockEditArea = SVG.createElement("svg");
 blockEditArea.setAttribute("width","1000");
 blockEditArea.setAttribute("height","1000");
 blockEditArea.setAttribute("style","transform-origin:left top;");
 createEditAreaContextMenu(blockEditArea);
+
+const blockEditor = new BlockEditor(blockEditArea);
+
+blockEditArea.addEventListener("block_changed", function(){
+	setCode(blockEditor.genArduinoCode(offlineDict).join("\n"));
+})
 /*
 let blockList = document.createElement("div");
 blockList.setAttribute("class", "alex");
