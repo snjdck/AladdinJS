@@ -115,10 +115,141 @@ function setCode(code){
 	lineNumberView.innerHTML = "<pre>" + lineText.join("\n") + "</pre>";
 }
 
+function createDropdownBtn(id, label){
+	let div = $(`<div class="btn-group" id="${id}"></div>`);
+	div.append(`<button type="button" class="btn btn-info">${label}</button>`);
+	div.append(`<button type="button" class="btn btn-info dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>`);
+	div.append(`<div class="dropdown-menu dropdown-menu-right"></div>`);
+	$("#header").append(div);
+}
+
+createDropdownBtn("port_btn", "Not Connected");
+createDropdownBtn("board_btn", "WeeeBot");
+createDropdownBtn("language_btn", "English");
+
 (function(){
-	
+	const port_btn = $("#port_btn");
+	window.setPort = port => {
+		port_btn[0].dataset.value = port;
+		$("#port_btn>:first-child").text(port || "Not Connected");
+		//board_btn[0].firstElementChild.innerText = port;
+		console.log("change port",port);
+	}
+	port_btn.on("show.bs.dropdown", function(evt){
+		let value = port_btn[0].dataset.value;
+		let menu = evt.relatedTarget.nextElementSibling;
+		if(value){
+			menu.innerHTML = `<span class="dropdown-item" onclick="setPort('');">Disconnect</span>`;
+		}else{
+			chrome.serial.getDevices(function(devices){
+				menu.innerHTML = devices.map(({displayName, path}) => {
+					return `<span class="dropdown-item" onclick="setPort('${path}');">${path}\t(${displayName})</span>`;
+				}).join("");
+			});
+		}
+		
+		/*
+		let nowText = this.firstElementChild.innerText;
+		
+		menu.innerHTML = board_data.map(([label, key]) => {
+			let active = label == nowText;
+			if(active){
+				return `<span class="dropdown-item active">${label}</span>`;
+			}
+			return `<span class="dropdown-item" onclick="setBoard('${key}');">${label}</span>`;
+		}).join("");
+		*/
+	});
+})();
+
+let currentLang = "en";
+const tooltipDict = {
+	"language_btn":{
+		"en":"Language",
+		"zh-cn":"语言"
+	},
+	"board_btn":{
+		"en":"Board",
+		"zh-cn":"主板"
+	}
+};
+const tooltip = {title:function(){
+	if(!this.id)return;
+	if(!tooltipDict[this.id]){
+		console.warn("tooltip not add", this.id);
+		return;
+	}
+	return tooltipDict[this.id][currentLang];
+}};
+
+(function(){
+	const board_data = [["WeeeBot","WeeeBot"],["WeeeBot mini", "WeeeBotMini"]];
+	const board_btn = $("#board_btn");
+	board_btn.tooltip(tooltip);
+	window.setBoard = board => {
+		board_btn[0].firstElementChild.innerText = board_data.filter(([label, key]) => key == board)[0][0];
+		console.log("change board",board);
+	}
+	board_btn.on("show.bs.dropdown", function(evt){
+		let nowText = this.firstElementChild.innerText;
+		let menu = evt.relatedTarget.nextElementSibling;
+		menu.innerHTML = board_data.map(([label, key]) => {
+			let active = label == nowText;
+			if(active){
+				return `<span class="dropdown-item active">${label}</span>`;
+			}
+			return `<span class="dropdown-item" onclick="setBoard('${key}');">${label}</span>`;
+		}).join("");
+	});
+})();
+
+(function(){
+	const board_data = [["WeeeBot","WeeeBot"],["WeeeBot mini", "WeeeBotMini"]];
+	const board_btn = $("#board_btn");
+	board_btn.tooltip(tooltip);
+	window.setBoard = board => {
+		board_btn[0].firstElementChild.innerText = board_data.filter(([label, key]) => key == board)[0][0];
+		console.log("change board",board);
+	}
+	board_btn.on("show.bs.dropdown", function(evt){
+		let nowText = this.firstElementChild.innerText;
+		let menu = evt.relatedTarget.nextElementSibling;
+		menu.innerHTML = board_data.map(([label, key]) => {
+			let active = label == nowText;
+			if(active){
+				return `<span class="dropdown-item active">${label}</span>`;
+			}
+			return `<span class="dropdown-item" onclick="setBoard('${key}');">${label}</span>`;
+		}).join("");
+	});
+})();
+
+(function(){
+	const language_data = [["English","en"],["简体中文", "zh-cn"]];
+	const language_btn = $("#language_btn");
+	language_btn.tooltip(tooltip);
+	window.setLanguage = lang => {
+		currentLang = lang;
+		language_btn[0].firstElementChild.innerText = language_data.filter(([label, key]) => key == lang)[0][0];
+		console.log("change lang",lang);
+	}
+	language_btn.on("show.bs.dropdown", function(evt){
+		let nowText = this.firstElementChild.innerText;
+		let menu = evt.relatedTarget.nextElementSibling;
+		menu.innerHTML = language_data.map(([label, key]) => {
+			let active = label == nowText;
+			if(active){
+				return `<span class="dropdown-item active">${label}</span>`;
+			}
+			return `<span class="dropdown-item" onclick="setLanguage('${key}');">${label}</span>`;
+		}).join("");
+	});
 })();
 //*
+
+
+
+$('button').button();
 setCode(`#include <WeELF328P.h>
 
 WeDCMotor dc;

@@ -79,6 +79,15 @@ body,td{
     width: 100px;
 }
 
+#header {
+    background-color: gray;
+    padding: 8px 4px 4px;
+}
+
+#header > div {
+    margin: 0px 4px;
+}
+
 body {
 	font-size:14px;
 }

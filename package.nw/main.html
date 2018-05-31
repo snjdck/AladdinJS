@@ -1,12 +1,32 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>WeeeCode</title>
-		<link rel="stylesheet" type="text/css" href="main.css">
-		<style type="text/css"></style>
+		<link rel="stylesheet" href="sites/bootstrap.min.css">
+		<link rel="stylesheet" href="main.css">
+		<script>if(typeof module === 'object'){window.module = module; module = undefined;}</script>
+		<script src="sites/jquery.min.js"></script>
+		<script src="sites/popper.min.js"></script>
+		<script src="sites/bootstrap.min.js"></script>
+		<script>if(window.module){module = window.module;}</script>
 	</head>
 	<body style="display: flex;flex-direction: column;">
-		<div id="header" style="height:60px;">header</div>
+		<div id="header" style="display: flex;">
+			<div class="btn-group">
+				<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				Action
+				</button>
+				<div class="dropdown-menu">
+					<a class="dropdown-item" href="#">Action</a>
+					<a class="dropdown-item" href="#">Another action</a>
+					<a class="dropdown-item" href="#">Something else here</a>
+					<div class="dropdown-divider"></div>
+					<a class="dropdown-item" href="#">Separated link</a>
+				</div>
+			</div>
+			<div style="flex:auto;"></div>
+		</div>
 		<div style="flex:auto; display:flex;">
 			<div id="stage" style="width:500px;min-width:200px;position: relative;">
 				<div style="position: absolute;width: 100%; height: 100%;display: flex;flex-direction: column;">
@@ -48,6 +68,6 @@
 				</div>
 			</div>
 		</div>
-		<script type="text/javascript" src="main.js"></script>
+		<script src="main.js"></script>
 	</body>
 </html>
