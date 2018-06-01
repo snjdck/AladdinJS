@@ -203,8 +203,11 @@ Messenger.options = {
     theme: 'flat'
 };
 
-//window.addEventListener("click", ()=> );
-
+$("#stage_tab input[type=radio]").change(function(){
+	let index = $(this).parent().index();
+	$("#stage > *:visible").hide();
+	$(`#stage > *:eq(${index})`).show();
+});
 
 setCode(`#include <WeELF328P.h>
 
