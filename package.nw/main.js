@@ -112,23 +112,23 @@ function setCode(code){
 	for(var i=0; i<lineCount; ++i){
 		lineText.push((i + 1).toString());
 	}
-	let codeView = document.getElementById("code_view");
-	let lineNumberView = codeView.previousElementSibling;
+	let lineNumberView = document.getElementById("source_code");
+	let codeView = lineNumberView.nextElementSibling;
 	codeView.innerHTML = "<pre>" + code + "</pre>";
 	lineNumberView.innerHTML = "<pre>" + lineText.join("\n") + "</pre>";
 }
 
-function createDropdownBtn(id, label){
+function createDropdownBtn(id, label, type="btn-info"){
 	let div = $(`<div class="btn-group" id="${id}"></div>`);
-	div.append(`<button type="button" class="btn btn-info">${label}</button>`);
-	div.append(`<button type="button" class="btn btn-info dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>`);
+	div.append(`<button type="button" class="btn ${type}">${label}</button>`);
+	div.append(`<button type="button" class="btn ${type} dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>`);
 	div.append(`<div class="dropdown-menu dropdown-menu-right"></div>`);
-	$("#header").append(div);
 	return div;
 }
 
-function createDropdownBtnByData(id, dataList, defaultIndex=0){
-	let dropdown = createDropdownBtn(id, dataList[defaultIndex][0]);
+function createDropdownBtnByData(id, dataList, defaultIndex=0, type="btn-info"){
+	dataList = dataList.map(v => Array.isArray(v) ? (v.length < 2 ? [v[0],v[0]] : v) : [v,v]);
+	let dropdown = createDropdownBtn(id, dataList[defaultIndex][0], type);
 	dropdown.data("value", dataList[defaultIndex][1]);
 	dropdown.change(function(evt){
 		let value = dataList[$(evt.target).index()];
@@ -147,11 +147,30 @@ function createDropdownBtnByData(id, dataList, defaultIndex=0){
 	return dropdown;
 }
 
+const tooltipDict = {
+	"language_btn":{
+		"en":"Language",
+		"zh-cn":"语言"
+	},
+	"board_btn":{
+		"en":"Board",
+		"zh-cn":"主板"
+	}
+};
+const tooltip = {title:function(){
+	if(!this.id)return;
+	if(!tooltipDict[this.id]){
+		console.warn("tooltip not add", this.id);
+		return;
+	}
+	return tooltipDict[this.id][$("#language_btn").data("value")];
+}};
 
-createDropdownBtn("port_btn", "Not Connected");
-
-
-
+$("#header").append(
+	createDropdownBtn("port_btn", "Not Connected"),
+	createDropdownBtnByData("board_btn", ["WeeeBot", "WeeeBot mini"]).tooltip(tooltip),
+	createDropdownBtnByData("language_btn", [["English","en"],["简体中文", "zh-cn"]]).tooltip(tooltip)
+);
 (function(){
 	const port_btn = $("#port_btn");
 	window.setPort = port => {
@@ -175,26 +194,7 @@ createDropdownBtn("port_btn", "Not Connected");
 	});
 })();
 
-const tooltipDict = {
-	"language_btn":{
-		"en":"Language",
-		"zh-cn":"语言"
-	},
-	"board_btn":{
-		"en":"Board",
-		"zh-cn":"主板"
-	}
-};
-const tooltip = {title:function(){
-	if(!this.id)return;
-	if(!tooltipDict[this.id]){
-		console.warn("tooltip not add", this.id);
-		return;
-	}
-	return tooltipDict[this.id][$("#language_btn").data("value")];
-}};
-createDropdownBtnByData("board_btn", [["WeeeBot","WeeeBot"],["WeeeBot mini", "WeeeBotMini"]]).tooltip(tooltip);
-createDropdownBtnByData("language_btn", [["English","en"],["简体中文", "zh-cn"]]).tooltip(tooltip);
+$("#console_view").next().append(createDropdownBtnByData("source_code_type", ["C++", "Python"], 0, "btn-secondary btn-sm").tooltip(tooltip));
 
 //*
 
@@ -203,7 +203,7 @@ Messenger.options = {
     theme: 'flat'
 };
 
-//window.addEventListener("click", ()=> Messenger().post("Your request has succeded!"));
+//window.addEventListener("click", ()=> );
 
 
 setCode(`#include <WeELF328P.h>
@@ -271,9 +271,23 @@ createEditAreaContextMenu(blockEditArea);
 
 const blockEditor = new BlockEditor(blockEditArea);
 
+
+function showCode(){
+	let syntaxTree = $("#source_code").data("value");
+	let type = $("#source_code_type").data("value");
+	let code = blockEditor.genCode(syntaxTree, offlineDict, type);
+	if(code){
+		setCode(code.join("\n"));
+	}else{
+		setCode("");
+		Messenger().post(`no ${type} code!`);
+	}
+}
 blockEditArea.addEventListener("block_changed", function(){
-	setCode(blockEditor.genArduinoCode(offlineDict).join("\n"));
-})
+	$("#source_code").data("value", blockEditor.genSyntaxTree());
+	showCode();
+});
+$("#source_code_type").change(showCode);
 
 createCategoryMenu();
 $("#blockEditAreaContainer").append(blockEditArea);

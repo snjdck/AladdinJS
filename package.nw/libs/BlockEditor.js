@@ -34,14 +34,19 @@ class BlockEditor
 			.map(({block}) => block);
 	}
 
-	genArduinoCode(context){
+	genSyntaxTree(){
 		for(let block of this.getTopBlocks()){
 			if(block.type != BLOCK_TYPE_ARDUINO){
 				continue;
 			}
-			return translate(outputCodeSelf(block), context);
+			return outputCodeSelf(block);
 		}
-		return translate();
+	}
+
+	genCode(syntaxTree, context, type){
+		switch(type){
+			case "C++": return translate(syntaxTree, context);
+		}
 	}
 }
 

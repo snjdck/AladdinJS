@@ -35,16 +35,14 @@
 		<div style="flex:auto; display:flex;">
 			<div id="stage" style="width:500px;min-width:200px;position: relative;">
 				<div style="position: absolute;width: 100%; height: 100%;display: flex;flex-direction: column;">
-					<div style="position: absolute;">
-						
-					</div>
-					<div id="top_view" onscroll="line_number.style.left=this.scrollLeft+'px'" style="overflow: auto; flex:auto;">
+					<div onscroll="source_code.style.left=this.scrollLeft+'px'" style="overflow: auto; flex:auto;">
 						<div style="display: flex;">
-							<div id="line_number" style="padding:0px 4px;text-align: right;background: #ecf0f5;border-right: 2px rgba(0,0,0,0.3) solid;user-select: none;position: relative;"></div>
-							<div id="code_view" style="padding:0px 4px;"></div>
+							<div id="source_code" style="padding:0px 4px;text-align: right;background: #ecf0f5;border-right: 2px rgba(0,0,0,0.3) solid;user-select: none;position: relative;"></div>
+							<div style="padding:0px 4px;"></div>
 						</div>
 					</div>
-					<div id="content" style="flex:0 0 200px;overflow:auto;background-color:#c8c8c8;"><pre>hello</pre></div>
+					<div id="console_view" style="flex:0 0 200px;overflow:auto;background-color:#c8c8c8;"><pre>hello</pre></div>
+					<div style="position: absolute;top: 4px;right: 12px;"></div>
 				</div>
 			</div>
 			<div style="width: 4px;cursor: e-resize;background-color: #dddddd;"></div>
