@@ -47,11 +47,14 @@ function createEditAreaContextMenu(target){
 const offlineDict = Object.create(null);
 
 function setBlockList(parent, blockInfoList){
+	parent.innerHTML = "";
+	/*
 	while(parent.hasChildNodes()){
 		parent.removeChild(parent.childNodes[0]);
-	}
+	}*/
 	for(let group of blockInfoList){
 		let span = document.createElement("span");
+		span.setAttribute("id", group.name);
 		parent.appendChild(span);
 		span.innerHTML = group.name;
 		for(let blockInfo of group.items){
@@ -121,11 +124,33 @@ function createDropdownBtn(id, label){
 	div.append(`<button type="button" class="btn btn-info dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>`);
 	div.append(`<div class="dropdown-menu dropdown-menu-right"></div>`);
 	$("#header").append(div);
+	return div;
 }
 
+function createDropdownBtnByData(id, dataList, defaultIndex=0){
+	let dropdown = createDropdownBtn(id, dataList[defaultIndex][0]);
+	dropdown.data("value", dataList[defaultIndex][1]);
+	dropdown.change(function(evt){
+		let value = dataList[$(evt.target).index()];
+		dropdown.children(":first-child").text(value[0]);
+		dropdown.data("value", value[1]);
+	});
+	dropdown.on("show.bs.dropdown", function(evt){
+		let nowText = this.firstElementChild.innerText;
+		let menu = evt.relatedTarget.nextElementSibling;
+		menu.innerHTML = dataList.map(([label, key]) => {
+			if(label == nowText)
+				return `<span class="dropdown-item active">${label}</span>`;
+			return `<span class="dropdown-item" onclick="$(this).trigger('change');">${label}</span>`;
+		}).join("");
+	});
+	return dropdown;
+}
+
+
 createDropdownBtn("port_btn", "Not Connected");
-createDropdownBtn("board_btn", "WeeeBot");
-createDropdownBtn("language_btn", "English");
+
+
 
 (function(){
 	const port_btn = $("#port_btn");
@@ -147,22 +172,9 @@ createDropdownBtn("language_btn", "English");
 				}).join("");
 			});
 		}
-		
-		/*
-		let nowText = this.firstElementChild.innerText;
-		
-		menu.innerHTML = board_data.map(([label, key]) => {
-			let active = label == nowText;
-			if(active){
-				return `<span class="dropdown-item active">${label}</span>`;
-			}
-			return `<span class="dropdown-item" onclick="setBoard('${key}');">${label}</span>`;
-		}).join("");
-		*/
 	});
 })();
 
-let currentLang = "en";
 const tooltipDict = {
 	"language_btn":{
 		"en":"Language",
@@ -179,77 +191,21 @@ const tooltip = {title:function(){
 		console.warn("tooltip not add", this.id);
 		return;
 	}
-	return tooltipDict[this.id][currentLang];
+	return tooltipDict[this.id][$("#language_btn").data("value")];
 }};
+createDropdownBtnByData("board_btn", [["WeeeBot","WeeeBot"],["WeeeBot mini", "WeeeBotMini"]]).tooltip(tooltip);
+createDropdownBtnByData("language_btn", [["English","en"],["简体中文", "zh-cn"]]).tooltip(tooltip);
 
-(function(){
-	const board_data = [["WeeeBot","WeeeBot"],["WeeeBot mini", "WeeeBotMini"]];
-	const board_btn = $("#board_btn");
-	board_btn.tooltip(tooltip);
-	window.setBoard = board => {
-		board_btn[0].firstElementChild.innerText = board_data.filter(([label, key]) => key == board)[0][0];
-		console.log("change board",board);
-	}
-	board_btn.on("show.bs.dropdown", function(evt){
-		let nowText = this.firstElementChild.innerText;
-		let menu = evt.relatedTarget.nextElementSibling;
-		menu.innerHTML = board_data.map(([label, key]) => {
-			let active = label == nowText;
-			if(active){
-				return `<span class="dropdown-item active">${label}</span>`;
-			}
-			return `<span class="dropdown-item" onclick="setBoard('${key}');">${label}</span>`;
-		}).join("");
-	});
-})();
-
-(function(){
-	const board_data = [["WeeeBot","WeeeBot"],["WeeeBot mini", "WeeeBotMini"]];
-	const board_btn = $("#board_btn");
-	board_btn.tooltip(tooltip);
-	window.setBoard = board => {
-		board_btn[0].firstElementChild.innerText = board_data.filter(([label, key]) => key == board)[0][0];
-		console.log("change board",board);
-	}
-	board_btn.on("show.bs.dropdown", function(evt){
-		let nowText = this.firstElementChild.innerText;
-		let menu = evt.relatedTarget.nextElementSibling;
-		menu.innerHTML = board_data.map(([label, key]) => {
-			let active = label == nowText;
-			if(active){
-				return `<span class="dropdown-item active">${label}</span>`;
-			}
-			return `<span class="dropdown-item" onclick="setBoard('${key}');">${label}</span>`;
-		}).join("");
-	});
-})();
-
-(function(){
-	const language_data = [["English","en"],["简体中文", "zh-cn"]];
-	const language_btn = $("#language_btn");
-	language_btn.tooltip(tooltip);
-	window.setLanguage = lang => {
-		currentLang = lang;
-		language_btn[0].firstElementChild.innerText = language_data.filter(([label, key]) => key == lang)[0][0];
-		console.log("change lang",lang);
-	}
-	language_btn.on("show.bs.dropdown", function(evt){
-		let nowText = this.firstElementChild.innerText;
-		let menu = evt.relatedTarget.nextElementSibling;
-		menu.innerHTML = language_data.map(([label, key]) => {
-			let active = label == nowText;
-			if(active){
-				return `<span class="dropdown-item active">${label}</span>`;
-			}
-			return `<span class="dropdown-item" onclick="setLanguage('${key}');">${label}</span>`;
-		}).join("");
-	});
-})();
 //*
 
+Messenger.options = {
+    extraClasses: 'messenger-fixed messenger-on-bottom',
+    theme: 'flat'
+};
+
+//window.addEventListener("click", ()=> Messenger().post("Your request has succeded!"));
 
 
-$('button').button();
 setCode(`#include <WeELF328P.h>
 
 WeDCMotor dc;
@@ -286,27 +242,15 @@ void _delay(float seconds){
 void _loop(){
 }`);
 //*/
-let blocks = document.getElementById("blocks");
-
-let blockEditAreaContainer = document.getElementById("blockEditAreaContainer");
-//let blockList = document.getElementById("blockList");
-//let scratchCategoryMenu = document.getElementById("scratchCategoryMenu");
-//let deleteArea = document.getElementById("deleteArea");
-
 (function(stage){
 	let offset;
 	let onMove = evt => stage.style.width = (offset + evt.x) + "px";
-	let reject = evt => evt.x < stage.getBoundingClientRect().width - 10;
-	stage.addEventListener("mousedown", function(evt){
-		if(reject(evt))return;
+	stage.nextElementSibling.addEventListener("mousedown", function(evt){
 		offset = stage.getBoundingClientRect().width - evt.x;
 		window.addEventListener("mousemove", onMove);
 		window.addEventListener("mouseup", function(evt){
 			window.removeEventListener("mousemove", onMove);
 		}, {once:true});
-	});
-	stage.addEventListener("mousemove", function(evt){
-		stage.style.cursor = reject(evt) ? "default" : "e-resize";
 	});
 })(document.getElementById("stage"));
 
@@ -330,55 +274,13 @@ const blockEditor = new BlockEditor(blockEditArea);
 blockEditArea.addEventListener("block_changed", function(){
 	setCode(blockEditor.genArduinoCode(offlineDict).join("\n"));
 })
-/*
-let blockList = document.createElement("div");
-blockList.setAttribute("class", "alex");
-blockList.style.position = "absolute";
-blockList.style.left = blockEditAreaContainer.style.left;
-blockList.style.top = "1px";
-blockList.style.bottom = "1px";
-blockList.style.backgroundColor = "rgba(255,193,107,0.6)";
-blockList.style.overflow = "auto";
-blockList.style.padding = "6px 0px 6px 0px";
-//blockList.style.maxHeight = "100%";
-*/
-//let scratchCategoryMenu = document.createElement("div");
-//scratchCategoryMenu.appendChild(createCategoryMenu(blockEditAreaContainer.style.left));
-//scratchCategoryMenu.appendChild(blockList);
-/*
-let deleteArea = document.createElement("div");
-deleteArea.style.position = "absolute";
-deleteArea.style.width = "100%";
-deleteArea.style.height = "100%";
-deleteArea.style.top = "0px";
-deleteArea.style.left = "0px";
-//deleteArea.style.backgroundColor = "rgba(0,0,0,0.6)";
-deleteArea.style.display = "none";
-*/
-createCategoryMenu();
-blockEditAreaContainer.appendChild(blockEditArea);
-//blocks.appendChild(blockEditAreaContainer);
-//blocks.appendChild(scratchCategoryMenu);
-//scratchCategoryMenu.appendChild(deleteArea);
 
-function createCategoryMenu(width){
-	/*
-	let menu = document.createElement("div");
-	menu.style.display = "-webkit-box";
-	menu.style.webkitBoxOrient = "vertical";
-	//menu.setAttribute("style", "display:-webkit-box; -webkit-box-direction:reverse;");
-	
-	menu.style.backgroundColor = blockList.style.backgroundColor;
-	menu.style.color = "#575E75";
-	menu.style.fontSize = "12px";
-	menu.style.width = width;
-*/
+createCategoryMenu();
+$("#blockEditAreaContainer").append(blockEditArea);
+
+
+function createCategoryMenu(){
 	let menu = document.getElementById("menu");
-	/*
-	menu.style.display = "box";
-	menu.style.boxOrient = "vertical";
-	menu.style.boxDirection = "reverse";
-	*/
 	for(let item of BlockListDef){
 		let div = document.createElement("div");
 		div.setAttribute("style", " text-align: center; background-clip: content-box;-webkit-box-sizing:border-box;");
@@ -388,7 +290,9 @@ function createCategoryMenu(width){
 		bubble.setAttribute("height", 28);
 		bubble.setAttribute("src", "icons/" + item.name + ".svg");
 		bubble.setAttribute("style", "pointer-events: none;");
-		let label = document.createElement("span");
+		let label = document.createElement("a");
+		label.setAttribute("class","navbar-link");
+		label.setAttribute("href","#"+item.name);
 		label.innerHTML = item.name;
 
 		div.appendChild(bubble);
@@ -422,16 +326,6 @@ function createCategoryMenu(width){
 
 setBlockList(blockList, BlockListDef);
 blockList.style.display = "none";
-/*
-scratchCategoryMenu.onmouseover = function(evt){
-	
-}
-scratchCategoryMenu.onmouseout = function(evt){
-	blockList.style.display = "none";
-	//console.log("mouse leave", evt);
-}
-blockList.onmousedown = () => ;
-*/
 
 
 (function(deleteArea){
@@ -457,146 +351,7 @@ blockList.onmousedown = () => ;
 })(document.getElementById("deleteArea"));
 
 
-
 /*
-
-let block = new BlockBase();
-blockEditArea.appendChild(block.svg);
-block.type = 2;
-block.setSpec("move %{number,number,STEPS,10} steps");
-
-
-let test2 = new BlockBase();
-blockEditArea.appendChild(test2.svg);
-test2.type = 1;
-test2.setSpec("time");
-test2.setXY(10, 30);
-
-
-let test3 = new BlockBase();
-blockEditArea.appendChild(test3.svg);
-test3.type = 5;
-test3.setSpec("for");
-test3.setXY(10, 90);
-
-
-test3 = new BlockBase();
-blockEditArea.appendChild(test3.svg);
-test3.type = 10;
-test3.setSpec("arduino");
-test3.setXY(10, 200);
-*/
-
-/*
-setBlockList(document.getElementById("blockList"), BlockListDef);
-
-//document.addEventListener("drag", e => console.log(e));
-let blockEditArea = createElementSVG("svg");
-document.getElementById("blockEditArea").appendChild(blockEditArea);
-blockEditArea.setAttribute("width","2000");
-blockEditArea.setAttribute("height","2000");
-
-
-let blockList = document.getElementById("blockList");
-let groupMenu = document.getElementById("groupMenu");
-
-blockList.style.display = "none";
-*/
-/*
-<table width="100%" height="100%">
-			<tr>
-				<td colspan="2" width="100%" height="20" style="background-color: rgb(0,0,255);">
-				</td>
-			</tr>
-			<tr>
-				<td width="500" height="100%" style="background-color: rgb(0,255,255);">
-				</td>
-				<td width="100%" height="100%">
-					<div id="groupMenu" style="display: table-cell;vertical-align: top;">
-		<div class="scratchCategoryMenu" style="display: inline-block;">
-			<div class="scratchCategoryMenuRow">
-				<div class="scratchCategoryMenuItem categorySelected">
-					<div class="scratchCategoryItemBubble" style="background-color: rgb(76, 151, 255); border-color: rgb(51, 115, 204);"></div>
-					<div class="scratchCategoryMenuItemLabel">Motion</div>
-				</div>
-			</div>
-			<div class="scratchCategoryMenuRow">
-				<div class="scratchCategoryMenuItem">
-					<div class="scratchCategoryItemBubble" style="background-color: rgb(153, 102, 255); border-color: rgb(119, 77, 203);"></div>
-					<div class="scratchCategoryMenuItemLabel">Looks</div>
-				</div>
-			</div>
-			<div class="scratchCategoryMenuRow">
-				<div class="scratchCategoryMenuItem">
-					<div class="scratchCategoryItemBubble" style="background-color: rgb(214, 92, 214); border-color: rgb(189, 66, 189);"></div>
-					<div class="scratchCategoryMenuItemLabel">Sound</div>
-				</div>
-			</div>
-			<div class="scratchCategoryMenuRow">
-				<div class="scratchCategoryMenuItem">
-					<div class="scratchCategoryItemBubble" style="background-color: rgb(255, 213, 0); border-color: rgb(204, 153, 0);"></div>
-					<div class="scratchCategoryMenuItemLabel">Events</div>
-				</div>
-			</div>
-			<div class="scratchCategoryMenuRow">
-				<div class="scratchCategoryMenuItem">
-					<div class="scratchCategoryItemBubble" style="background-color: rgb(255, 171, 25); border-color: rgb(207, 139, 23);"></div>
-					<div class="scratchCategoryMenuItemLabel">Control</div>
-				</div>
-			</div>
-			<div class="scratchCategoryMenuRow">
-				<div class="scratchCategoryMenuItem">
-					<div class="scratchCategoryItemBubble" style="background-color: rgb(76, 191, 230); border-color: rgb(46, 142, 184);"></div>
-					<div class="scratchCategoryMenuItemLabel">Sensing</div>
-				</div>
-			</div>
-			<div class="scratchCategoryMenuRow">
-				<div class="scratchCategoryMenuItem">
-					<div class="scratchCategoryItemBubble" style="background-color: rgb(64, 191, 74); border-color: rgb(56, 148, 56);"></div>
-					<div class="scratchCategoryMenuItemLabel">Operators</div>
-				</div>
-			</div>
-			<div class="scratchCategoryMenuRow">
-				<div class="scratchCategoryMenuItem">
-					<div class="scratchCategoryItemBubble" style="background-color: rgb(255, 140, 26); border-color: rgb(219, 110, 0);"></div>
-					<div class="scratchCategoryMenuItemLabel">Variables</div>
-				</div>
-			</div>
-			<div class="scratchCategoryMenuRow">
-				<div class="scratchCategoryMenuItem">
-					<div class="scratchCategoryItemBubble" style="background-color: rgb(255, 102, 128); border-color: rgb(255, 77, 106);"></div>
-					<div class="scratchCategoryMenuItemLabel">My Blocks</div>
-				</div>
-			</div>
-		</div>
-		<div id="blockList" style="max-height:400px;overflow:auto;position: absolute;left:60px;background-color: rgba(255,255,255,0.6);">
-		</div>
-		</div>
-		<div id="blockEditArea" style="overflow:auto; position:absolute; left:500px; right:0px; height:600px;">
-		</div>
-				</td>
-			</tr>
-		<div class="blocklyWidgetDiv fieldTextInput" style="display: none; width: 41px; height: 33px; margin-left: 0px; border-radius: 16.5px; border-color: rgb(51, 115, 204); transition: box-shadow 0.25s; box-shadow: rgba(255, 255, 255, 0.3) 0px 0px 0px 4px;">
-			<input id="textInput" class="blocklyHtmlInput" style="border-radius: 16.5px; font-size: 14px;">
-		</div>
-*/
-
-/*
-function setBlock(parent, blockInfo){
-	
-	let block = createElementSVG("g");
-	//block.setAttribute("transform", `translate(0,${parent.getBBox().height})`);
-	parent.appendChild(block);
-	
-	block.appendChild(createBlockPath());
-	let offsetX = 0;
-	for(let item of Spec.parse(blockInfo)){
-		let element = setBlockArg(item, offsetX);
-		block.appendChild(element);
-		offsetX += element.getBBox().width;
-	}
-	return block;
-}
 
 function setBlockArg(item, offsetX){
 	let element;
