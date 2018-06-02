@@ -24,6 +24,8 @@ const {
 	INSERT_PT_CHILD
 } = require("blockly/graphic/BlockConst");
 
+let online = require("./libs/Primitives");
+
 function createBlockContextMenu(block){
 	let menu = new nw.Menu();
 	menu.append(new nw.MenuItem({ label: 'Item A', click(){console.log("A click", block)}}));
@@ -60,6 +62,9 @@ function setBlockList(parent, blockInfoList){
 		for(let blockInfo of group.items){
 			if(blockInfo.id){
 				offlineDict[blockInfo.id] = blockInfo.cpp;
+				if(blockInfo.run){
+					functionProvider.register(blockInfo.run, blockInfo.id);
+				}
 			}
 			let svg = SVG.createElement("svg");
 			parent.appendChild(svg);
@@ -131,6 +136,7 @@ function createDropdownBtnByData(id, dataList, defaultIndex=0, type="btn-info"){
 	let dropdown = createDropdownBtn(id, dataList[defaultIndex][0], type);
 	dropdown.data("value", dataList[defaultIndex][1]);
 	dropdown.change(function(evt){
+		evt.stopPropagation();
 		let value = dataList[$(evt.target).index()];
 		dropdown.children(":first-child").text(value[0]);
 		dropdown.data("value", value[1]);
@@ -172,12 +178,25 @@ $("#header").append(
 	createDropdownBtnByData("language_btn", [["English","en"],["简体中文", "zh-cn"]]).tooltip(tooltip)
 );
 (function(){
+	const SerialPort = require("./libs/SerialPort");
 	const port_btn = $("#port_btn");
 	window.setPort = port => {
 		port_btn[0].dataset.value = port;
 		$("#port_btn>:first-child").text(port || "Not Connected");
-		//board_btn[0].firstElementChild.innerText = port;
-		console.log("change port",port);
+		if(port){
+			new SerialPort(port, {bitrate:115200}, function(msg){
+				if(!msg){
+					window.serial = this;
+				}else{
+					Messenger().post(`serial error: ${msg}`);
+					setPort("");
+				}
+			});
+		}else{
+			if(window.serial){
+				window.serial.close();
+			}
+		}
 	}
 	port_btn.on("show.bs.dropdown", function(evt){
 		let value = port_btn[0].dataset.value;
@@ -294,6 +313,22 @@ $("#source_code_type").change(showCode);
 
 createCategoryMenu();
 $("#blockEditAreaContainer").append(blockEditArea);
+
+const {Interpreter, FunctionProvider, Thread} = require("blockly");
+
+const functionProvider = new FunctionProvider();
+
+const interpreter = new Interpreter(functionProvider);
+interpreter.run();
+
+$("#btn_run").click(function(){
+	let syntaxTree = blockEditor.genSyntaxTree();
+	if(syntaxTree){
+		console.log(syntaxTree);
+		interpreter.execute(syntaxTree);
+		console.log(interpreter.castCodeListToString(interpreter.compile(syntaxTree)));
+	}
+});
 
 
 function createCategoryMenu(){
