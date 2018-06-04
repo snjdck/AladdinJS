@@ -10,7 +10,7 @@ const CONFIG_PATH = "http://ox2nuzbz7.bkt.clouddn.com/config/weeecode_version.js
 let HOME_PAGE = "http://www.weeemake.com/download/";
 
 const html = `
-<div class="modal" tabindex="-1"">
+<div class="modal" tabindex="-1">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
