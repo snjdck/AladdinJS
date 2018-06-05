@@ -10,8 +10,8 @@ const CONFIG_PATH = "http://ox2nuzbz7.bkt.clouddn.com/config/weeecode_version.js
 let HOME_PAGE = "http://www.weeemake.com/download/";
 
 const html = `
-<div class="modal" tabindex="-1">
-	<div class="modal-dialog">
+<div class="modal fade" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title">There is a newer version</h5>

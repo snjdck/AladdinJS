@@ -1,5 +1,7 @@
 "use strict";
 
+//require("./libs/AppVersionChecker");
+
 const SVG = require("fileformats/svg");
 const Spec = require("blockly/graphic/Spec");
 const BlockBase = require("blockly/graphic/BlockBase");
@@ -50,15 +52,8 @@ const offlineDict = Object.create(null);
 
 function setBlockList(parent, blockInfoList){
 	parent.innerHTML = "";
-	/*
-	while(parent.hasChildNodes()){
-		parent.removeChild(parent.childNodes[0]);
-	}*/
 	for(let group of blockInfoList){
-		let span = document.createElement("span");
-		span.setAttribute("id", group.name);
-		parent.appendChild(span);
-		span.innerHTML = group.name;
+		$(parent).append(`<div data-tag="${group.name}">${group.name}</div>`);
 		for(let blockInfo of group.items){
 			if(blockInfo.id){
 				offlineDict[blockInfo.id] = blockInfo.cpp;
@@ -332,25 +327,54 @@ $("#btn_run").click(function(){
 
 
 function createCategoryMenu(){
-	let menu = document.getElementById("menu");
+	let html = BlockListDef.map(({name}) => `
+		<div data-tag="${name}" style="text-align:center;vertical-align:middle;">
+			<embed type="image/svg+xml" width="36" height="28" style="pointer-events:none;" src="icons/${name}.svg"></embed>
+			<span style="user-select: none;cursor:default;">${name}</span>
+		</div>
+	`).join(`<hr style="width:80%;">`);
+	$("#menu").append(html).children("div").mousedown(function(evt){
+		evt.stopPropagation();
+		//$("#menu > div").css("background-color", "");
+		//$(this).css("background-color", "yellow");
+		$("#blockList").show();
+		let tag = $(this).data("tag");
+		let top = $(`#blockList > [data-tag=${tag}]`).position().top;
+		//document.getElementById("blockList").scrollTop += top;
+		$("#blockList").animate({scrollTop: `+=${top}`}, "fast");
+	});
+	$(document).mousedown(() => {
+		$("#menu > div").css("background-color", "");
+		$("#blockList").hide();
+	});
+	$("#blockList").on("scroll", function(){
+		let itemList = $(this).children("[data-tag]").toArray();
+		for(let i=itemList.length-1; i>=0; --i){
+			let item = $(itemList[i]);
+			if(item.position().top <= 10){
+				let menuList = $("#menu").children();
+				menuList.css("background-color", "");
+				menuList.filter(`div[data-tag=${item.data("tag")}]`).css("background-color","yellow")
+				return;
+			}
+		}
+	});
+	/*
 	for(let item of BlockListDef){
-		let div = document.createElement("div");
-		div.setAttribute("style", " text-align: center; background-clip: content-box;-webkit-box-sizing:border-box;");
+		let div = document.createElement("li");
+		div.setAttribute("class", "nav-item");
+		div.dataset.tag = item.name;
+		div.setAttribute("style", " text-align: center;vertical-align:middle;");
 		let bubble = document.createElement("embed");
 		bubble.setAttribute("type", "image/svg+xml");
 		bubble.setAttribute("width", 36);
 		bubble.setAttribute("height", 28);
 		bubble.setAttribute("src", "icons/" + item.name + ".svg");
 		bubble.setAttribute("style", "pointer-events: none;");
-		let label = document.createElement("a");
-		label.setAttribute("class","navbar-link");
-		label.setAttribute("href","#"+item.name);
-		label.innerHTML = item.name;
-
-		div.appendChild(bubble);
-		div.appendChild(label);
+		$(div).append(bubble, `<a href="#${item.name}">${item.name}</a>`, `<hr style="width:80%;">`);
 		menu.appendChild(div);
 	}
+	
 	let menuChildNodes = Array.from(menu.childNodes);
 	function findNode(path){
 		for(let node of path){
@@ -373,11 +397,14 @@ function createCategoryMenu(){
 			blockList.style.display = "none";
 		}
 	})
+
 	return menu;
+	*/
 }
 
 setBlockList(blockList, BlockListDef);
-blockList.style.display = "none";
+//blockList.style.display = "none";
+$("#blockList").hide();
 
 
 (function(deleteArea){
@@ -401,6 +428,8 @@ blockList.style.display = "none";
 		deleteFlag = false;
 	}
 })(document.getElementById("deleteArea"));
+
+
 
 
 /*
