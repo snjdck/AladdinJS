@@ -14,4 +14,3 @@ Notifier[InjectTag] = {module: Module};
 export class Model extends Notifier {}
 export class Service extends Notifier {}
 export class Controller extends Notifier {}
-export class View extends Notifier {}

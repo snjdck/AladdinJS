@@ -5,3 +5,4 @@ export {default as Msg} from './src/Msg';
 export * from './src/Msg';
 export * from './src/Notifier';
 export * from './src/react';
+export {InjectTag} from 'ioc';

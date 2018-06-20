@@ -1,7 +1,7 @@
 
 import Injector from 'ioc';
 import Msg from './Msg';
-import {Model, Service, View, Controller} from './Notifier';
+import {Model, Service, Controller} from './Notifier';
 import {isBaseClass} from './utils';
 
 class Application
@@ -52,7 +52,6 @@ class Application
 		let moduleList = Array.from(this.moduleDict.values());
 		for(let module of moduleList) initAllModels(module);
 		for(let module of moduleList) initAllServices(module);
-		for(let module of moduleList) initAllViews(module);
 		for(let module of moduleList) initAllControllers(module);
 	}
 }
@@ -116,11 +115,6 @@ const initAllServices = initComponents(function(v){
 		}
 	}
 });
-
-const initAllViews = initComponents(
-	v => isBaseClass(v, View),
-	(module, set) => set.forEach(v => module.regView(v))
-);
 
 const initAllControllers = initComponents(
 	v => isBaseClass(v, Controller),
