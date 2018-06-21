@@ -6,7 +6,21 @@ class ReactApplication extends Application
 {
 	onStartup(element, container){
 		super.onStartup();
-		registerViews(this, ReactDOM.render(element, container));
+		this.registerViews(ReactDOM.render(element, container));
+	}
+	registerViews(component, module=null){
+		let moduleStack = [];
+		for(let node of walk(component)){
+			if(node === undefined){
+				module = moduleStack.pop();
+				continue;
+			}
+			moduleStack.push(module);
+			if(node instanceof ModuleComponent)
+				module = this.getModuleByRootViewName(node.constructor.name);
+			node.module = module;
+			module.regView(node);
+		}
 	}
 }
 
@@ -34,22 +48,6 @@ const walk = (function(){
 	}
 	return component => _walk(component._reactInternalFiber);
 })();
-
-function registerViews(application, component){
-	let moduleStack = [];
-	let module;
-	for(let node of walk(component)){
-		if(node === undefined){
-			module = moduleStack.pop();
-			continue;
-		}
-		moduleStack.push(module);
-		if(node instanceof ModuleComponent)
-			module = application.getModuleByRootViewName(node.constructor.name);
-		node.module = module;
-		module.regView(node);
-	}
-}
 
 export {
 	ModuleComponent,

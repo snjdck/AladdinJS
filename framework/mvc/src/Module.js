@@ -34,7 +34,7 @@ class Module
 	}
 
 	regView(view){
-		console.assert(!this.viewSet.has(view));
+		if(this.viewSet.has(view))return;
 		this.viewSet.add(view);
 		this.injector.injectInto(view);
 		safeCall(view, "onReg");
