@@ -1,16 +1,14 @@
 
 import Injector from 'ioc';
 import Msg from './Msg';
-import {handleMsg, safeCall} from './utils';
+import safeCall from 'lambda/safeCall';
 
 class Module
 {
 	constructor(){
-		Object.defineProperties(this, {
-			injector: {value: new Injector()},
-			controllerDict: {value: new Map()},
-			viewSet: {value: new Set()}
-		});
+		Object.defineProperty(this, "injector", {value: new Injector()});
+		Object.defineProperty(this, "controllerDict", {value: new Map()});
+		Object.defineProperty(this, "viewSet", {value: new Set()});
 		this.injector.mapValue(Module, this, null, null);
 		this.injector.mapValue(Injector, this.injector, null, null);
 	}
@@ -61,7 +59,16 @@ class Module
 		this.controllerDict.delete(controllerType);
 	}
 
-	collectComponents(){return [];}
+	collectAllModels(){return [];}
+	collectAllServices(){return [];}
+	collectAllControllers(){return [];}
+}
+
+function handleMsg(dict, msg){
+	for(let target of dict.values()){
+		if(msg.isProcessCanceled())break;
+		safeCall(target, msg.name, msg);
+	}
 }
 
 export default Module;

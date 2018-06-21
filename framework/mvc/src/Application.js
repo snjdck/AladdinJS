@@ -1,16 +1,12 @@
 
 import Injector from 'ioc';
 import Msg from './Msg';
-import {Model, Service, Controller} from './Notifier';
-import {isBaseClass} from './utils';
 
 class Application
 {
 	constructor(){
-		Object.defineProperties(this, {
-			injector: {value: new Injector()},
-			moduleDict: {value: new Map()}
-		});
+		Object.defineProperty(this, "injector",   {value: new Injector()});
+		Object.defineProperty(this, "moduleDict", {value: new Map()});
 		this.injector.mapValue(Application, this, null, null);
 		this.injector.mapValue(Injector, this.injector, null, null);
 	}
@@ -56,17 +52,8 @@ class Application
 	}
 }
 
-const initComponents = (filter, initFn) => module => initFn(module, module.collectComponents().filter(filter));
-
-const initAllModels = initComponents(function(v){
-	if(!Array.isArray(v))
-		return isBaseClass(v, Model);
-	if(v.length == 2)
-		return isBaseClass(v[1], Model)
-	if(v.length == 1)
-		return isBaseClass(v[0], Model)
-}, function(module, set){
-	for(let v of set){
+function initAllModels(module){
+	for(let v of module.collectAllModels()){
 		if(Array.isArray(v)){
 			if(v.length == 2){
 				module.regModel(v[1], v[0]);
@@ -83,21 +70,10 @@ const initAllModels = initComponents(function(v){
 			module.regModel(v);
 		}
 	}
-});
+}
 
-const initAllServices = initComponents(function(v){
-	if(!Array.isArray(v))
-		return isBaseClass(v, Service);
-	if(v.length == 3)
-		return true;
-	if(v.length == 1)
-		return isBaseClass(v[0], Service);
-	if(v.length == 2){
-		return (typeof v[1] == "boolean") || isBaseClass(v[1], Service);
-	}
-	throw new Error(v);
-}, function(module, set){
-	for(let v of set){
+function initAllServices(module){
+	for(let v of module.collectAllServices()){
 		if(!Array.isArray(v)){
 			module.regService(v, v);
 		}else if(v.length == 3){
@@ -114,11 +90,12 @@ const initAllServices = initComponents(function(v){
 			throw new Error(v);
 		}
 	}
-});
+}
 
-const initAllControllers = initComponents(
-	v => isBaseClass(v, Controller),
-	(module, set) => set.forEach(v => module.regController(v))
-);
+function initAllControllers(module){
+	for(let v of module.collectAllControllers()){
+		module.regController(v);
+	}
+}
 
 export default Application;

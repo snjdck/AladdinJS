@@ -1,3 +1,6 @@
+import newClass from 'lambda/newClass';
+import safeCall from 'lambda/safeCall';
+import collectAllTypes from 'lambda/collectAllTypes';
 
 class InjectionTypeValue
 {
@@ -46,8 +49,6 @@ class InjectionTypeSingleton
 	}
 }
 
-const newClass = klass => klass.prototype ? new klass() : klass();
-
 class Injector
 {
 	static calcKey(type, id=null, isMeta=false){
@@ -60,15 +61,8 @@ class Injector
 	}
 
 	constructor(parent=null){
-		Object.defineProperties(this, {
-			parent: {
-				value: parent,
-				writable: true
-			},
-			ruleDict: {
-				value: Object.create(null)
-			}
-		});
+		Object.defineProperty(this, 'parent', {value: parent, writable: true});
+		Object.defineProperty(this, 'ruleDict', {value: Object.create(null)});
 	}
 
 	mapValue(type, value, id=null, realInjector=true){
@@ -109,18 +103,12 @@ class Injector
 	}
 
 	injectInto(target){
-		let queue = [];
-		for(let klass=target.constructor; klass; klass=Object.getPrototypeOf(klass)){
-			queue.push(klass[InjectTag]);
-		}
-		let injection = queue.filter(Boolean).reduceRight((prev, curr) => Object.assign(prev, curr), Object.create(null));
+		let queue = Array.from(collectAllTypes(target)).map(v => v[InjectTag]).filter(Boolean);
+		let injection = queue.reduceRight((prev, curr) => Object.assign(prev, curr), Object.create(null));
 		for(let [k, v] of Object.entries(injection)){
 			target[k] = Array.isArray(v) ? this.getInstance(...v) : this.getInstance(v);
 		}
-		let callback = target[InjectTag];
-		if(callback instanceof Function){
-			callback.call(target, this);
-		}
+		safeCall(target, InjectTag, this);
 	}
 }
 

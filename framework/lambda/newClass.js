@@ -1,0 +1,1 @@
+export default klass => klass.prototype ? new klass() : klass();

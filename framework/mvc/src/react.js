@@ -43,9 +43,8 @@ function registerViews(application, component){
 			module = moduleStack.pop();
 			continue;
 		}
-		let flag = node instanceof ModuleComponent;
 		moduleStack.push(module);
-		if(flag)
+		if(node instanceof ModuleComponent)
 			module = application.getModuleByRootViewName(node.constructor.name);
 		node.module = module;
 		module.regView(node);
