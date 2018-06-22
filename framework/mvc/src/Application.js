@@ -13,6 +13,7 @@ class Application
 
 	regModule(module){
 		console.assert(!(this.hasStartup || this.moduleDict.has(module.constructor)));
+		Object.defineProperty(module, 'application', {value: this});
 		this.moduleDict.set(module.constructor, module);
 		module.injector.parent = this.injector;
 		return this;

@@ -1,6 +1,7 @@
 import {Component} from 'react';
 import ReactDOM from 'react-dom';
 import Application from './Application';
+import Module from './Module';
 
 class ReactApplication extends Application
 {
@@ -10,7 +11,7 @@ class ReactApplication extends Application
 	}
 	registerViews(component, module=null){
 		let moduleStack = [];
-		for(let node of walk(component)){
+		for(let node of traverseChildren(component)){
 			if(node === undefined){
 				module = moduleStack.pop();
 				continue;
@@ -21,6 +22,13 @@ class ReactApplication extends Application
 			node.module = module;
 			module.regView(node);
 		}
+	}
+}
+
+class ReactModule extends Module
+{
+	registerViews(component){
+		this.application.registerViews(component, this);
 	}
 }
 
@@ -37,20 +45,35 @@ class ViewComponent extends Component
 
 class ModuleComponent extends ViewComponent{}
 
-const walk = (function(){
-	function* _walk(fiber){
+function isViewComponent(fiber){
+	return fiber.stateNode instanceof ViewComponent;
+}
+
+const traverseChildren = (function(){
+	function* walk(fiber){
 		for(;fiber;fiber=fiber.sibling){
-			let flag = fiber.stateNode instanceof ViewComponent;
+			let flag = isViewComponent(fiber);
 			if(flag)yield fiber.stateNode;
-			yield* _walk(fiber.child);
+			yield* walk(fiber.child);
 			if(flag)yield;
 		}
 	}
-	return component => _walk(component._reactInternalFiber);
+	return component => walk(component._reactInternalFiber);
 })();
+
+function* traverseParents(component){
+	let fiber = component._reactInternalFiber;
+	while(fiber.return){
+		fiber = fiber.return;
+		if(isViewComponent(fiber)){
+			yield fiber.stateNode;
+		}
+	}
+}
 
 export {
 	ModuleComponent,
 	ViewComponent,
-	ReactApplication
+	ReactApplication,
+	ReactModule
 };
