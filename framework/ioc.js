@@ -103,7 +103,7 @@ class Injector
 	}
 
 	injectInto(target){
-		let queue = Array.from(collectAllTypes(target)).map(v => v[InjectTag]).filter(Boolean);
+		let queue = Array.from(collectAllTypes(target)).filter(v => v.hasOwnProperty(InjectTag)).map(v => v[InjectTag]);
 		let injection = queue.reduceRight((prev, curr) => Object.assign(prev, curr), Object.create(null));
 		for(let [k, v] of Object.entries(injection)){
 			target[k] = Array.isArray(v) ? this.getInstance(...v) : this.getInstance(v);
