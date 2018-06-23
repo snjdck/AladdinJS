@@ -4,6 +4,7 @@ import Application from './Application';
 import Module from './Module';
 import createBatchQueue from 'lambda/createBatchQueue';
 import findTopParents from 'lambda/findTopParents';
+import {wrapMethod} from 'lambda/wrap';
 
 class ReactApplication extends Application
 {
@@ -30,12 +31,10 @@ class ReactApplication extends Application
 
 class ViewComponent extends Component
 {
-	UNSAFE_componentWillMount(){
-		enqueue(this);
-	}
-	componentDidMount(){}
-	componentWillUnmount(){
-		this.module.delView(this);
+	constructor(props){
+		super(props);
+		wrapMethod(this, 'UNSAFE_componentWillMount',  () => enqueue(this));
+		wrapMethod(this, 'componentWillUnmount', null, () => this.module.delView(this));
 	}
 	notify(msgName, msgData){
 		return this.module.notify(msgName, msgData);
