@@ -1,7 +1,6 @@
 import {Component} from 'react';
 import ReactDOM from 'react-dom';
 import Application from './Application';
-import Module from './Module';
 import createBatchQueue from 'lambda/createBatchQueue';
 import findTopParents from 'lambda/findTopParents';
 import {wrapMethod} from 'lambda/wrap';
@@ -44,10 +43,8 @@ class ViewComponent extends Component
 class ModuleComponent extends ViewComponent{}
 
 const enqueue = createBatchQueue(queue => findTopParents(queue, isSubFiber).forEach(registerViews));
-
-function isViewComponent(fiber){
-	return fiber.stateNode instanceof ViewComponent;
-}
+const isViewComponent = fiber => fiber.stateNode instanceof ViewComponent;
+const getFiber = component => component._reactInternalFiber;
 
 const traverseChildren = (function(){
 	function* walk(fiber, skipSibling=false){
@@ -59,12 +56,12 @@ const traverseChildren = (function(){
 			if(skipSibling)break;
 		}
 	}
-	return component => walk(component._reactInternalFiber, true);
+	return component => walk(getFiber(component), true);
 })();
 
 function isSubFiber(parent, child){
-	parent = parent._reactInternalFiber;
-	child  =  child._reactInternalFiber;
+	parent = getFiber(parent);
+	child  = getFiber(child);
 	for(; child; child = child.return){
 		if(child === parent){
 			return true;
@@ -73,14 +70,13 @@ function isSubFiber(parent, child){
 }
 
 function registerViews(component){
-	let fiber = component._reactInternalFiber;
+	let fiber = getFiber(component);
 	while(fiber.return){
 		fiber = fiber.return;
+		if(!isViewComponent(fiber))continue;
 		let module = fiber.stateNode.module;
-		if(isViewComponent(fiber) && module instanceof Module){
-			module.application.registerViews(component, module);
-			return;
-		}
+		module.application.registerViews(component, module);
+		return;
 	}
 	let application = fiber.stateNode.containerInfo._reactApplication;
 	application.registerViews(component);
