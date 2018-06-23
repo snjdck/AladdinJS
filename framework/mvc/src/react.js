@@ -1,6 +1,7 @@
 import {Component} from 'react';
 import ReactDOM from 'react-dom';
 import Application from './Application';
+import Notifier from './Notifier';
 import createBatchQueue from 'lambda/createBatchQueue';
 import findTopParents from 'lambda/findTopParents';
 import {wrapMethod} from 'lambda/wrap';
@@ -22,24 +23,15 @@ class ReactApplication extends Application
 			moduleStack.push(module);
 			if(node instanceof ModuleComponent)
 				module = this.getModuleByRootViewName(node.constructor.name);
-			node.module = module;
 			module.regView(node);
 		}
 	}
 }
 
-class ViewComponent extends Component
-{
-	constructor(props){
-		super(props);
-		wrapMethod(this, 'UNSAFE_componentWillMount',  () => enqueue(this));
-		wrapMethod(this, 'componentWillUnmount', null, () => this.module.delView(this));
-	}
-	notify(msgName, msgData){
-		return this.module.notify(msgName, msgData);
-	}
-}
-
+const ViewComponent = Notifier(Component, function(){
+	wrapMethod(this, 'UNSAFE_componentWillMount',  () => enqueue(this));
+	wrapMethod(this, 'componentWillUnmount', null, () => this.module.delView(this));
+});
 class ModuleComponent extends ViewComponent{}
 
 const enqueue = createBatchQueue(queue => findTopParents(queue, isSubFiber).forEach(registerViews));
