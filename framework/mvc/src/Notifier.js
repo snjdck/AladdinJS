@@ -1,17 +1,15 @@
 import {InjectTag} from 'ioc';
 import Module from './Module';
+import defineClass from 'lambda/defineClass';
 
-function Notifier(baseClass=Object, initFn=null){
-	return class extends baseClass {
-		static [InjectTag] = {module: Module};
-		constructor(...args){
-			super(...args);
-			if(initFn)initFn.apply(this, args);
-		}
-		notify(msgName, msgData){
-			return this.module.notify(msgName, msgData);
-		}
+const instanceProps = {
+	notify(msgName, msgData){
+		return this.module.notify(msgName, msgData);
 	}
-}
+};
 
-export default Notifier;
+const staticProps = {
+	[InjectTag]: {module: Module}
+};
+
+export default (baseClass, initFn) => defineClass(baseClass, initFn, instanceProps, staticProps);
