@@ -21,8 +21,8 @@ class ReactApplication extends Application
 				continue;
 			}
 			moduleStack.push(module);
-			if(node instanceof ModuleComponent)
-				module = this.getModuleByRootViewName(node.constructor.name);
+			if(node.props.module)
+				module = this.getModule(node.props.module);
 			module.regView(node);
 		}
 	}
@@ -32,7 +32,6 @@ const ViewComponent = Notifier(Component, function(){
 	wrapMethod(this, 'UNSAFE_componentWillMount',  () => enqueue(this));
 	wrapMethod(this, 'componentWillUnmount', null, () => this.module.delView(this));
 });
-class ModuleComponent extends ViewComponent{}
 
 const enqueue = createBatchQueue(queue => findTopParents(queue, isSubFiber).forEach(registerViews));
 const isViewComponent = fiber => fiber.stateNode instanceof ViewComponent;
@@ -75,7 +74,6 @@ function registerViews(component){
 }
 
 export {
-	ModuleComponent,
-	ViewComponent,
-	ReactApplication
+	ReactApplication,
+	ViewComponent
 };

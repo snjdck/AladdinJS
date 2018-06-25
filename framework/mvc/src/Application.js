@@ -20,13 +20,14 @@ class Application
 	}
 
 	getModule(moduleType){
-		return this.moduleDict.get(moduleType);
-	}
-
-	getModuleByRootViewName(rootViewName){
-		if(!rootViewName)return;
+		if(moduleType instanceof Function){
+			return this.moduleDict.get(moduleType);
+		}
+		if(typeof moduleType !== 'string'){
+			return;
+		}
 		for(let module of this.moduleDict.values()){
-			if(module.rootViewName == rootViewName){
+			if(module.constructor.name === moduleType){
 				return module;
 			}
 		}
