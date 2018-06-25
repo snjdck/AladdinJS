@@ -6,7 +6,6 @@ export const MsgModuleStartup = Msg.ModuleStartup;
 export const Model = Notifier();
 export const Service = Notifier();
 export const Controller = Notifier();
-export {default as Module} from './src/Module';
 export {InjectTag} from 'ioc';
 export * from './src/Msg';
 export * from './src/react';

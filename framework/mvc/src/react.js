@@ -61,16 +61,15 @@ function isSubFiber(parent, child){
 }
 
 function registerViews(component){
+	let module;
 	let fiber = getFiber(component);
 	while(fiber.return){
 		fiber = fiber.return;
-		if(!isViewComponent(fiber))continue;
-		let module = fiber.stateNode.module;
-		module.application.registerViews(component, module);
-		return;
+		if(module || !isViewComponent(fiber))continue;
+		module = fiber.stateNode.module;
 	}
 	let application = fiber.stateNode.containerInfo._reactApplication;
-	application.registerViews(component);
+	application.registerViews(component, module);
 }
 
 export {

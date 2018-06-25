@@ -15,7 +15,6 @@ class Application
 	regModule(meta){
 		let module = new Module(meta);
 		console.assert(!(this.hasStartup || (module.name in this.moduleDict)));
-		Object.defineProperty(module, 'application', {value: this});
 		this.moduleDict[module.name] = module;
 		module.injector.parent = this.injector;
 		return this;
