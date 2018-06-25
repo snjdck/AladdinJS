@@ -1,40 +1,32 @@
 
 import Injector from 'ioc';
+import Module from './Module';
 import Msg from './Msg';
 
 class Application
 {
 	constructor(){
 		Object.defineProperty(this, "injector",   {value: new Injector()});
-		Object.defineProperty(this, "moduleDict", {value: new Map()});
+		Object.defineProperty(this, "moduleDict", {value: Object.create(null)});
 		this.injector.mapValue(Application, this, null, null);
 		this.injector.mapValue(Injector, this.injector, null, null);
 	}
 
-	regModule(module){
-		console.assert(!(this.hasStartup || this.moduleDict.has(module.constructor)));
+	regModule(meta){
+		let module = new Module(meta);
+		console.assert(!(this.hasStartup || (module.name in this.moduleDict)));
 		Object.defineProperty(module, 'application', {value: this});
-		this.moduleDict.set(module.constructor, module);
+		this.moduleDict[module.name] = module;
 		module.injector.parent = this.injector;
 		return this;
 	}
 
-	getModule(moduleType){
-		if(moduleType instanceof Function){
-			return this.moduleDict.get(moduleType);
-		}
-		if(typeof moduleType !== 'string'){
-			return;
-		}
-		for(let module of this.moduleDict.values()){
-			if(module.constructor.name === moduleType){
-				return module;
-			}
-		}
+	getModule(moduleName){
+		return this.moduleDict[moduleName];
 	}
 
 	notify(msgName, msgData){
-		for(let module of this.moduleDict.values()){
+		for(let module of Object.values(this.moduleDict)){
 			module.notify(msgName, msgData);
 		}
 	}
@@ -47,7 +39,7 @@ class Application
 	}
 
 	onStartup(){
-		let moduleList = Array.from(this.moduleDict.values());
+		let moduleList = Array.from(Object.values(this.moduleDict));
 		for(let module of moduleList) initAllModels(module);
 		for(let module of moduleList) module.activateRoles();
 		for(let module of moduleList) initAllServices(module);

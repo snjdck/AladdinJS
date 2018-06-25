@@ -5,13 +5,16 @@ import safeCall from 'lambda/safeCall';
 
 class Module
 {
-	constructor(){
+	constructor(meta){
+		Object.defineProperty(this, "name", {value: meta.name});
+		Object.defineProperty(this, "meta", {value: meta});
 		Object.defineProperty(this, "injector", {value: new Injector()});
 		Object.defineProperty(this, "controllerDict", {value: new Map()});
 		Object.defineProperty(this, "viewSet", {value: new Set()});
 		Object.defineProperty(this, "roleSet", {value: new Set()});
 		this.injector.mapValue(Module, this, null, null);
 		this.injector.mapValue(Injector, this.injector, null, null);
+		assertMeta(meta);
 	}
 
 	notify(msgName, msgData=null){
@@ -69,9 +72,9 @@ class Module
 		this.roleSet.clear();
 	}
 
-	collectAllModels(){return [];}
-	collectAllServices(){return [];}
-	collectAllControllers(){return [];}
+	collectAllModels(){return this.meta.models;}
+	collectAllServices(){return this.meta.services;}
+	collectAllControllers(){return this.meta.controllers;}
 }
 
 function handleMsg(dict, msg){
@@ -79,6 +82,13 @@ function handleMsg(dict, msg){
 		if(msg.isProcessCanceled())break;
 		safeCall(target, msg.name, msg);
 	}
+}
+
+function assertMeta(meta){
+	console.assert(typeof meta.name === 'string', 'module must have a name!');
+	console.assert(Array.isArray(meta.models), 'models must provided!');
+	console.assert(Array.isArray(meta.services), 'services must provided!');
+	console.assert(Array.isArray(meta.controllers), 'controllers must provided!');
 }
 
 export default Module;
