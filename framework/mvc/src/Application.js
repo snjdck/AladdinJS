@@ -44,6 +44,7 @@ class Application
 		for(let module of moduleList) initAllServices(module);
 		for(let module of moduleList) module.activateRoles();
 		for(let module of moduleList) initAllControllers(module);
+		for(let module of moduleList) module.onStartup();
 	}
 }
 

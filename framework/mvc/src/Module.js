@@ -7,7 +7,6 @@ class Module
 {
 	constructor(meta){
 		Object.defineProperty(this, "name", {value: meta.name});
-		Object.defineProperty(this, "meta", {value: meta});
 		Object.defineProperty(this, "injector", {value: new Injector()});
 		Object.defineProperty(this, "controllerDict", {value: new Map()});
 		Object.defineProperty(this, "viewSet", {value: new Set()});
@@ -15,6 +14,7 @@ class Module
 		this.injector.mapValue(Module, this, null, null);
 		this.injector.mapValue(Injector, this.injector, null, null);
 		assertMeta(meta);
+		this.meta = meta;
 	}
 
 	notify(msgName, msgData=null){
@@ -70,6 +70,10 @@ class Module
 		for(let role of this.roleSet)
 			this.injector.getInstance(role);
 		this.roleSet.clear();
+	}
+
+	onStartup(){
+		delete this.meta;
 	}
 
 	collectAllModels(){return this.meta.models;}
