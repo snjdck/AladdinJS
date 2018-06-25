@@ -11,7 +11,7 @@ class ReactApplication extends Application
 	onStartup(element, container){
 		super.onStartup();
 		container._reactApplication = this;
-		ReactDOM.render(element, container);
+		this.registerViews(ReactDOM.render(element, container));
 	}
 	registerViews(component, module=null){
 		let moduleStack = [];
@@ -61,6 +61,7 @@ function isSubFiber(parent, child){
 }
 
 function registerViews(component){
+	if(component.module)return;
 	let module;
 	let fiber = getFiber(component);
 	while(fiber.return){
