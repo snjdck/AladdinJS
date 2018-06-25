@@ -49,7 +49,9 @@ class Application
 	onStartup(){
 		let moduleList = Array.from(this.moduleDict.values());
 		for(let module of moduleList) initAllModels(module);
+		for(let module of moduleList) module.activateRoles();
 		for(let module of moduleList) initAllServices(module);
+		for(let module of moduleList) module.activateRoles();
 		for(let module of moduleList) initAllControllers(module);
 	}
 }

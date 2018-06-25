@@ -9,6 +9,7 @@ class Module
 		Object.defineProperty(this, "injector", {value: new Injector()});
 		Object.defineProperty(this, "controllerDict", {value: new Map()});
 		Object.defineProperty(this, "viewSet", {value: new Set()});
+		Object.defineProperty(this, "roleSet", {value: new Set()});
 		this.injector.mapValue(Module, this, null, null);
 		this.injector.mapValue(Injector, this.injector, null, null);
 	}
@@ -23,10 +24,13 @@ class Module
 	regService(serviceInterface, serviceClass, asLocal=false){
 		let injector = asLocal ? this.injector : this.injector.parent;
 		injector.mapSingleton(serviceInterface, serviceClass, null, this.injector);
+		this.roleSet.add(serviceInterface);
 	}
 
 	regModel(model, modelType=null){
-		this.injector.mapValue(modelType || model.constructor, model);
+		if(!modelType)modelType = model.constructor;
+		this.injector.mapValue(modelType, model);
+		this.roleSet.add(modelType);
 	}
 
 	delModel(modelType){
@@ -57,6 +61,12 @@ class Module
 		let controller = this.controllerDict.get(controllerType);
 		safeCall(controller, "onDel");
 		this.controllerDict.delete(controllerType);
+	}
+
+	activateRoles(){
+		for(let role of this.roleSet)
+			this.injector.getInstance(role);
+		this.roleSet.clear();
 	}
 
 	collectAllModels(){return [];}
