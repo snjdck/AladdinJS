@@ -3,12 +3,8 @@ import Notifier from './src/Notifier';
 import Msg, {createMsgNames} from './src/Msg';
 import {ReactApplication, ViewComponent} from './src/react';
 
-function createReactApplication(element, container, ...moduleMetaList){
-	let application = new ReactApplication();
-	for(let meta of moduleMetaList)
-		application.regModule(meta);
-	application.startup(element, container);
-	return application;
+function startupReactApplication(element, container, ...moduleMetaList){
+	moduleMetaList.reduce((app, mod) => app.regModule(mod), new ReactApplication()).startup(element, container);
 }
 
 export const MsgModuleStartup = Msg.ModuleStartup;
@@ -19,5 +15,5 @@ export {InjectTag} from 'ioc';
 export {
 	ViewComponent,
 	createMsgNames,
-	createReactApplication
+	startupReactApplication
 }
