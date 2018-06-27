@@ -14,63 +14,52 @@ class ArrayKeyMap
 
 	get(key){
 		let {map, dimention} = this;
-		for(let i=0;;){
-			let k = key[i++];
-			let v = map.get(k);
+		for(let i=0, k; map; map=map.get(k)){
+			k = key[i++];
 			if(i === dimention){
-				return v;
+				return map.get(k);
 			}
-			if(!(v instanceof Map)){
-				return;
-			}
-			map = v;
-		}
-	}
-
-	set(key, value){
-		let {map, dimention} = this;
-		for(let i=0;;){
-			let k = key[i++];
-			if(i === dimention){
-				if(!map.has(k))++this._size;
-				map.set(k, value);
-				return;
-			}
-			let v = map.get(k);
-			if(!(v instanceof Map)){
-				map.set(k, (v = new Map()));
-			}
-			map = v;
 		}
 	}
 
 	has(key){
 		let {map, dimention} = this;
-		for(let i=0;;){
-			let k = key[i++];
-			if(i === dimention)
+		for(let i=0, k; map; map=map.get(k)){
+			k = key[i++];
+			if(i === dimention){
 				return map.has(k);
-			let v = map.get(k);
-			if(!(v instanceof Map))
-				return false;
-			map = v;
+			}
 		}
+		return false;
 	}
 
 	delete(key){
 		let {map, dimention} = this;
-		for(let i=0;;){
-			let k = key[i++];
+		for(let i=0, k; map; map=map.get(k)){
+			k = key[i++];
 			if(i === dimention){
 				let success = map.delete(k);
 				if(success) --this._size;
 				return success;
 			}
-			let v = map.get(k);
-			if(!(v instanceof Map))
-				return false;
-			map = v;
 		}
+		return false;
+	}
+
+	set(key, value){
+		let {map, dimention} = this;
+		for(let i=0, k; ; map=map.get(k)){
+			k = key[i++];
+			if(i === dimention){
+				if(!map.has(k))++this._size;
+				map.set(k, value);
+				break;
+			}
+			if(!map.has(k)){
+				map.set(k, new Map());
+			}
+		}
+		return this;
 	}
 
 	clear(){
@@ -103,10 +92,11 @@ class ArrayKeyMap
 }
 
 function*traverse(map, keys, index, dimention){
-	if(index + 1 < dimention){
+	const nextIndex = index + 1;
+	if(nextIndex < dimention){
 		for(let [k, v] of map){
 			keys[index] = k;
-			yield*traverse(v, keys, index+1, dimention);
+			yield*traverse(v, keys, nextIndex, dimention);
 		}
 	}else{
 		for(let k of map.keys()){
@@ -116,12 +106,4 @@ function*traverse(map, keys, index, dimention){
 	}
 }
 
-let map = new ArrayKeyMap(2);
-map.set(['a', 100], 'aaa');
-map.set(['b', 200], 'bbb');
-console.log(map.get(['a']))
-console.log(map.get(['b']))
-console.log(map.map);
-for(let item of map){
-	console.log(item, "+++++++++")
-}
+export default ArrayKeyMap;
