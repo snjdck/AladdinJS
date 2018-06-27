@@ -15,7 +15,7 @@ class ArrayKeyMap
 	get(key){
 		let {map, dimention} = this;
 		for(let i=0, k; map; map=map.get(k)){
-			k = key[i++];
+			k = fetchKey(key, i++);
 			if(i === dimention){
 				return map.get(k);
 			}
@@ -25,7 +25,7 @@ class ArrayKeyMap
 	has(key){
 		let {map, dimention} = this;
 		for(let i=0, k; map; map=map.get(k)){
-			k = key[i++];
+			k = fetchKey(key, i++);
 			if(i === dimention){
 				return map.has(k);
 			}
@@ -36,7 +36,7 @@ class ArrayKeyMap
 	delete(key){
 		let {map, dimention} = this;
 		for(let i=0, k; map; map=map.get(k)){
-			k = key[i++];
+			k = fetchKey(key, i++);
 			if(i === dimention){
 				let success = map.delete(k);
 				if(success) --this._size;
@@ -49,7 +49,7 @@ class ArrayKeyMap
 	set(key, value){
 		let {map, dimention} = this;
 		for(let i=0, k; ; map=map.get(k)){
-			k = key[i++];
+			k = fetchKey(key, i++);
 			if(i === dimention){
 				if(!map.has(k))++this._size;
 				map.set(k, value);
@@ -89,6 +89,10 @@ class ArrayKeyMap
 	[Symbol.iterator](){
 		return this.entries();
 	}
+}
+
+function fetchKey(key, i){
+	return Array.isArray(key) ? key[i] : i > 0 ? undefined : key;
 }
 
 function*traverse(map, keys, index, dimention){
