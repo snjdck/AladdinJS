@@ -19,11 +19,11 @@ class Injector
 	}
 
 	mapClass(key, value=null, realInjector=null){
-		this.mapRule(key, new InjectionTypeClass(realInjector || this, fetchFunction(key, value)));
+		this.mapRule(key, new InjectionTypeClass(realInjector || this, fetchClass(key, value)));
 	}
 
 	mapSingleton(key, value=null, realInjector=null){
-		this.mapRule(key, new InjectionTypeSingleton(realInjector || this, fetchFunction(key, value)));
+		this.mapRule(key, new InjectionTypeSingleton(realInjector || this, fetchClass(key, value)));
 	}
 
 	mapRule(key, rule){
@@ -59,7 +59,7 @@ class Injector
 	}
 }
 
-function fetchFunction(key, value){
+function fetchClass(key, value){
 	let fn = value || Array.isArray(key) ? key[0] : key;
 	if(typeof fn !== 'function')throw new Error('value must be function!');
 	return fn;
