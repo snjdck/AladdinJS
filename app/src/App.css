@@ -1,0 +1,70 @@
+
+body {
+	overflow: hidden;
+}
+
+#root, .App{
+	height: 100%;
+	width: 100%;
+}
+
+#blocklyDiv {
+	height: 100%;
+	width: 100%;
+}
+
+.scratchCategoryMenuItem {
+	width: 100px;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.blocklyToolboxDiv{
+	top: 32px;
+}
+
+.scratchCategoryMenu {
+	width: 100px;
+}
+
+.blocklyFlyout, .blocklyFlyoutScrollbar {
+	visibility: hidden;
+	/*left: 48px;*/
+}
+
+.scratchCategoryItemBubble {
+	width: 1rem;
+	height:1rem;
+	font-size: 1rem;
+	margin: 0 0.2rem 0.125rem 0.2rem;
+}
+
+.blocklyToolboxDelete::after{
+	event-pointers:none;
+	position: absolute;
+	top: 0;
+	width: 100px;
+	height: 100%;
+	content: "";
+	background-color: rgba(255,0,0,0.5);
+}
+
+.blocklyTrash {
+	display: none;
+}
+
+.runBtn {
+	z-index: 50;
+	position: absolute;
+	right: 1rem;
+	bottom: 1rem;
+}
+
+.goBackBtn {
+	z-index: 50;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100px;
+}
