@@ -23,8 +23,8 @@ function fetchRGB(argValues){
     return {r, g, b};
 }
 
-function weeebot_motor_dc({SPEED, WEEEBOT_DCMOTOR_OPTION}){
-    this.net.sendCmd(200, WEEEBOT_DCMOTOR_OPTION, SPEED);
+function weeebot_motor_dc({SPEED, DC_MOTOR_INDEX}){
+    this.net.sendCmd(200, DC_MOTOR_INDEX, SPEED);
 }
 
 function weeebot_motor_dc_130({SPEED, SENSOR_PORT}){
@@ -77,8 +77,8 @@ function weeebot_rgb3_RJ11(argValues) {
 }
 
 function board_light_sensor(argValues) {
-    var port = argValues.LIGHT_PORT;
-    return this.net.sendCmd( 8, port);
+    //var port = argValues.LIGHT_PORT;
+    return this.net.sendCmd(8, 21);
 }
 
 function board_temperature_sensor(argValues) {
@@ -86,8 +86,8 @@ function board_temperature_sensor(argValues) {
     return this.net.sendCmd( 12, port);
 }
 function board_sound_sensor(argValues){
-    var port = argValues.SOUND_PORT;
-    return this.net.sendCmd( 11, port);
+    //var port = argValues.SOUND_PORT;
+    return this.net.sendCmd( 11, 17);
 }
 /*
 function weeebot_encoder_move(argValues) {
@@ -121,15 +121,7 @@ function weeebot_on_board_button(argValues){
 function test_tone_note(argValues){
     var note = argValues.TEST_TONE_NOTE_NOTE_OPTION;
     var hz = argValues.TEST_TONE_NOTE_BEAT_OPTION;
-    this.net.sendCmd( 10, note, hz);
-    return new Promise(resolve => {
-        let expired = performance.now() + parseInt(hz);
-        this.suspendUpdater = () => {
-            if(performance.now() >= expired){
-                resolve();
-            }
-        };
-    });
+    return this.net.sendCmd( 10, note, hz);
 }
 function ultrasonic(argValues){
     var port = argValues.SENSOR_PORT;

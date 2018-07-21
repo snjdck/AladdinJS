@@ -61,20 +61,20 @@ toolbox = create(["category", {"name":"WeeeBot\nMini", id:'sounds', "key":"WeeeB
 //export const motion = create(["category", {"name":"%{BKY_CATEGORY_MOTION}", id:'motion', "colour":"#4C97FF", "secondaryColour":"#3373CC"},
 export const motion = newCategory("%{BKY_CATEGORY_MOTION}", 'motion', Blockly.Colours.motion, [
      newBlock("weeebot_motor_dc", [
-            newDropdownValue("WEEEBOT_DCMOTOR_OPTION", 1),
+            //newDropdownValue("WEEEBOT_DCMOTOR_OPTION", 1),
             newDropdownValue("SPEED", 100)
         ]),
         newBlock("weeebot_motor_move", [
-            newDropdownValue("MOVE_DIRECTION", 1),
+            //newDropdownValue("MOVE_DIRECTION", 1),
             newNumberValue("SPEED", 120)
         ]),
         newBlock("weeebot_stop"),
         newBlock("weeebot_motor_dc_130", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1]),
+            //newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1]),
             newNumberValue("SPEED", 0)
         ]),
         newBlock("on_board_servo", [
-            newDropdownValue("SENSOR_PORT", PORTS[1]),
+            //newDropdownValue("SENSOR_PORT", PORTS[1]),
             newDropdownValue("ANGLE", 90)
         ]),
 ]);
@@ -87,31 +87,31 @@ export const looks = newCategory("%{BKY_CATEGORY_LOOKS}", 'looks', Blockly.Colou
         ]),
      newLabel('RGB'),
         newBlock("weeebot_rgb", [
-            newDropdownValue("SENSOR_PORT", PORTS[1]),
+            //newDropdownValue("SENSOR_PORT", PORTS[1]),
             newNumberValue("PIXEL", 0),
             newXML("value", {"name":"COLOR"}, [newXML("shadow", {"type":"colour_picker"})])
         ]),
         newBlock("weeebot_rgb3", [
-            newDropdownValue("SENSOR_PORT", PORTS[1]),
+            //newDropdownValue("SENSOR_PORT", PORTS[1]),
             newNumberValue("PIXEL", 0),
             newDropdownValue("R", 255, 'RGB_VALUE'),
             newDropdownValue("G", 255, 'RGB_VALUE'),
             newDropdownValue("B", 255, 'RGB_VALUE')
         ]),
         newBlock("weeebot_rgb_RJ11", [
-            newDropdownValue("SENSOR_PORT", PORTS[1]),
+           // newDropdownValue("SENSOR_PORT", PORTS[1]),
             newNumberValue("PIXEL", 0),
             newXML("value", {"name":"COLOR"}, [newXML("shadow", {"type":"colour_picker"})])
         ]),
         newBlock("weeebot_rgb3_RJ11", [
-            newDropdownValue("SENSOR_PORT", PORTS[1]),
+           // newDropdownValue("SENSOR_PORT", PORTS[1]),
             newNumberValue("PIXEL", 0),
             newNumberValue("R", 255),
             newNumberValue("G", 255),
             newNumberValue("B", 255)
         ]),
         newBlock("led_strip", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1]),
+         //   newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1]),
             newNumberValue("PIXEL", 0),
             newDropdownValue("R", 255, 'RGB_VALUE'),
             newDropdownValue("G", 255, 'RGB_VALUE'),
@@ -119,70 +119,48 @@ export const looks = newCategory("%{BKY_CATEGORY_LOOKS}", 'looks', Blockly.Colou
         ]),
          newLabel('ultrasonic'),
     newBlock("ultrasonic_led", [
-            newDropdownValue("SENSOR_PORT", PORTS[1]),
-            newDropdownValue("ULTRASONIC_LED_INDEX", 3),
+         //   newDropdownValue("SENSOR_PORT", PORTS[1]),
+            //newDropdownValue("ULTRASONIC_LED_INDEX", 3),
             newXML("value", {"name":"COLOR"}, [newXML("shadow", {"type":"colour_picker"})])
         ]),
         newBlock("ultrasonic_led_rgb", [
-            newDropdownValue("SENSOR_PORT", PORTS[1]),
-            newDropdownValue("ULTRASONIC_LED_INDEX", 3),
+           // newDropdownValue("SENSOR_PORT", PORTS[1]),
+            //newDropdownValue("ULTRASONIC_LED_INDEX", 3),
             newNumberValue("R", 255),
             newNumberValue("G", 255),
             newNumberValue("B", 255)
         ]),
         newLabel('ir_avoid'),
         newBlock("ir_avoid_led", [
-            newDropdownValue("SENSOR_PORT", PORTS[2]),
-            newDropdownValue("ULTRASONIC_LED_INDEX", 3),
+            //newDropdownValue("SENSOR_PORT", PORTS[2]),
+            //newDropdownValue("ULTRASONIC_LED_INDEX", 3),
             newXML("value", {"name":"COLOR"}, [newXML("shadow", {"type":"colour_picker"})])
         ]),
         newBlock("ir_avoid_led_rgb", [
-            newDropdownValue("SENSOR_PORT", PORTS[2]),
-            newDropdownValue("ULTRASONIC_LED_INDEX", 3),
+            //newDropdownValue("SENSOR_PORT", PORTS[2]),
+            //newDropdownValue("ULTRASONIC_LED_INDEX", 3),
             newNumberValue("R", 255),
             newNumberValue("G", 255),
             newNumberValue("B", 255)
         ]),
-         newBlock("weeebot_single_led", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1])/*,
-            newDropdownValue("ON_OFF", 'TRUE')*/
-        ]),
-        newBlock("front_led_light", [
-            newDropdownValue("SENSOR_PORT", PORTS[2]),
-            newDropdownValue("ULTRASONIC_LED_INDEX", 3)
-        ]),
-        newBlock("back_led_light", [
-            newDropdownValue("BACK_LED_PORT", BACK_LED_PORTS[0])
-        ]),
-        newBlock("led_button_light", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1]),
-            newDropdownValue("BUTTON_INDEX", 1)
-        ]),
+         newBlock("weeebot_single_led"),
+        newBlock("front_led_light"),
+        newBlock("back_led_light"),
+        newBlock("led_button_light"),
         newLabel('MP3'),
-        newBlock("mp3_play", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1])
-        ]),
-        newBlock("mp3_pause", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1])
-        ]),
-        newBlock("mp3_next_music", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1])
-        ]),
+        newBlock("mp3_play"),
+        newBlock("mp3_pause"),
+        newBlock("mp3_next_music"),
         newBlock("mp3_set_music", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1]),
+           // newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1]),
             newNumberValue("NUM", 1)
         ]),
         newBlock("mp3_set_volume", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1]),
+          //  newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1]),
             newNumberValue("NUM", 0)
         ]),
-        newBlock("mp3_set_device", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1]),
-            newDropdownValue("MP3_DEVICE_TYPE", 4)
-        ]),
-        newBlock("mp3_is_over", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1])
-        ])
+        newBlock("mp3_set_device"),
+        newBlock("mp3_is_over")
 ]);
 
 
@@ -191,68 +169,61 @@ export const looks = newCategory("%{BKY_CATEGORY_LOOKS}", 'looks', Blockly.Colou
 export const sound = newCategory("%{BKY_CATEGORY_SOUND}", 'sound', Blockly.Colours.sounds, [
         newLabel('led matrix'),
         newBlock("weeebot_led_matrix_number", [
-            newDropdownValue("SENSOR_PORT", PORTS[3]),
+           // newDropdownValue("SENSOR_PORT", PORTS[3]),
             newNumberValue("NUM", 100)
         ]),
         //*
         newBlock("weeebot_led_matrix_time", [
-            newDropdownValue("SENSOR_PORT", PORTS[3]),
+         //   newDropdownValue("SENSOR_PORT", PORTS[3]),
             newNumberValue("HOUR", 12),
             //newDropdownValue("SHOW_COLON", 1),
             newNumberValue("SECOND", 34)
         ]),//*/
         newBlock("weeebot_led_matrix_string", [
-            newDropdownValue("SENSOR_PORT", PORTS[3]),
+          //  newDropdownValue("SENSOR_PORT", PORTS[3]),
             newNumberValue("X", 0),
             newNumberValue("Y", 0),
             newTextValue("STR", "Hi")
         ]),
         //*
         newBlock("weeebot_led_matrix_bitmap", [
-            newDropdownValue("SENSOR_PORT", PORTS[3]),
+          //  newDropdownValue("SENSOR_PORT", PORTS[3]),
             newNumberValue("X", 0),
             newNumberValue("Y", 0),
             newDropdownValue('MATRIX', '0101010101100010101000100')
             //newXML("value", {"name":"LED_MATRIX_DATA"}, [newXML("shadow", {"type":"led_matrix_data"})])
         ]),//*/
         newBlock("weeebot_led_matrix_pixel_show", [
-            newDropdownValue("SENSOR_PORT", PORTS[3]),
+          //  newDropdownValue("SENSOR_PORT", PORTS[3]),
             newNumberValue("X", 0),
             newNumberValue("Y", 0)
         ]),
         newBlock("weeebot_led_matrix_pixel_hide", [
-            newDropdownValue("SENSOR_PORT", PORTS[3]),
+          //  newDropdownValue("SENSOR_PORT", PORTS[3]),
             newNumberValue("X", 0),
             newNumberValue("Y", 0)
         ]),
-        newBlock("weeebot_led_matrix_clear", [
-            newDropdownValue("SENSOR_PORT", PORTS[3])
-        ]),
+        newBlock("weeebot_led_matrix_clear"),
         newLabel('seven_segment'),
         newBlock("seven_segment", [
-            newDropdownValue("SENSOR_PORT", PORTS[1]),
+          //  newDropdownValue("SENSOR_PORT", PORTS[1]),
             newNumberValue("NUM", 100)
         ]),
         newLabel('oled'),
-                newBlock("oled_set_size", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1]),
-            newDropdownValue("OLED_SIZE", 8)
-        ]),
+        newBlock("oled_set_size"),
         newBlock("oled_show_string", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1]),
+           // newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1]),
             newNumberValue("X", 0),
             newNumberValue("Y", 0),
             newTextValue("STR", "Hi")
         ]),
         newBlock("oled_show_number", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1]),
+           // newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1]),
             newNumberValue("X", 0),
             newNumberValue("Y", 0),
             newNumberValue("NUM", 100)
         ]),
-        newBlock("oled_clear_screen", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1])
-        ]),
+        newBlock("oled_clear_screen"),
 ]);
 
 
@@ -260,27 +231,18 @@ export const sound = newCategory("%{BKY_CATEGORY_SOUND}", 'sound', Blockly.Colou
 
 //export const sensing = create(["category", {"name":"%{BKY_CATEGORY_SENSING}", id:'sensing', "colour":"#4CBFE6", "secondaryColour":"#2E8EB8"},
 export const sensing = newCategory("%{BKY_CATEGORY_SENSING}", 'sensing', Blockly.Colours.sensing, [
-       newBlock("color_sensor_white_balance", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1])
-        ]),
-        newBlock("color_sensor_light", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1])
-        ]),
+       newBlock("color_sensor_white_balance"),
+        newBlock("color_sensor_light"),
         
 
-        newBlock("line_follower", [
-            newDropdownValue("SENSOR_PORT", PORTS[1]),
-            newDropdownValue("LINE_FOLLOWER_INDEX", 1)
-        ]),
-        newBlock("ultrasonic", [
-            newDropdownValue("SENSOR_PORT", PORTS[1])
-        ]),
-        newBlock("board_light_sensor", [
+        newBlock("line_follower"),
+        newBlock("ultrasonic"),
+        newBlock("board_light_sensor"/*, [
             newDropdownValue("LIGHT_PORT", 21)
-        ]),
-        newBlock("board_sound_sensor", [
+        ]*/),
+        newBlock("board_sound_sensor"/*, [
             newDropdownValue("SOUND_PORT", 17)
-        ]),
+        ]*/),
         /*newBlock("board_temperature_sensor", [
             newDropdownValue("SENSOR_PORT", PORTS[1])
         ]),
@@ -288,74 +250,26 @@ export const sensing = newCategory("%{BKY_CATEGORY_SENSING}", 'sensing', Blockly
             newDropdownValue("SENSOR_PORT", PORTS[1])
         ]),*/
         
-        newBlock("weeebot_single_line_follower", [
-            newDropdownValue("SENSOR_PORT", PORTS[1])
-        ]),
-        newBlock("humiture_humidity", [
-            newDropdownValue("SENSOR_PORT", PORTS[1])
-        ]),
-        newBlock("humiture_temperature", [
-            newDropdownValue("SENSOR_PORT", PORTS[1])
-        ]),
-        newBlock("soil", [
-            newDropdownValue("SENSOR_PORT", PORTS[1])
-        ]),
-        newBlock("sliding_potentiometer", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1])
-        ]),
-        newBlock("potentiometer", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1])
-        ]),
-        newBlock("gas_sensor", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1])
-        ]),
-        newBlock("color_sensor", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1]),
-            newDropdownValue("COLOR_TYPE", 0)
-        ]),
-        newBlock("flame_sensor", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1]),
-            newDropdownValue("FLAME_INDEX", 1)
-        ]),
-        newBlock("joystick", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1]),
-            newDropdownValue("AXIS2", 0)
-        ]),
-        newBlock("compass", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1]),
-            newDropdownValue("AXIS3", 0)
-        ]),
-        newBlock("gyro_gyration", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1]),
-            newDropdownValue("AXIS3", 0)
-        ]),
-        newBlock("gyro_acceleration", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1]),
-            newDropdownValue("AXIS3", 0)
-        ]),
-        newBlock("weeebot_infraread", [
-            newDropdownValue("IR_CODE", 69)
-        ]),
-        newBlock("weeebot_ir_avoid", [
-            newDropdownValue("SENSOR_PORT", PORTS[2])
-        ]),
-        newBlock("touch", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1])
-        ]),
-        newBlock("led_button", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1]),
-            newDropdownValue("BUTTON_INDEX", 1)
-        ]),
-        newBlock("pir", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1])
-        ]),
-        newBlock("tilt", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1]),
-            newDropdownValue("LINE_FOLLOWER_INDEX", 1)
-        ]),
-        newBlock("limit_switch", [
-            newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1])
-        ]),
+        newBlock("weeebot_single_line_follower"),
+        newBlock("humiture_humidity"),
+        newBlock("humiture_temperature"),
+        newBlock("soil"),
+        newBlock("sliding_potentiometer"),
+        newBlock("potentiometer"),
+        newBlock("gas_sensor"),
+        newBlock("color_sensor"),
+        newBlock("flame_sensor"),
+        newBlock("joystick"),
+        newBlock("compass"),
+        newBlock("gyro_gyration"),
+        newBlock("gyro_acceleration"),
+        newBlock("weeebot_infraread"),
+        newBlock("weeebot_ir_avoid"),
+        newBlock("touch"),
+        newBlock("led_button"),
+        newBlock("pir"),
+        newBlock("tilt"),
+        newBlock("limit_switch"),
         newBlock('sensing_timer'),
         newBlock('sensing_resettimer'),
         newBlock('sensing_current'),

@@ -113,23 +113,27 @@ function createDropDown(name, options){
 	return {type:'field_dropdown', name, options};
 }
 
+function defaultIndex(dropdown, index){
+	return {...dropdown, defaultIndex:index};
+}
+
 export default function (){
-	var color = {
+	/*var color = {
 		"primary": "#FF6680",
 		"secondary": "#FF4D6A",
 		"tertiary": "#FF3355"
-	};
+	};*/
 	//const Blockly = require("scratch-blocks");
 	var Translation = Blockly.Msg;
 	
 	var result = {};
 	function regBlock(id, title, args, typeName, color){
-		result[id] = jsonInitBlock(id, title, args, typeName, color || 'colours_motion');
+		result[id] = jsonInitBlock(id, title, args, typeName, color);
 	}
-	function regOption(id, typeName, options){
+	function regOption(id, typeName, options, color){
 		result[id] = jsonInitOption(id.toUpperCase(), options, typeName, color);
 	}
-	function regEvent(id, title){
+	function regEvent(id, title, color){
 		result[id] = jsonInitEvent(id, title, color);
 	}
 	regNumberOption(result, 'SPEED', {
@@ -168,21 +172,40 @@ export default function (){
   }
 };*/
 	//regEvent("weeebot_program", Translation.WB_PROGRAM_BEGIN);
-	regOption("move_direction", "Number", [
+	/*regOption("move_direction", "Number", [
 		[Translation.WB_Forward, 1],
 		[Translation.WB_Backward, 2],
 		[Translation.WB_Left, 3],
-		[Translation.WB_Right, 4]]);
-	regOption("line_follower_index", "Number", [
+		[Translation.WB_Right, 4]]);*/
+	const MOVE_DIRECTION = createDropDown('MOVE_DIRECTION', [
+		[Translation.WB_Forward, '1'],
+		[Translation.WB_Backward, '2'],
+		[Translation.WB_Left, '3'],
+		[Translation.WB_Right, '4']
+	]);
+	/*regOption("line_follower_index", "Number", [
 		['S1', 1],
-		['S2', 2]]);
-	regOption("ultrasonic_led_index", "Number", [
+		['S2', 2]]);*/
+	const LINE_FOLLOWER_INDEX = createDropDown('LINE_FOLLOWER_INDEX', [
+		['S1', '1'],
+		['S2', '2']
+	]);
+	/*regOption("ultrasonic_led_index", "Number", [
 		[Translation.WB_Left, 2],
 		[Translation.WB_Right, 1],
-		[Translation.WB_Both, 3]]);
-	regOption("weeebot_dcmotor_option", "Number", [
+		[Translation.WB_Both, 3]]);*/
+	const ULTRASONIC_LED_INDEX = createDropDown('ULTRASONIC_LED_INDEX', [
+		[Translation.WB_Both,  '3'],
+		[Translation.WB_Left,  '2'],
+		[Translation.WB_Right, '1']
+	]);
+	const DC_MOTOR_INDEX = createDropDown('DC_MOTOR_INDEX', [
+		['M1', '1'],
+		['M2', '2']
+	]);
+	/*regOption("weeebot_dcmotor_option", "Number", [
 		['M1', 1],
-		['M2', 2]]);
+		['M2', 2]]);*/
 	/*regOption("on_off", "Number", [
 		[Translation.ON , 1],
 		[Translation.OFF, 0]]);*/
@@ -191,24 +214,53 @@ export default function (){
 		[Translation.WB_PortA, 19],
 		[Translation.WB_PortB, 18],
 		[Translation.WB_PortC, 16],
-		[Translation.WB_PortD, 15]]);
+		[Translation.WB_PortD, 15]], Blockly.Colours.sensing);
 	regOption("sound_port", "Number", [
 		[Translation.WB_OnBoard,17],
 		[Translation.WB_PortA, 19],
 		[Translation.WB_PortB, 18],
 		[Translation.WB_PortC, 16],
-		[Translation.WB_PortD, 15]]);
-	regOption("sensor_port", "Number", [
+		[Translation.WB_PortD, 15]], Blockly.Colours.sensing);
+	/*regOption("sensor_port", "Number", [
 		[Translation.WB_PortA, 19],
 		[Translation.WB_PortB, 18],
 		[Translation.WB_PortC, 16],
-		[Translation.WB_PortD, 15]]);
-	regOption("back_led_port", "Number", [
+		[Translation.WB_PortD, 15]]);*/
+	const SENSOR_PORT = defaultIndex(createDropDown('SENSOR_PORT', [
+		[Translation.WB_PortA, '19'],
+		[Translation.WB_PortB, '18'],
+		[Translation.WB_PortC, '16'],
+		[Translation.WB_PortD, '15']
+	]), 3);
+	/*regOption("back_led_port", "Number", [
 		[Translation.WB_MINI_LEFT_YELLOW, 4],
 		[Translation.WB_MINI_LEFT_RED, 3],
 		[Translation.WB_MINI_RIGHT_RED, 14],
-		[Translation.WB_MINI_RIGHT_YELLOW, 13]]);
-	regOption("ir_code", "Number", [
+		[Translation.WB_MINI_RIGHT_YELLOW, 13]]);*/
+	const IR_CODE = createDropDown('IR_CODE', [
+		["A", '69'],
+		["B", '70'],
+		["C", '71'],
+		["D", '68'],
+		["E", '67'],
+		["F", '13'],
+		["↑", '64'],
+		["↓", '25'],
+		["←", '7'],
+		["→", '9'],
+		["OK",'21'],
+		["R0",'22'],
+		["R1",'12'],
+		["R2",'24'],
+		["R3",'94'],
+		["R4",'8'],
+		["R5",'28'],
+		["R6",'90'],
+		["R7",'66'],
+		["R8",'82'],
+		["R9",'74']
+	]);
+	/*regOption("ir_code", "Number", [
 		["A",69],
 		["B",70],
 		["C",71],
@@ -229,7 +281,7 @@ export default function (){
 		["R6",90],
 		["R7",66],
 		["R8",82],
-		["R9",74]]);
+		["R9",74]]);*/
 	regOption("test_tone_note_note_option", "Number", [
 		["B0", 31],["C1", 33],["D1", 37],["E1", 41],["F1", 44],["G1", 49],["A1", 55],["B1", 62],
 		["C2", 65],["D2", 73],["E2", 82],["F2", 87],["G2", 98],["A2", 110],["B2", 123],
@@ -238,13 +290,13 @@ export default function (){
 		["C5", 523],["D5", 587],["E5", 659],["F5", 698],["G5", 784],["A5", 880],["B5", 988],
 		["C6", 1047],["D6", 1175],["E6", 1319],["F6", 1397],["G6", 1568],["A6", 1760],["B6", 1976],
 		["C7", 2093],["D7", 2349],["E7", 2637],["F7", 2794],["G7", 3136],["A7", 3520],["B7", 3951],
-		["C8", 4186],["D8", 4699]]);
+		["C8", 4186],["D8", 4699]], Blockly.Colours.looks);
 	regOption("test_tone_note_beat_option", "Number", [
 		[Translation.WB_TONE_Half,500],
 		[Translation.WB_TONE_Quarter,250],
 		[Translation.WB_TONE_Eighth,125],
 		[Translation.WB_TONE_Whole,1000],
-		[Translation.WB_TONE_Double,2000]]);
+		[Translation.WB_TONE_Double,2000]], Blockly.Colours.looks);
 	const SHOW_COLON = createDropDown('SHOW_COLON', [
 		[":", '1'],
 		["　",'0']]);
@@ -258,6 +310,12 @@ export default function (){
 		[Translation.ON , '1'],
 		[Translation.OFF, '0']
 	]);
+	const BACK_LED_PORT = createDropDown('BACK_LED_PORT', [
+		[Translation.WB_MINI_LEFT_YELLOW, '4'],
+		[Translation.WB_MINI_LEFT_RED, '3'],
+		[Translation.WB_MINI_RIGHT_RED, '14'],
+		[Translation.WB_MINI_RIGHT_YELLOW, '13']
+	]);
 	/*const ON_OFF = {
 		"type": "field_checkbox",
       "name": "ON_OFF",
@@ -268,104 +326,137 @@ export default function (){
       "name": "COLOR",
       "colour": "#ff0000"
 	};*/
-	regOption("button_index", "Number", [
+	const BUTTON_INDEX = createDropDown('BUTTON_INDEX', [
+		["1", '1'],
+		["2", '2'],
+		["3", '3'],
+		["4", '4']
+	]);
+	/*regOption("button_index", "Number", [
 		["1", 1],
 		["2", 2],
 		["3", 3],
-		["4", 4]]);
-	regOption("mp3_device_type", "Number", [
+		["4", 4]]);*/
+	const MP3_DEVICE_TYPE = createDropDown('MP3_DEVICE_TYPE', [
+		["FLASH", '4'],
+		["TF", '2']
+	]);
+	/*regOption("mp3_device_type", "Number", [
 		["FLASH", 4],
-		["TF", 2]]);
-	regOption("oled_size", "Number", [
+		["TF", 2]]);*/
+	const OLED_SIZE = createDropDown('OLED_SIZE', [
+		["8",  '8'],
+		["16", '16']
+	]);
+	/*regOption("oled_size", "Number", [
 		["8",  8],
-		["16", 16]]);
-	regOption("color_type", "Number", [
+		["16", 16]]);*/
+	const COLOR_TYPE = createDropDown('COLOR_TYPE', [
+		[Translation.COLOUR_LIGHT, '0'],
+		[Translation.COLOUR_RGB_RED,  '1'],
+		[Translation.COLOUR_RGB_GREEN,'2'],
+		[Translation.COLOUR_RGB_BLUE, '3']
+	]);
+	/*regOption("color_type", "Number", [
 		[Translation.COLOUR_LIGHT,0],
 		[Translation.COLOUR_RGB_RED,  1],
 		[Translation.COLOUR_RGB_GREEN,2],
-		[Translation.COLOUR_RGB_BLUE, 3]]);
-	regOption("flame_index", "Number", [
+		[Translation.COLOUR_RGB_BLUE, 3]]);*/
+	const FLAME_INDEX = createDropDown('FLAME_INDEX', [
+		["1",'1'],
+		["2",'2'],
+		["3",'3']
+	]);
+	/*regOption("flame_index", "Number", [
 		["1",1],
 		["2",2],
-		["3",3]]);
-	regOption("axis2", "Number", [
+		["3",3]]);*/
+	const AXIS2 = createDropDown('AXIS2', [
+		[Translation.X_AXIS, '0'],
+		[Translation.Y_AXIS, '1']
+	]);
+	const AXIS3 = createDropDown('AXIS3', [
+		[Translation.X_AXIS, '0'],
+		[Translation.Y_AXIS, '1'],
+		[Translation.Z_AXIS, '2']
+	]);
+	/*regOption("axis2", "Number", [
 		[Translation.X_AXIS,0],
 		[Translation.Y_AXIS,1]]);
 	regOption("axis3", "Number", [
 		[Translation.X_AXIS,0],
 		[Translation.Y_AXIS,1],
-		[Translation.Z_AXIS,2]]);
-	regBlock("weeebot_motor_dc",   Translation.WB_DCMOTOR,    ["WEEEBOT_DCMOTOR_OPTION", "SPEED"], null, 'colours_motion');
-	regBlock("weeebot_motor_move", Translation.WB_MOTOR_MOVE, ["MOVE_DIRECTION", "SPEED"], null, 'colours_motion');
-	regBlock("on_board_servo", Translation.WB_BOARD_SERVO, ["SENSOR_PORT", "ANGLE"], null, 'colours_motion');
+		[Translation.Z_AXIS,2]]);*/
+	regBlock("weeebot_motor_dc",   Translation.WB_DCMOTOR,    [DC_MOTOR_INDEX, "SPEED"], null, 'colours_motion');
+	regBlock("weeebot_motor_move", Translation.WB_MOTOR_MOVE, [MOVE_DIRECTION, "SPEED"], null, 'colours_motion');
+	regBlock("on_board_servo", Translation.WB_BOARD_SERVO, [SENSOR_PORT, "ANGLE"], null, 'colours_motion');
 	regBlock("test_tone_note", Translation.WB_TONE, ["TEST_TONE_NOTE_NOTE_OPTION", "TEST_TONE_NOTE_BEAT_OPTION"], null, 'colours_looks');
 	regBlock("weeebot_stop", Translation.WB_STOP_MOTOR, [], null, 'colours_motion');
-	regBlock("weeebot_rgb", Translation.WB_RGB1, ["SENSOR_PORT", "PIXEL", "COLOR"], null, 'colours_looks');
-	regBlock("weeebot_rgb3", Translation.WB_RGB2, ["SENSOR_PORT", "PIXEL", "R", "G", "B"], null, 'colours_looks');
-	regBlock("weeebot_rgb_RJ11",  "RJ11 " + Translation.WB_RGB1, ["SENSOR_PORT", "PIXEL", "COLOR"], null, 'colours_looks');
-	regBlock("weeebot_rgb3_RJ11", "RJ11 " + Translation.WB_RGB2, ["SENSOR_PORT", "PIXEL", "R", "G", "B"], null, 'colours_looks');
-	regBlock("board_light_sensor", Translation.WB_LIGHT, ["LIGHT_PORT"], "Number", 'colours_sensing');
-	regBlock("board_temperature_sensor", Translation.WB_TEMPERATURE, ["SENSOR_PORT"], "Number", 'colours_sensing');
-	regBlock("board_sound_sensor", Translation.WB_SOUND, ["SOUND_PORT"], "Number", 'colours_sensing');
-	regBlock("weeebot_on_board_button", Translation.WB_BOARD_BUTTON, ["SENSOR_PORT"], "Boolean", 'colours_sensing');
-	regBlock("weeebot_infraread", Translation.WB_BOARD_IR_PRESSED, ["IR_CODE"], "Boolean", 'colours_sensing');
-	regBlock("line_follower", Translation.WB_LINE_FOLLOWER, ["SENSOR_PORT", "LINE_FOLLOWER_INDEX"], "Number", 'colours_sensing');
-	regBlock("ultrasonic", Translation.WB_ULTRASONIC, ["SENSOR_PORT"], "Number", 'colours_sensing');
-	regBlock("ultrasonic_led", Translation.WB_ULTRASONIC_LED, ["SENSOR_PORT", "ULTRASONIC_LED_INDEX", "COLOR"], null, 'colours_looks');
-	regBlock("ultrasonic_led_rgb", Translation.WB_ULTRASONIC_LED_RGB, ["SENSOR_PORT", "ULTRASONIC_LED_INDEX", "R", "G", "B"], null, 'colours_looks');
-	regBlock("ir_avoid_led", Translation.WB_IR_AVOID_LED, ["SENSOR_PORT", "ULTRASONIC_LED_INDEX", "COLOR"], null, 'colours_looks');
-	regBlock("ir_avoid_led_rgb", Translation.WB_IR_AVOID_LED_RGB, ["SENSOR_PORT", "ULTRASONIC_LED_INDEX", "R", "G", "B"], null, 'colours_looks');
-	regBlock("weeebot_led_matrix_number", Translation.WB_LED_MATRIX_NUMBER, ["SENSOR_PORT", "NUM"], null, 'colours_sounds');
-	regBlock("weeebot_led_matrix_time", Translation.WB_LED_MATRIX_TIME, ["SENSOR_PORT", "HOUR", SHOW_COLON, "SECOND"], null, 'colours_sounds');
-	regBlock("weeebot_led_matrix_string", Translation.WB_LED_MATRIX_STRING, ["SENSOR_PORT", "X", "Y", "STR"], null, 'colours_sounds');
-	regBlock("weeebot_led_matrix_bitmap", Translation.WB_LED_MATRIX_BITMAP, ["SENSOR_PORT", "X", "Y", "MATRIX"], null, 'colours_sounds');
-	regBlock("weeebot_led_matrix_pixel_show", Translation.WB_LED_MATRIX_PIXEL_SHOW, ["SENSOR_PORT", "X", "Y"], null, 'colours_sounds');
-	regBlock("weeebot_led_matrix_pixel_hide", Translation.WB_LED_MATRIX_PIXEL_HIDE, ["SENSOR_PORT", "X", "Y"], null, 'colours_sounds');
-	regBlock("weeebot_led_matrix_clear", Translation.WB_LED_MATRIX_CLEAR, ["SENSOR_PORT"], null, 'colours_sounds');
-	regBlock("weeebot_ir_avoid", Translation.WB_IR_AVOID, ["SENSOR_PORT"], "Boolean", 'colours_sensing');
-	regBlock("weeebot_single_line_follower", Translation.WB_SINGLE_LINE_FOLLOWER, ["SENSOR_PORT"], "Number", 'colours_sensing');
-	regBlock("back_led_light", Translation.WB_MINI_BACK_LED, ["BACK_LED_PORT", ON_OFF], null, 'colours_looks');
-	regBlock("front_led_light", Translation.WB_MINI_FRONT_LED, ["SENSOR_PORT", "ULTRASONIC_LED_INDEX", ON_OFF], null, 'colours_looks');
-	//regBlock("front_led_light", Translation.WB_MINI_FRONT_LED, ["SENSOR_PORT", "ULTRASONIC_LED_INDEX", "ON_OFF"]);
+	regBlock("weeebot_rgb", Translation.WB_RGB1, [SENSOR_PORT, "PIXEL", "COLOR"], null, 'colours_looks');
+	regBlock("weeebot_rgb3", Translation.WB_RGB2, [SENSOR_PORT, "PIXEL", "R", "G", "B"], null, 'colours_looks');
+	regBlock("weeebot_rgb_RJ11",  "RJ11 " + Translation.WB_RGB1, [SENSOR_PORT, "PIXEL", "COLOR"], null, 'colours_looks');
+	regBlock("weeebot_rgb3_RJ11", "RJ11 " + Translation.WB_RGB2, [SENSOR_PORT, "PIXEL", "R", "G", "B"], null, 'colours_looks');
+	regBlock("board_light_sensor", Translation.WB_LIGHT.replace('%1', ''), [], "Number", 'colours_sensing');
+	regBlock("board_temperature_sensor", Translation.WB_TEMPERATURE, [SENSOR_PORT], "Number", 'colours_sensing');
+	regBlock("board_sound_sensor", Translation.WB_SOUND.replace('%1', ''), [], "Number", 'colours_sensing');
+	regBlock("weeebot_on_board_button", Translation.WB_BOARD_BUTTON, [SENSOR_PORT], "Boolean", 'colours_sensing');
+	regBlock("weeebot_infraread", Translation.WB_BOARD_IR_PRESSED, [IR_CODE], "Boolean", 'colours_sensing');
+	regBlock("line_follower", Translation.WB_LINE_FOLLOWER, [SENSOR_PORT, LINE_FOLLOWER_INDEX], "Number", 'colours_sensing');
+	regBlock("ultrasonic", Translation.WB_ULTRASONIC, [SENSOR_PORT], "Number", 'colours_sensing');
+	regBlock("ultrasonic_led", Translation.WB_ULTRASONIC_LED, [SENSOR_PORT, ULTRASONIC_LED_INDEX, "COLOR"], null, 'colours_looks');
+	regBlock("ultrasonic_led_rgb", Translation.WB_ULTRASONIC_LED_RGB, [SENSOR_PORT, ULTRASONIC_LED_INDEX, "R", "G", "B"], null, 'colours_looks');
+	regBlock("ir_avoid_led", Translation.WB_IR_AVOID_LED, [defaultIndex(SENSOR_PORT, 1), ULTRASONIC_LED_INDEX, "COLOR"], null, 'colours_looks');
+	regBlock("ir_avoid_led_rgb", Translation.WB_IR_AVOID_LED_RGB, [defaultIndex(SENSOR_PORT, 1), ULTRASONIC_LED_INDEX, "R", "G", "B"], null, 'colours_looks');
+	regBlock("weeebot_led_matrix_number", Translation.WB_LED_MATRIX_NUMBER, [defaultIndex(SENSOR_PORT, 2), "NUM"], null, 'colours_sounds');
+	regBlock("weeebot_led_matrix_time", Translation.WB_LED_MATRIX_TIME, [defaultIndex(SENSOR_PORT, 2), "HOUR", SHOW_COLON, "SECOND"], null, 'colours_sounds');
+	regBlock("weeebot_led_matrix_string", Translation.WB_LED_MATRIX_STRING, [defaultIndex(SENSOR_PORT, 2), "X", "Y", "STR"], null, 'colours_sounds');
+	regBlock("weeebot_led_matrix_bitmap", Translation.WB_LED_MATRIX_BITMAP, [defaultIndex(SENSOR_PORT, 2), "X", "Y", "MATRIX"], null, 'colours_sounds');
+	regBlock("weeebot_led_matrix_pixel_show", Translation.WB_LED_MATRIX_PIXEL_SHOW, [defaultIndex(SENSOR_PORT, 2), "X", "Y"], null, 'colours_sounds');
+	regBlock("weeebot_led_matrix_pixel_hide", Translation.WB_LED_MATRIX_PIXEL_HIDE, [defaultIndex(SENSOR_PORT, 2), "X", "Y"], null, 'colours_sounds');
+	regBlock("weeebot_led_matrix_clear", Translation.WB_LED_MATRIX_CLEAR, [defaultIndex(SENSOR_PORT, 2)], null, 'colours_sounds');
+	regBlock("weeebot_ir_avoid", Translation.WB_IR_AVOID, [defaultIndex(SENSOR_PORT, 1)], "Boolean", 'colours_sensing');
+	regBlock("weeebot_single_line_follower", Translation.WB_SINGLE_LINE_FOLLOWER, [defaultIndex(SENSOR_PORT, 0)], "Number", 'colours_sensing');
+	regBlock("back_led_light", Translation.WB_MINI_BACK_LED, [BACK_LED_PORT, ON_OFF], null, 'colours_looks');
+	regBlock("front_led_light", Translation.WB_MINI_FRONT_LED, [defaultIndex(SENSOR_PORT, 1), ULTRASONIC_LED_INDEX, ON_OFF], null, 'colours_looks');
 
-	regBlock("humiture_humidity", Translation.WB_HUMITURE_HUMIDITY, ["SENSOR_PORT"], "Number", 'colours_sensing');
-	regBlock("humiture_temperature", Translation.WB_HUMITURE_TEMPERATURE, ["SENSOR_PORT"], "Number", 'colours_sensing');
-	regBlock("soil", Translation.WB_SOIL, ["SENSOR_PORT"], "Number", 'colours_sensing');
-	regBlock("seven_segment", Translation.WB_7_SEGMENT_DISPLAY, ["SENSOR_PORT", "NUM"], null, 'colours_sounds');
-	regBlock("weeebot_motor_dc_130", "5V 130 " + Translation.WB_DCMOTOR, ["SENSOR_PORT", "SPEED"], null, 'colours_motion');
-	regBlock("weeebot_single_led", Translation.WB_SINGLE_LED, ["SENSOR_PORT", ON_OFF], null, 'colours_looks');
-	regBlock("sliding_potentiometer", Translation.WB_SLIDING_POTENTIOMETER, ["SENSOR_PORT"], "Number", 'colours_sensing');
-	regBlock("potentiometer", Translation.WB_POTENTIOMETER, ["SENSOR_PORT"], "Number", 'colours_sensing');
-	regBlock("gas_sensor", Translation.WB_GAS, ["SENSOR_PORT"], "Number", 'colours_sensing');
+	regBlock("humiture_humidity", Translation.WB_HUMITURE_HUMIDITY, [SENSOR_PORT], "Number", 'colours_sensing');
+	regBlock("humiture_temperature", Translation.WB_HUMITURE_TEMPERATURE, [SENSOR_PORT], "Number", 'colours_sensing');
+	regBlock("soil", Translation.WB_SOIL, [SENSOR_PORT], "Number", 'colours_sensing');
+	regBlock("seven_segment", Translation.WB_7_SEGMENT_DISPLAY, [SENSOR_PORT, "NUM"], null, 'colours_sounds');
+	regBlock("weeebot_motor_dc_130", "5V 130 " + Translation.WB_DCMOTOR, [SENSOR_PORT, "SPEED"], null, 'colours_motion');
+	regBlock("weeebot_single_led", Translation.WB_SINGLE_LED, [SENSOR_PORT, ON_OFF], null, 'colours_looks');
+	regBlock("sliding_potentiometer", Translation.WB_SLIDING_POTENTIOMETER, [SENSOR_PORT], "Number", 'colours_sensing');
+	regBlock("potentiometer", Translation.WB_POTENTIOMETER, [SENSOR_PORT], "Number", 'colours_sensing');
+	regBlock("gas_sensor", Translation.WB_GAS, [SENSOR_PORT], "Number", 'colours_sensing');
 
-	regBlock("led_strip", Translation.WB_LED_STRIP, ["SENSOR_PORT", "PIXEL", "R", "G", "B"], null, 'colours_looks');
-	regBlock("led_button_light", Translation.WB_LED_BUTTON_LIGHT, ["SENSOR_PORT", "BUTTON_INDEX", ON_OFF], null, 'colours_looks');
-	regBlock("relay", Translation.WB_RELAY, ["SENSOR_PORT", ON_OFF], null, 'colours_pen');
-	regBlock("water_atomizer", Translation.WB_WATER_ATOMIZER, ["SENSOR_PORT", ON_OFF], null, 'colours_pen');
-	regBlock("color_sensor_white_balance", Translation.WB_COLOR_SENSOR_WHITE_BALANCE, ["SENSOR_PORT"], null, 'colours_sensing');
-	regBlock("color_sensor_light", Translation.WB_COLOR_SENSOR_LIGHT, ["SENSOR_PORT", ON_OFF], null, 'colours_sensing');
-	regBlock("mp3_play", Translation.WB_MP3_PLAY, ["SENSOR_PORT"], null, 'colours_looks');
-	regBlock("mp3_pause", Translation.WB_MP3_PAUSE, ["SENSOR_PORT"], null, 'colours_looks');
-	regBlock("mp3_next_music", Translation.WB_MP3_NEXT_MUSIC, ["SENSOR_PORT"], null, 'colours_looks');
-	regBlock("mp3_set_music", Translation.WB_MP3_SET_MUSIC, ["SENSOR_PORT", "NUM"], null, 'colours_looks');
-	regBlock("mp3_set_volume", Translation.WB_MP3_SET_VOLUME, ["SENSOR_PORT", "NUM"], null, 'colours_looks');
-	regBlock("mp3_set_device", Translation.WB_MP3_SET_DEVICE, ["SENSOR_PORT", "MP3_DEVICE_TYPE"], null, 'colours_looks');
-	regBlock("mp3_is_over", Translation.WB_MP3_IS_OVER, ["SENSOR_PORT"], "Boolean", 'colours_looks');
-	regBlock("oled_set_size", Translation.WB_OLED_SET_SIZE, ["SENSOR_PORT", "OLED_SIZE"], null, 'colours_sounds');
-	regBlock("oled_show_string", Translation.WB_OLED_SHOW_STRING, ["SENSOR_PORT", "X", "Y", "STR"], null, 'colours_sounds');
-	regBlock("oled_show_number", Translation.WB_OLED_SHOW_NUMBER, ["SENSOR_PORT", "X", "Y", "NUM"], null, 'colours_sounds');
-	regBlock("oled_clear_screen", Translation.WB_OLED_CLEAR_SCREEN, ["SENSOR_PORT"], null, 'colours_sounds');
-	regBlock("color_sensor", Translation.WB_COLOR_SENSOR, ["SENSOR_PORT", "COLOR_TYPE"], "Number", 'colours_sensing');
-	regBlock("flame_sensor", Translation.WB_FLAME_SENSOR, ["SENSOR_PORT", "FLAME_INDEX"], "Number", 'colours_sensing');
-	regBlock("joystick", Translation.WB_JOYSTICK, ["SENSOR_PORT", "AXIS2"], "Number", 'colours_sensing');
-	regBlock("compass", Translation.WB_COMPASS, ["SENSOR_PORT", "AXIS3"], "Number", 'colours_sensing');
-	regBlock("gyro_gyration", Translation.WB_GYRO_GYRATION, ["SENSOR_PORT", "AXIS3"], "Number", 'colours_sensing');
-	regBlock("gyro_acceleration", Translation.WB_GYRO_ACCELERATION, ["SENSOR_PORT", "AXIS3"], "Number", 'colours_sensing');
-	regBlock("touch", Translation.WB_TOUCH, ["SENSOR_PORT"], "Boolean", 'colours_sensing');
-	regBlock("led_button", Translation.WB_LED_BUTTON, ["SENSOR_PORT", "BUTTON_INDEX"], "Boolean", 'colours_sensing');
-	regBlock("pir",  Translation.WB_PIR, ["SENSOR_PORT"], "Boolean", 'colours_sensing');
-	regBlock("tilt", Translation.WB_TILT, ["SENSOR_PORT", "LINE_FOLLOWER_INDEX"], "Boolean", 'colours_sensing');
-	regBlock("limit_switch", Translation.WB_LIMIT_SWITCH, ["SENSOR_PORT"], "Boolean", 'colours_sensing');
+	regBlock("led_strip", Translation.WB_LED_STRIP, [SENSOR_PORT, "PIXEL", "R", "G", "B"], null, 'colours_looks');
+	regBlock("led_button_light", Translation.WB_LED_BUTTON_LIGHT, [SENSOR_PORT, BUTTON_INDEX, ON_OFF], null, 'colours_looks');
+	regBlock("relay", Translation.WB_RELAY, [SENSOR_PORT, ON_OFF], null, 'colours_pen');
+	regBlock("water_atomizer", Translation.WB_WATER_ATOMIZER, [SENSOR_PORT, ON_OFF], null, 'colours_pen');
+	regBlock("color_sensor_white_balance", Translation.WB_COLOR_SENSOR_WHITE_BALANCE, [SENSOR_PORT], null, 'colours_sensing');
+	regBlock("color_sensor_light", Translation.WB_COLOR_SENSOR_LIGHT, [SENSOR_PORT, ON_OFF], null, 'colours_sensing');
+	regBlock("mp3_play", Translation.WB_MP3_PLAY, [SENSOR_PORT], null, 'colours_looks');
+	regBlock("mp3_pause", Translation.WB_MP3_PAUSE, [SENSOR_PORT], null, 'colours_looks');
+	regBlock("mp3_next_music", Translation.WB_MP3_NEXT_MUSIC, [SENSOR_PORT], null, 'colours_looks');
+	regBlock("mp3_set_music", Translation.WB_MP3_SET_MUSIC, [SENSOR_PORT, "NUM"], null, 'colours_looks');
+	regBlock("mp3_set_volume", Translation.WB_MP3_SET_VOLUME, [SENSOR_PORT, "NUM"], null, 'colours_looks');
+	regBlock("mp3_set_device", Translation.WB_MP3_SET_DEVICE, [SENSOR_PORT, MP3_DEVICE_TYPE], null, 'colours_looks');
+	regBlock("mp3_is_over", Translation.WB_MP3_IS_OVER, [SENSOR_PORT], "Boolean", 'colours_looks');
+	regBlock("oled_set_size", Translation.WB_OLED_SET_SIZE, [SENSOR_PORT, OLED_SIZE], null, 'colours_sounds');
+	regBlock("oled_show_string", Translation.WB_OLED_SHOW_STRING, [SENSOR_PORT, "X", "Y", "STR"], null, 'colours_sounds');
+	regBlock("oled_show_number", Translation.WB_OLED_SHOW_NUMBER, [SENSOR_PORT, "X", "Y", "NUM"], null, 'colours_sounds');
+	regBlock("oled_clear_screen", Translation.WB_OLED_CLEAR_SCREEN, [SENSOR_PORT], null, 'colours_sounds');
+	regBlock("color_sensor", Translation.WB_COLOR_SENSOR, [SENSOR_PORT, COLOR_TYPE], "Number", 'colours_sensing');
+	regBlock("flame_sensor", Translation.WB_FLAME_SENSOR, [SENSOR_PORT, FLAME_INDEX], "Number", 'colours_sensing');
+	regBlock("joystick", Translation.WB_JOYSTICK, [SENSOR_PORT, AXIS2], "Number", 'colours_sensing');
+	regBlock("compass", Translation.WB_COMPASS, [SENSOR_PORT, AXIS3], "Number", 'colours_sensing');
+	regBlock("gyro_gyration", Translation.WB_GYRO_GYRATION, [SENSOR_PORT, AXIS3], "Number", 'colours_sensing');
+	regBlock("gyro_acceleration", Translation.WB_GYRO_ACCELERATION, [SENSOR_PORT, AXIS3], "Number", 'colours_sensing');
+	regBlock("touch", Translation.WB_TOUCH, [SENSOR_PORT], "Boolean", 'colours_sensing');
+	regBlock("led_button", Translation.WB_LED_BUTTON, [SENSOR_PORT, BUTTON_INDEX], "Boolean", 'colours_sensing');
+	regBlock("pir",  Translation.WB_PIR, [SENSOR_PORT], "Boolean", 'colours_sensing');
+	regBlock("tilt", Translation.WB_TILT, [SENSOR_PORT, LINE_FOLLOWER_INDEX], "Boolean", 'colours_sensing');
+	regBlock("limit_switch", Translation.WB_LIMIT_SWITCH, [SENSOR_PORT], "Boolean", 'colours_sensing');
 
 	return result;
 };

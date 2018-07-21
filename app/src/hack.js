@@ -11,6 +11,18 @@ wrapFn(Blockly.BlockDragger.prototype, 'pixelsToWorkspaceUnits_', oldFn => funct
 	return pt ? oldFn.call(this, pt) : {x:0,y:0};
 });
 
+wrapFn(Blockly.FieldDropdown, 'fromJson', oldFn => function(options){
+	let result = oldFn.call(this, options);
+	const key = 'defaultIndex';
+	if(key in options){
+		let index = options[key];
+		if(index > 0){
+			result.setValue(result.getOptions()[index][1]);
+		}
+	}
+	return result;
+});
+
 wrapFn(Blockly.FieldNumber, 'fromJson', oldFn => function(options){
 	let result = oldFn.call(this, options);
 	const hasMin = 'min' in options;
