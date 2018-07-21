@@ -7,6 +7,18 @@ import wrapFn from 'utils/function/overrideMethod';
 Blockly.Toolbox.prototype.width=500;
 Blockly.VerticalFlyout.prototype.DEFAULT_WIDTH=400;
 
+function copyProps(to, from, props){
+	for(let prop of props){
+		to[prop] = from[prop];
+	}
+}
+
+copyProps(
+	Blockly.FieldTextDropdown.prototype,
+	Blockly.FieldDropdown.prototype,
+	['getOptions', 'onItemSelected']
+);
+
 wrapFn(Blockly.BlockDragger.prototype, 'pixelsToWorkspaceUnits_', oldFn => function(pt){
 	return pt ? oldFn.call(this, pt) : {x:0,y:0};
 });
@@ -23,7 +35,7 @@ wrapFn(Blockly.FieldDropdown, 'fromJson', oldFn => function(options){
 	return result;
 });
 
-wrapFn(Blockly.FieldNumber, 'fromJson', oldFn => function(options){
+const fromJson = oldFn => function(options){
 	let result = oldFn.call(this, options);
 	const hasMin = 'min' in options;
 	const hasMax = 'max' in options;
@@ -39,7 +51,10 @@ wrapFn(Blockly.FieldNumber, 'fromJson', oldFn => function(options){
 		result.setValidator(value => Math.min(max, parseFloat(value)));
 	}
 	return result;
-});
+}
+
+wrapFn(Blockly.FieldNumber, 'fromJson', fromJson);
+wrapFn(Blockly.FieldNumberDropdown, 'fromJson', fromJson);
 
 Blockly.alert=function(info, callback){
 	message.warn(info, callback);

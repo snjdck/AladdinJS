@@ -1,12 +1,8 @@
 
 import Blockly from "scratch-blocks";
 
-function typeNameToTypeID(typeName){
-	switch(typeName){
-		case "Number":  return 2;
-		case "Boolean": return 1;
-	}
-	return 3;
+function createOptions(...args){
+	return args.map(v => [String(v), String(v)]);
 }
 
 function regNumberOption(target, id, args){
@@ -14,33 +10,11 @@ function regNumberOption(target, id, args){
 		this.jsonInit({
 			"message0": "%1",
 			"args0": [{
-				"type": "field_number",
+				"type": "field_numberdropdown",
 				"name": id,
 				...args
 			}],
-			"output": "Number",
-			"outputShape": Blockly.OUTPUT_SHAPE_ROUND,
-			"colour": Blockly.Colours.textField,
-			"colourSecondary": Blockly.Colours.textField,
-			"colourTertiary": Blockly.Colours.textField
-		});
-	}};
-}
-
-function regBooleanOption(target, id){
-	target[id.toLowerCase()] = {init(){
-		this.jsonInit({
-			"message0": "%1",
-			"args0": [{
-				"type": "field_checkbox",
-				"name": id,
-				"checked": true
-			}],
-			"output": "Boolean",
-			"outputShape": 1,
-			"colour": Blockly.Colours.textField,
-			"colourSecondary": Blockly.Colours.textField,
-			"colourTertiary": Blockly.Colours.textField
+			extensions:['output_number', 'colours_textfield']
 		});
 	}};
 }
@@ -49,31 +23,18 @@ function jsonInitBlock(id, title, args, typeName, color){
 	return {init(){
 		let params = {};
 		params.args0 = args.map(v => (typeof v === 'string' ? {type:'input_value',name:v} : v));
-		/*
-		for(var i=0; i<args.length; ++i){
-			var arg = {};
-			arg.type = "input_value";
-			arg.name = args[i];
-			params.args0.push(arg);
-		}
-		*/
 		params.message0 = title;
 		if(typeName){
 			params.extensions = [`output_${typeName.toLowerCase()}`, color];
 		}else{
 			params.extensions = ['shape_statement', color];
 		}
-		//params.inputsInline = true;
-		//params.colour = color.primary;
-		//params.colourSecondary = color.secondary;
-		//params.colourTertiary = color.tertiary;
 		params.tooltip = title;
 		this.jsonInit(params);
 	}};
 }
 
 function jsonInitOption(id, options, typeName, color){
-	//console.log(JSON.stringify(options))
 	return {init(){
 		var params = {};
 		params.args0 = [{
@@ -82,9 +43,6 @@ function jsonInitOption(id, options, typeName, color){
 			options: options.map(([k, v]) => [k, v.toString()])
 		}];
 		params.message0 = "%1";
-		//params.output = typeName;
-		//params.outputShape = typeNameToTypeID(typeName);
-		//params.inputsInline = true;
 		params.colour = color.primary;
 		params.colourSecondary = color.secondary;
 		params.colourTertiary = color.tertiary;
@@ -139,19 +97,22 @@ export default function (){
 	regNumberOption(result, 'SPEED', {
 		"precision": 1,
 		"min":-255,
-		"max":255
+		"max":255,
+		options:createOptions(-255, -200, -150, -100, -50, 0, 50, 100, 150, 200, 255)
 	});
 	regNumberOption(result, 'ANGLE', {
 		"precision": 1,
 		"min":0,
-		"max":180
+		"max":180,
+		options:createOptions(0, 30, 60, 90, 120, 150, 180)
 	});
 	regNumberOption(result, 'RGB_VALUE', {
 		"precision": 1,
 		"min":0,
-		"max":255
+		"max":255,
+		options:createOptions(0, 64, 128, 192, 255)
 	});
-	regBooleanOption(result, 'ON_OFF')
+	//regBooleanOption(result, 'ON_OFF')
 
 	/*
 	result['led_matrix_data'] = {
@@ -326,12 +287,7 @@ export default function (){
       "name": "COLOR",
       "colour": "#ff0000"
 	};*/
-	const BUTTON_INDEX = createDropDown('BUTTON_INDEX', [
-		["1", '1'],
-		["2", '2'],
-		["3", '3'],
-		["4", '4']
-	]);
+	const BUTTON_INDEX = createDropDown('BUTTON_INDEX', createOptions(1, 2, 3, 4));
 	/*regOption("button_index", "Number", [
 		["1", 1],
 		["2", 2],
@@ -344,10 +300,7 @@ export default function (){
 	/*regOption("mp3_device_type", "Number", [
 		["FLASH", 4],
 		["TF", 2]]);*/
-	const OLED_SIZE = createDropDown('OLED_SIZE', [
-		["8",  '8'],
-		["16", '16']
-	]);
+	const OLED_SIZE = createDropDown('OLED_SIZE', createOptions(8, 16));
 	/*regOption("oled_size", "Number", [
 		["8",  8],
 		["16", 16]]);*/
@@ -362,11 +315,7 @@ export default function (){
 		[Translation.COLOUR_RGB_RED,  1],
 		[Translation.COLOUR_RGB_GREEN,2],
 		[Translation.COLOUR_RGB_BLUE, 3]]);*/
-	const FLAME_INDEX = createDropDown('FLAME_INDEX', [
-		["1",'1'],
-		["2",'2'],
-		["3",'3']
-	]);
+	const FLAME_INDEX = createDropDown('FLAME_INDEX', createOptions(1, 2, 3));
 	/*regOption("flame_index", "Number", [
 		["1",1],
 		["2",2],
