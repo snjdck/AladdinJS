@@ -12,15 +12,15 @@ import {
 } from './utils/ToolboxUtil';
 //*/
 //A0 = 14
-const PORTS = [0, 19, 18, 16, 15];
-const SENSOR_PORTS = PORTS;
+//const PORTS = [0, 19, 18, 16, 15];
+//const SENSOR_PORTS = PORTS;
 /*
 #define MINI_LIFT_YELLOW   4
 #define MINI_LEFT_RED      3
 #define MINI_RIGHT_RED     A0
 #define MINI_RIGHT_YELLOW  13
 */
-const BACK_LED_PORTS = [4,3,14,13];
+//const BACK_LED_PORTS = [4,3,14,13];
 
 export const others = newCategory("Others", 'others', Blockly.Colours.pen,[
 		//newBlock("weeebot_program"),
@@ -38,12 +38,8 @@ export const others = newCategory("Others", 'others', Blockly.Colours.pen,[
 		
 	  
 	   
-		newBlock("relay", [
-			newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1])
-		]),
-		newBlock("water_atomizer", [
-			newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1])
-		]),
+		newBlock("relay"),
+		newBlock("water_atomizer"),
 		
 	]);
 /*
@@ -61,20 +57,16 @@ toolbox = create(["category", {"name":"WeeeBot\nMini", id:'sounds', "key":"WeeeB
 //export const motion = create(["category", {"name":"%{BKY_CATEGORY_MOTION}", id:'motion', "colour":"#4C97FF", "secondaryColour":"#3373CC"},
 export const motion = newCategory("%{BKY_CATEGORY_MOTION}", 'motion', Blockly.Colours.motion, [
 	 newBlock("weeebot_motor_dc", [
-			//newDropdownValue("WEEEBOT_DCMOTOR_OPTION", 1),
 			newDropdownValue("SPEED", 100)
 		]),
 		newBlock("weeebot_motor_move", [
-			//newDropdownValue("MOVE_DIRECTION", 1),
-			newNumberValue("SPEED", 120)
+			newDropdownValue("SPEED", 120)
 		]),
 		newBlock("weeebot_stop"),
 		newBlock("weeebot_motor_dc_130", [
-			//newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1]),
-			newNumberValue("SPEED", 0)
+			newDropdownValue("SPEED", 0)
 		]),
 		newBlock("on_board_servo", [
-			//newDropdownValue("SENSOR_PORT", PORTS[1]),
 			newDropdownValue("ANGLE", 90)
 		]),
 ]);
@@ -87,45 +79,36 @@ export const looks = newCategory("%{BKY_CATEGORY_LOOKS}", 'looks', Blockly.Colou
 		]),
 	 newLabel('RGB'),
 		newBlock("weeebot_rgb", [
-			//newDropdownValue("SENSOR_PORT", PORTS[1]),
-			newNumberValue("PIXEL", 0),
+			newNumberValue("PIXEL", 0, 'math_whole_number'),
 			newXML("value", {"name":"COLOR"}, [newXML("shadow", {"type":"colour_picker"})])
 		]),
 		newBlock("weeebot_rgb3", [
-			//newDropdownValue("SENSOR_PORT", PORTS[1]),
-			newNumberValue("PIXEL", 0),
+			newNumberValue("PIXEL", 0, 'math_whole_number'),
 			newDropdownValue("R", 255, 'RGB_VALUE'),
 			newDropdownValue("G", 255, 'RGB_VALUE'),
 			newDropdownValue("B", 255, 'RGB_VALUE')
 		]),
 		newBlock("weeebot_rgb_RJ11", [
-		   // newDropdownValue("SENSOR_PORT", PORTS[1]),
-			newNumberValue("PIXEL", 0),
+			newNumberValue("PIXEL", 0, 'math_whole_number'),
 			newXML("value", {"name":"COLOR"}, [newXML("shadow", {"type":"colour_picker"})])
 		]),
 		newBlock("weeebot_rgb3_RJ11", [
-		   // newDropdownValue("SENSOR_PORT", PORTS[1]),
-			newNumberValue("PIXEL", 0),
+			newNumberValue("PIXEL", 0, 'math_whole_number'),
 			newDropdownValue("R", 255, 'RGB_VALUE'),
 			newDropdownValue("G", 255, 'RGB_VALUE'),
 			newDropdownValue("B", 255, 'RGB_VALUE')
 		]),
 		newBlock("led_strip", [
-		 //   newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1]),
-			newNumberValue("PIXEL", 0),
+			newNumberValue("PIXEL", 0, 'math_whole_number'),
 			newDropdownValue("R", 255, 'RGB_VALUE'),
 			newDropdownValue("G", 255, 'RGB_VALUE'),
 			newDropdownValue("B", 255, 'RGB_VALUE')
 		]),
 		 newLabel('ultrasonic'),
 	newBlock("ultrasonic_led", [
-		 //   newDropdownValue("SENSOR_PORT", PORTS[1]),
-			//newDropdownValue("ULTRASONIC_LED_INDEX", 3),
 			newXML("value", {"name":"COLOR"}, [newXML("shadow", {"type":"colour_picker"})])
 		]),
 		newBlock("ultrasonic_led_rgb", [
-		   // newDropdownValue("SENSOR_PORT", PORTS[1]),
-			//newDropdownValue("ULTRASONIC_LED_INDEX", 3),
 			newDropdownValue("R", 255, 'RGB_VALUE'),
 			newDropdownValue("G", 255, 'RGB_VALUE'),
 			newDropdownValue("B", 255, 'RGB_VALUE')
@@ -135,9 +118,9 @@ export const looks = newCategory("%{BKY_CATEGORY_LOOKS}", 'looks', Blockly.Colou
 			newXML("value", {"name":"COLOR"}, [newXML("shadow", {"type":"colour_picker"})])
 		]),
 		newBlock("ir_avoid_led_rgb", [
-			newNumberValue("R", 255),
-			newNumberValue("G", 255),
-			newNumberValue("B", 255)
+			newDropdownValue("R", 255, 'RGB_VALUE'),
+			newDropdownValue("G", 255, 'RGB_VALUE'),
+			newDropdownValue("B", 255, 'RGB_VALUE')
 		]),
 		newBlock("weeebot_single_led"),
 		newBlock("front_led_light"),
@@ -148,10 +131,10 @@ export const looks = newCategory("%{BKY_CATEGORY_LOOKS}", 'looks', Blockly.Colou
 		newBlock("mp3_pause"),
 		newBlock("mp3_next_music"),
 		newBlock("mp3_set_music", [
-			newNumberValue("NUM", 1)
+			newNumberValue("NUM", 1, 'math_whole_number')
 		]),
 		newBlock("mp3_set_volume", [
-			newNumberValue("NUM", 0)
+			newNumberValue("NUM", 0, 'math_whole_number')
 		]),
 		newBlock("mp3_set_device"),
 		newBlock("mp3_is_over")
@@ -163,64 +146,50 @@ export const looks = newCategory("%{BKY_CATEGORY_LOOKS}", 'looks', Blockly.Colou
 export const sound = newCategory("%{BKY_CATEGORY_SOUND}", 'sound', Blockly.Colours.sounds, [
 		newLabel('led matrix'),
 		newBlock("weeebot_led_matrix_number", [
-		   // newDropdownValue("SENSOR_PORT", PORTS[3]),
 			newNumberValue("NUM", 100)
 		]),
-		//*
 		newBlock("weeebot_led_matrix_time", [
-		 //   newDropdownValue("SENSOR_PORT", PORTS[3]),
-			newNumberValue("HOUR", 12),
-			//newDropdownValue("SHOW_COLON", 1),
-			newNumberValue("SECOND", 34)
-		]),//*/
+			newNumberValue("HOUR", 12, 'math_whole_number'),
+			newNumberValue("SECOND", 34, 'math_whole_number')
+		]),
 		newBlock("weeebot_led_matrix_string", [
-		  //  newDropdownValue("SENSOR_PORT", PORTS[3]),
-			newNumberValue("X", 0),
-			newNumberValue("Y", 0),
+			newNumberValue("X", 0, 'math_integer'),
+			newNumberValue("Y", 0, 'math_integer'),
 			newTextValue("STR", "Hi")
 		]),
-		//*
 		newBlock("weeebot_led_matrix_bitmap", [
-		  //  newDropdownValue("SENSOR_PORT", PORTS[3]),
-			newNumberValue("X", 0),
-			newNumberValue("Y", 0),
+			newNumberValue("X", 0, 'math_integer'),
+			newNumberValue("Y", 0, 'math_integer'),
 			newDropdownValue('MATRIX', '0101010101100010101000100')
 			//newXML("value", {"name":"LED_MATRIX_DATA"}, [newXML("shadow", {"type":"led_matrix_data"})])
 		]),//*/
 		newBlock("weeebot_led_matrix_pixel_show", [
-		  //  newDropdownValue("SENSOR_PORT", PORTS[3]),
-			newNumberValue("X", 0),
-			newNumberValue("Y", 0)
+			newNumberValue("X", 0, 'math_integer'),
+			newNumberValue("Y", 0, 'math_integer'),
 		]),
 		newBlock("weeebot_led_matrix_pixel_hide", [
-		  //  newDropdownValue("SENSOR_PORT", PORTS[3]),
-			newNumberValue("X", 0),
-			newNumberValue("Y", 0)
+			newNumberValue("X", 0, 'math_integer'),
+			newNumberValue("Y", 0, 'math_integer'),
 		]),
 		newBlock("weeebot_led_matrix_clear"),
 		newLabel('seven_segment'),
 		newBlock("seven_segment", [
-		  //  newDropdownValue("SENSOR_PORT", PORTS[1]),
 			newNumberValue("NUM", 100)
 		]),
 		newLabel('oled'),
 		newBlock("oled_set_size"),
 		newBlock("oled_show_string", [
-		   // newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1]),
-			newNumberValue("X", 0),
-			newNumberValue("Y", 0),
+			newNumberValue("X", 0, 'math_integer'),
+			newNumberValue("Y", 0, 'math_integer'),
 			newTextValue("STR", "Hi")
 		]),
 		newBlock("oled_show_number", [
-		   // newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1]),
-			newNumberValue("X", 0),
-			newNumberValue("Y", 0),
+			newNumberValue("X", 0, 'math_integer'),
+			newNumberValue("Y", 0, 'math_integer'),
 			newNumberValue("NUM", 100)
 		]),
 		newBlock("oled_clear_screen"),
 ]);
-
-
 
 
 //export const sensing = create(["category", {"name":"%{BKY_CATEGORY_SENSING}", id:'sensing', "colour":"#4CBFE6", "secondaryColour":"#2E8EB8"},
