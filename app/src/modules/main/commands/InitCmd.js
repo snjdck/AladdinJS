@@ -8,7 +8,7 @@ import {
 import Blockly from 'scratch-blocks';
 import {showFlyout} from '../../../hack';
 import MainModel from '../MainModel';
-import toolbox from '../blocks/toolbox';
+import toolbox from '../robots';
 
 class InitCmd extends Controller
 {

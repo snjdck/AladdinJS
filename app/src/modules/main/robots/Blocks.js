@@ -1,8 +1,6 @@
 
 import Blockly from "scratch-blocks";
 
-console.log(Blockly)
-
 function typeNameToTypeID(typeName){
 	switch(typeName){
 		case "Number":  return 2;
@@ -320,7 +318,7 @@ export default function (){
 	regBlock("weeebot_led_matrix_number", Translation.WB_LED_MATRIX_NUMBER, ["SENSOR_PORT", "NUM"], null, 'colours_sounds');
 	regBlock("weeebot_led_matrix_time", Translation.WB_LED_MATRIX_TIME, ["SENSOR_PORT", "HOUR", SHOW_COLON, "SECOND"], null, 'colours_sounds');
 	regBlock("weeebot_led_matrix_string", Translation.WB_LED_MATRIX_STRING, ["SENSOR_PORT", "X", "Y", "STR"], null, 'colours_sounds');
-	regBlock("weeebot_led_matrix_bitmap", Translation.WB_LED_MATRIX_BITMAP, ["SENSOR_PORT", "X", "Y", "LED_MATRIX_DATA"], null, 'colours_sounds');
+	regBlock("weeebot_led_matrix_bitmap", Translation.WB_LED_MATRIX_BITMAP, ["SENSOR_PORT", "X", "Y", "MATRIX"], null, 'colours_sounds');
 	regBlock("weeebot_led_matrix_pixel_show", Translation.WB_LED_MATRIX_PIXEL_SHOW, ["SENSOR_PORT", "X", "Y"], null, 'colours_sounds');
 	regBlock("weeebot_led_matrix_pixel_hide", Translation.WB_LED_MATRIX_PIXEL_HIDE, ["SENSOR_PORT", "X", "Y"], null, 'colours_sounds');
 	regBlock("weeebot_led_matrix_clear", Translation.WB_LED_MATRIX_CLEAR, ["SENSOR_PORT"], null, 'colours_sounds');

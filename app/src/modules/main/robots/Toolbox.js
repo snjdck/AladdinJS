@@ -1,37 +1,15 @@
 "use strict";
-
-function create(args){
-    if(!Array.isArray(args))
-        return args;
-    let [tagName, ...children] = args;
-    let attributes = (children[0] == null || children[0].constructor == Object) && children.shift();
-    let result = "<" + tagName;
-    if(attributes)
-        result += Object.entries(attributes).map(([k,v]) => ` ${k}="${v}"`).join("");
-    if(children.length > 0)
-        return result + ">" + children.map(create).join("") + `</${tagName}>`;
-    return result + "/>";
-}
-
-function newXML(name, attributes, children=[]){
-    return [name, attributes, ...children];
-}
-
-function newNumberValue(name, defaultValue){
-    return ["value", {name}, ["shadow", {"type":"math_number"}, ["field", {"name":"NUM"}, defaultValue]]];
-}
-
-function newTextValue(name, defaultValue){
-    return ["value", {name}, ["shadow", {"type":"text"}, ["field", {"name":"TEXT"}, defaultValue]]];
-}
-
-function newDropdownValue(name, defaultValue, shadow=name){
-    return ["value", {name}, ["shadow", {"type":shadow.toLowerCase()}, ["field", {name:shadow}, defaultValue]]];
-}
-
-function newBlock(type, children=[]){
-    return ["block", {type, id:type}, ...children];
-}
+import Blockly from 'scratch-blocks';
+import create from 'fileformats/xml/create';
+import {
+    newXML,
+    newBlock,
+    newCategory,
+    newNumberValue,
+    newTextValue,
+    newDropdownValue,
+    newLabel
+} from './utils/ToolboxUtil';
 //*/
 //A0 = 14
 const PORTS = [0, 19, 18, 16, 15];
@@ -44,7 +22,7 @@ const SENSOR_PORTS = PORTS;
 */
 const BACK_LED_PORTS = [4,3,14,13];
 
-export const others = create(["category", {"name":"Others", id:'others', "colour":"#0fBD8C", "secondaryColour":"#0DA57A"},
+export const others = newCategory("Others", 'others', Blockly.Colours.pen,[
         //newBlock("weeebot_program"),
        
         /*newBlock("weeebot_steppermove", [
@@ -79,10 +57,9 @@ toolbox = create(["category", {"name":"WeeeBot\nMini", id:'sounds', "key":"WeeeB
         ])
     ]);
 */
-
-const newLabel = text => newXML('label', {text});
-
-export const motion = create(["category", {"name":"%{BKY_CATEGORY_MOTION}", id:'motion', "colour":"#4C97FF", "secondaryColour":"#3373CC"},
+//console.log(Blockly.Colours)
+//export const motion = create(["category", {"name":"%{BKY_CATEGORY_MOTION}", id:'motion', "colour":"#4C97FF", "secondaryColour":"#3373CC"},
+export const motion = newCategory("%{BKY_CATEGORY_MOTION}", 'motion', Blockly.Colours.motion, [
      newBlock("weeebot_motor_dc", [
             newDropdownValue("WEEEBOT_DCMOTOR_OPTION", 1),
             newDropdownValue("SPEED", 100)
@@ -102,7 +79,8 @@ export const motion = create(["category", {"name":"%{BKY_CATEGORY_MOTION}", id:'
         ]),
 ]);
 
-export const looks = create(["category", {"name":"%{BKY_CATEGORY_LOOKS}", id:'looks', "colour":"#9966FF", "secondaryColour":"#774DCB"},
+//export const looks = create(["category", {"name":"%{BKY_CATEGORY_LOOKS}", id:'looks', "colour":"#9966FF", "secondaryColour":"#774DCB"},
+export const looks = newCategory("%{BKY_CATEGORY_LOOKS}", 'looks', Blockly.Colours.looks, [
      newBlock("test_tone_note", [
             newDropdownValue("TEST_TONE_NOTE_NOTE_OPTION", 262),
             newDropdownValue("TEST_TONE_NOTE_BEAT_OPTION", 500)
@@ -209,7 +187,8 @@ export const looks = create(["category", {"name":"%{BKY_CATEGORY_LOOKS}", id:'lo
 
 
 
-export const sound = create(["category", {"name":"%{BKY_CATEGORY_SOUND}", id:'sound', "colour":"#D65CD6", "secondaryColour":"#BD42BD"},
+//export const sound = create(["category", {"name":"%{BKY_CATEGORY_SOUND}", id:'sound', "colour":"#D65CD6", "secondaryColour":"#BD42BD"},
+export const sound = newCategory("%{BKY_CATEGORY_SOUND}", 'sound', Blockly.Colours.sounds, [
         newLabel('led matrix'),
         newBlock("weeebot_led_matrix_number", [
             newDropdownValue("SENSOR_PORT", PORTS[3]),
@@ -228,13 +207,14 @@ export const sound = create(["category", {"name":"%{BKY_CATEGORY_SOUND}", id:'so
             newNumberValue("Y", 0),
             newTextValue("STR", "Hi")
         ]),
-        /*
+        //*
         newBlock("weeebot_led_matrix_bitmap", [
             newDropdownValue("SENSOR_PORT", PORTS[3]),
             newNumberValue("X", 0),
             newNumberValue("Y", 0),
-            newXML("value", {"name":"LED_MATRIX_DATA"}, [newXML("shadow", {"type":"led_matrix_data"})])
-        ]),*/
+            newDropdownValue('MATRIX', '0101010101100010101000100')
+            //newXML("value", {"name":"LED_MATRIX_DATA"}, [newXML("shadow", {"type":"led_matrix_data"})])
+        ]),//*/
         newBlock("weeebot_led_matrix_pixel_show", [
             newDropdownValue("SENSOR_PORT", PORTS[3]),
             newNumberValue("X", 0),
@@ -276,7 +256,10 @@ export const sound = create(["category", {"name":"%{BKY_CATEGORY_SOUND}", id:'so
 ]);
 
 
-export const sensing = create(["category", {"name":"%{BKY_CATEGORY_SENSING}", id:'sensing', "colour":"#4CBFE6", "secondaryColour":"#2E8EB8"},
+
+
+//export const sensing = create(["category", {"name":"%{BKY_CATEGORY_SENSING}", id:'sensing', "colour":"#4CBFE6", "secondaryColour":"#2E8EB8"},
+export const sensing = newCategory("%{BKY_CATEGORY_SENSING}", 'sensing', Blockly.Colours.sensing, [
        newBlock("color_sensor_white_balance", [
             newDropdownValue("SENSOR_PORT", SENSOR_PORTS[1])
         ]),
@@ -378,3 +361,89 @@ export const sensing = create(["category", {"name":"%{BKY_CATEGORY_SENSING}", id
         newBlock('sensing_current'),
         newBlock('sensing_dayssince2000'),
 ]);
+
+export const events = newCategory("%{BKY_CATEGORY_EVENTS}", "events", Blockly.Colours.event, [
+    newBlock('event_whenflagclicked')
+]);
+
+export const control = newCategory("%{BKY_CATEGORY_CONTROL}", "control", Blockly.Colours.control, [
+    newBlock('control_wait', [
+        newNumberValue('DURATION', 1, 'math_positive_number')
+    ]),
+    newBlock('control_repeat', [
+        newNumberValue('TIMES', 10, 'math_whole_number')
+    ]),
+    newBlock('control_forever'),
+    newBlock('control_if'),
+    newBlock('control_if_else'),
+    newBlock('control_wait_until'),
+    newBlock('control_repeat_until'),
+]);
+
+export const variable = newCategory("%{BKY_CATEGORY_VARIABLES}", "data", Blockly.Colours.data, "VARIABLE");
+export const procedure = newCategory("%{BKY_CATEGORY_MYBLOCKS}", "more", Blockly.Colours.more, "PROCEDURE");
+
+export const operators = newCategory("%{BKY_CATEGORY_OPERATORS}", "operators", Blockly.Colours.operators, [
+    newBlock('operator_add', [
+        newNumberValue('NUM1'),
+        newNumberValue('NUM2')
+    ]),
+    newBlock('operator_subtract', [
+        newNumberValue('NUM1'),
+        newNumberValue('NUM2')
+    ]),
+    newBlock('operator_multiply', [
+        newNumberValue('NUM1'),
+        newNumberValue('NUM2')
+    ]),
+    newBlock('operator_divide', [
+        newNumberValue('NUM1'),
+        newNumberValue('NUM2')
+    ]),
+    newBlock('operator_random', [
+        newNumberValue('FROM', 1),
+        newNumberValue('TO', 10)
+    ]),
+    newBlock('operator_lt', [
+        newTextValue('OPERAND1'),
+        newTextValue('OPERAND2')
+    ]),
+    newBlock('operator_equals', [
+        newTextValue('OPERAND1'),
+        newTextValue('OPERAND2')
+    ]),
+    newBlock('operator_gt', [
+        newTextValue('OPERAND1'),
+        newTextValue('OPERAND2')
+    ]),
+    newBlock('operator_and'),
+    newBlock('operator_or'),
+    newBlock('operator_not'),
+    newBlock('operator_join', [
+        newTextValue('STRING1', 'hello'),
+        newTextValue('STRING2', 'world')
+    ]),
+    newBlock('operator_letter_of', [
+        newNumberValue('LETTER', 1, 'math_whole_number'),
+        newTextValue('STRING', 'world')
+    ]),
+    newBlock('operator_length', [
+        newTextValue('STRING', 'world')
+    ]),
+    newBlock('operator_contains', [
+        newTextValue('STRING1', 'hello'),
+        newTextValue('STRING2', 'world')
+    ]),
+    newBlock('operator_mod', [
+        newNumberValue('NUM1'),
+        newNumberValue('NUM2')
+    ]),
+    newBlock('operator_round', [
+        newNumberValue('NUM')
+    ]),
+    newBlock('operator_mathop', [
+        newNumberValue('NUM')
+    ])
+]);
+
+export default create(['xml', events, control, motion, looks, sound, sensing, operators, variable, procedure, others]);

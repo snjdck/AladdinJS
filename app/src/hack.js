@@ -2,10 +2,7 @@ import Blockly from 'scratch-blocks';
 import './locale/en';
 import {message, Modal, Input} from 'antd';
 import React from 'react';
-
-function wrapFn(target, prop, newFn){
-	target[prop] = newFn(target[prop]);
-}
+import wrapFn from 'utils/function/overrideMethod';
 
 Blockly.Toolbox.prototype.width=500;
 Blockly.VerticalFlyout.prototype.DEFAULT_WIDTH=400;
