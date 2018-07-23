@@ -152,12 +152,20 @@ class RunCodeCmd extends Controller
 		let json = xml2json(xml);
 		if(!json.block)return;
 		let blocks = Array.isArray(json.block) ? json.block : [json.block];
-		blocks = blocks.filter(v => v.type === "event_whenflagclicked");
+		let fnDefs = blocks.filter(v => v.type === 'procedures_definition');
+		console.log(fnDefs)
+		for(let blockList of block2syntaxTree(fnDefs)){
+			console.log('fndef',blockList)
+			let codeList = interpreter.compile(blockList);
+			console.log('fncodes',interpreter.castCodeListToString(codeList));
+		}
+		
+		blocks = blocks.filter(v => v.type === 'event_whenflagclicked');
 		console.log(blocks);
 		for(let blockList of block2syntaxTree(blocks)){
 			console.log(blockList)
 			let codeList = interpreter.compile(blockList);
-			//console.log(interpreter.castCodeListToString(codeList));
+			console.log(interpreter.castCodeListToString(codeList));
 			interpreter.executeAssembly(codeList);
 		}
 	}
