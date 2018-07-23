@@ -147,7 +147,7 @@ class RunCodeCmd extends Controller
 		Thread.prototype.net = this.bluetooth;
 		Thread.prototype.interpreter = interpreter;
 
-		let workspace = Blockly.getMainWorkspace();
+		let workspace = this.model.workspace;
 		let xml = Blockly.Xml.workspaceToDom(workspace);
 		let json = xml2json(xml);
 		if(!json.block)return;

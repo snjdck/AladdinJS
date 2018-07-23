@@ -8,6 +8,7 @@ import {
 import Blockly from 'scratch-blocks';
 import {showFlyout} from '../../../hack';
 import MainModel from '../MainModel';
+import {MsgNames} from '../';
 import toolbox from '../robots';
 
 class InitCmd extends Controller
@@ -59,6 +60,8 @@ class InitCmd extends Controller
 		});
 
 		this.model.workspace = workspace;
+
+		Blockly.Procedures.externalProcedureDefCallback = (...args) => this.notify(MsgNames.createFnBlock, args);
 	}
 }
 

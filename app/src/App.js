@@ -1,11 +1,15 @@
-import React, { Component } from 'react';
-import Blockly from 'scratch-blocks';
+import React from 'react';
+//import Blockly from 'scratch-blocks';
 import './App.css';
 import {Button} from 'antd';
 //import {showFlyout} from './hack';
 //import xml2json from 'fileformats/xml/toJSON'
 import {MsgNames} from './modules/main';
-import {ViewComponent} from 'mvc';
+//import toolbox from './modules/main/robots';
+//import MainModel from './modules/main/MainModel';
+import {ViewComponent, InjectTag} from 'mvc';
+
+import CreateBlockView from './CreateBlockView';
 
 /*
 workspace.setVisible(true)
@@ -39,10 +43,11 @@ class App extends ViewComponent {
 				<div id="blocklyDiv"></div>
 				<Button className='goBackBtn'>Go Back</Button>
 				<Button className="runBtn" type={codeRunFlag ? "danger" :"primary"} onClick={this.runCode}>{codeRunFlag ? "Stop" :"Start"}</Button>
+				<CreateBlockView />
 			</div>
 		);
 	}
 }
 
-export default App;
 
+export default App;

@@ -16,7 +16,7 @@ function copyProps(to, from, props){
 copyProps(
 	Blockly.FieldTextDropdown.prototype,
 	Blockly.FieldDropdown.prototype,
-	['getOptions', 'onItemSelected']
+	['getOptions', 'onItemSelected', 'isOptionListDynamic']
 );
 
 wrapFn(Blockly.BlockDragger.prototype, 'pixelsToWorkspaceUnits_', oldFn => function(pt){
@@ -88,10 +88,6 @@ Blockly.prompt=function(title, defaultInput, callback){
 		}
 	});
 };
-
-Blockly.Procedures.externalProcedureDefCallback = function(){
-	message.warn('create function!');
-}
 
 function showFlyout(value){
 	value = value ? 'visible' : 'hidden';
