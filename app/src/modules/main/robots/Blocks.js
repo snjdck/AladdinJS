@@ -359,7 +359,8 @@ export default function (){
 	regBlock("weeebot_led_matrix_number", Translation.WB_LED_MATRIX_NUMBER, [defaultIndex(SENSOR_PORT, 2), "NUM"], null, 'colours_sounds');
 	regBlock("weeebot_led_matrix_time", Translation.WB_LED_MATRIX_TIME, [defaultIndex(SENSOR_PORT, 2), "HOUR", SHOW_COLON, "SECOND"], null, 'colours_sounds');
 	regBlock("weeebot_led_matrix_string", Translation.WB_LED_MATRIX_STRING, [defaultIndex(SENSOR_PORT, 2), "X", "Y", "STR"], null, 'colours_sounds');
-	regBlock("weeebot_led_matrix_bitmap", Translation.WB_LED_MATRIX_BITMAP, [defaultIndex(SENSOR_PORT, 2), "X", "Y", "MATRIX"], null, 'colours_sounds');
+	regBlock("weeebot_led_matrix_bitmap_21x7", Translation.WB_LED_MATRIX_BITMAP, [defaultIndex(SENSOR_PORT, 2), "X", "Y", "MATRIX"], null, 'colours_sounds');
+	regBlock("weeebot_led_matrix_bitmap_14x5", Translation.WB_LED_MATRIX_BITMAP, [defaultIndex(SENSOR_PORT, 2), "X", "Y", "MATRIX"], null, 'colours_sounds');
 	regBlock("weeebot_led_matrix_pixel_show", Translation.WB_LED_MATRIX_PIXEL_SHOW, [defaultIndex(SENSOR_PORT, 2), "X", "Y"], null, 'colours_sounds');
 	regBlock("weeebot_led_matrix_pixel_hide", Translation.WB_LED_MATRIX_PIXEL_HIDE, [defaultIndex(SENSOR_PORT, 2), "X", "Y"], null, 'colours_sounds');
 	regBlock("weeebot_led_matrix_clear", Translation.WB_LED_MATRIX_CLEAR, [defaultIndex(SENSOR_PORT, 2)], null, 'colours_sounds');

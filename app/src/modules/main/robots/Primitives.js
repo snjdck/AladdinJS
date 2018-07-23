@@ -158,6 +158,14 @@ function weeebot_led_matrix_string(argValues){
     this.net.sendCmd( 114, port, x, y, str);
 }
 
+function weeebot_led_matrix_bitmap_21x7(argValues){
+    console.log(argValues)
+}
+
+function weeebot_led_matrix_bitmap_14x5(argValues){
+    console.log(argValues)
+}
+
 function weeebot_led_matrix_bitmap(argValues){
     var port = argValues.SENSOR_PORT;
     var x = argValues.X;
@@ -461,7 +469,8 @@ export default {
         weeebot_led_matrix_number,
         weeebot_led_matrix_time,
         weeebot_led_matrix_string,
-        weeebot_led_matrix_bitmap,
+        weeebot_led_matrix_bitmap_21x7,
+        weeebot_led_matrix_bitmap_14x5,
         weeebot_led_matrix_pixel_show,
         weeebot_led_matrix_pixel_hide,
         weeebot_led_matrix_clear,
