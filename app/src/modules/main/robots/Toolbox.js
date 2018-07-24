@@ -1,4 +1,4 @@
-"use strict";
+
 import Blockly from 'scratch-blocks';
 import create from 'fileformats/xml/create';
 import {
@@ -22,7 +22,7 @@ import {
 */
 //const BACK_LED_PORTS = [4,3,14,13];
 
-export const others = newCategory("Others", 'others', Blockly.Colours.pen,[
+const others = newCategory("Others", 'others', Blockly.Colours.pen,[
 		//newBlock("weeebot_program"),
 	   
 		/*newBlock("weeebot_steppermove", [
@@ -55,7 +55,7 @@ toolbox = create(["category", {"name":"WeeeBot\nMini", id:'sounds', "key":"WeeeB
 */
 //console.log(Blockly.Colours)
 //export const motion = create(["category", {"name":"%{BKY_CATEGORY_MOTION}", id:'motion', "colour":"#4C97FF", "secondaryColour":"#3373CC"},
-export const motion = newCategory("%{BKY_CATEGORY_MOTION}", 'motion', Blockly.Colours.motion, [
+const motion = newCategory("%{BKY_CATEGORY_MOTION}", 'motion', Blockly.Colours.motion, [
 	 newBlock("weeebot_motor_dc", [
 			newDropdownValue("SPEED", 100)
 		]),
@@ -72,7 +72,7 @@ export const motion = newCategory("%{BKY_CATEGORY_MOTION}", 'motion', Blockly.Co
 ]);
 
 //export const looks = create(["category", {"name":"%{BKY_CATEGORY_LOOKS}", id:'looks', "colour":"#9966FF", "secondaryColour":"#774DCB"},
-export const looks = newCategory("%{BKY_CATEGORY_LOOKS}", 'looks', Blockly.Colours.looks, [
+const looks = newCategory("%{BKY_CATEGORY_LOOKS}", 'looks', Blockly.Colours.looks, [
 	 newBlock("test_tone_note", [
 			newDropdownValue("TEST_TONE_NOTE_NOTE_OPTION", 262),
 			newDropdownValue("TEST_TONE_NOTE_BEAT_OPTION", 500)
@@ -143,7 +143,7 @@ export const looks = newCategory("%{BKY_CATEGORY_LOOKS}", 'looks', Blockly.Colou
 
 
 //export const sound = create(["category", {"name":"%{BKY_CATEGORY_SOUND}", id:'sound', "colour":"#D65CD6", "secondaryColour":"#BD42BD"},
-export const sound = newCategory("%{BKY_CATEGORY_SOUND}", 'sound', Blockly.Colours.sounds, [
+const sound = newCategory("%{BKY_CATEGORY_SOUND}", 'sound', Blockly.Colours.sounds, [
 		newLabel('led matrix'),
 		newBlock("weeebot_led_matrix_number", [
 			newNumberValue("NUM", 100)
@@ -199,7 +199,7 @@ export const sound = newCategory("%{BKY_CATEGORY_SOUND}", 'sound', Blockly.Colou
 
 
 //export const sensing = create(["category", {"name":"%{BKY_CATEGORY_SENSING}", id:'sensing', "colour":"#4CBFE6", "secondaryColour":"#2E8EB8"},
-export const sensing = newCategory("%{BKY_CATEGORY_SENSING}", 'sensing', Blockly.Colours.sensing, [
+const sensing = newCategory("%{BKY_CATEGORY_SENSING}", 'sensing', Blockly.Colours.sensing, [
 		newBlock("color_sensor_white_balance"),
 		newBlock("color_sensor_light"),
 		newBlock("line_follower"),
@@ -232,11 +232,11 @@ export const sensing = newCategory("%{BKY_CATEGORY_SENSING}", 'sensing', Blockly
 		newBlock('sensing_dayssince2000'),
 ]);
 
-export const events = newCategory("%{BKY_CATEGORY_EVENTS}", "events", Blockly.Colours.event, [
+const events = newCategory("%{BKY_CATEGORY_EVENTS}", "events", Blockly.Colours.event, [
 	newBlock('event_whenflagclicked')
 ]);
 
-export const control = newCategory("%{BKY_CATEGORY_CONTROL}", "control", Blockly.Colours.control, [
+const control = newCategory("%{BKY_CATEGORY_CONTROL}", "control", Blockly.Colours.control, [
 	newBlock('control_wait', [
 		newNumberValue('DURATION', 1, 'math_positive_number')
 	]),
@@ -250,10 +250,10 @@ export const control = newCategory("%{BKY_CATEGORY_CONTROL}", "control", Blockly
 	newBlock('control_repeat_until'),
 ]);
 
-export const variable = newCategory("%{BKY_CATEGORY_VARIABLES}", "data", Blockly.Colours.data, "VARIABLE");
-export const procedure = newCategory("%{BKY_CATEGORY_MYBLOCKS}", "more", Blockly.Colours.more, "PROCEDURE");
+const variable = newCategory("%{BKY_CATEGORY_VARIABLES}", "data", Blockly.Colours.data, "VARIABLE");
+const procedure = newCategory("%{BKY_CATEGORY_MYBLOCKS}", "more", Blockly.Colours.more, "PROCEDURE");
 
-export const operators = newCategory("%{BKY_CATEGORY_OPERATORS}", "operators", Blockly.Colours.operators, [
+const operators = newCategory("%{BKY_CATEGORY_OPERATORS}", "operators", Blockly.Colours.operators, [
 	newBlock('operator_add', [
 		newNumberValue('NUM1'),
 		newNumberValue('NUM2')
