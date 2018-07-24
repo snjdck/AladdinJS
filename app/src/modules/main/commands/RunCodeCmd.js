@@ -31,11 +31,13 @@ const funcDict = {
 	event_whenflagclicked(){
 
 	},
-	motion_gotoxy({X, Y}){
-		console.log('motion_gotoxy', X, Y);
+	argument_reporter_boolean({VALUE}){
+		console.log('argument_reporter_boolean', VALUE);
+		return this.getVar(VALUE);
 	},
-	motion_xposition(){
-		return 100;
+	argument_reporter_string_number({VALUE}){
+		console.log('argument_reporter_string_number', VALUE);
+		return this.getVar(VALUE);
 	},
 	data_listcontents({LIST}){
 		console.log('LIST', LIST)
@@ -159,14 +161,15 @@ class RunCodeCmd extends Controller
 			let codeList = interpreter.compile(blockList);
 			console.log('fncodes',interpreter.castCodeListToString(codeList));
 		}
-		
+		//fnDefs = block2syntaxTree(fnDefs).reduce((a, b) => a.concat(b), []);
+		let globalContext = interpreter.executeSynchronously(block2syntaxTree(fnDefs).reduce((a, b) => a.concat(b), []));
 		blocks = blocks.filter(v => v.type === 'event_whenflagclicked');
 		console.log(blocks);
 		for(let blockList of block2syntaxTree(blocks)){
 			console.log(blockList)
 			let codeList = interpreter.compile(blockList);
 			console.log(interpreter.castCodeListToString(codeList));
-			interpreter.executeAssembly(codeList);
+			interpreter.executeAssembly(codeList, globalContext);
 		}
 	}
 }

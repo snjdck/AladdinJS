@@ -50,7 +50,7 @@ function castBlock(block){
 		}else if(block.type === 'procedures_definition'){
 			let {mutation, value} = block.statement.shadow;
 			let statement = block.next && block.next.block;
-			result.push(SyntaxTreeFactory.SetVar(mutation.proccode, SyntaxTreeFactory.NewFunction(JSON.parse(mutation.argumentids), castBlock(statement))));
+			result.push(SyntaxTreeFactory.SetVar(mutation.proccode, SyntaxTreeFactory.NewFunction(JSON.parse(mutation.argumentnames), castBlock(statement), [true])));
 			break;
 		}else{
 			result.push(SyntaxTreeFactory.NewStatement(block.type, castArgList(block)));
