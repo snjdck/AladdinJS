@@ -18,6 +18,30 @@ function tan(angle) {
 	}
 }
 
+function isWhiteSpace (val) {
+    return val === null || (typeof val === 'string' && val.trim().length === 0);
+}
+
+function compare (v1, v2) {
+    let n1 = Number(v1);
+    let n2 = Number(v2);
+    if (n1 === 0 && isWhiteSpace(v1)) {
+        n1 = NaN;
+    } else if (n2 === 0 && isWhiteSpace(v2)) {
+        n2 = NaN;
+    }
+    if (isNaN(n1) || isNaN(n2)) {
+        // At least one argument can't be converted to a number.
+        // Scratch compares strings as case insensitive.
+        const s1 = String(v1).toLowerCase();
+        const s2 = String(v2).toLowerCase();
+        return s1.localeCompare(s2);
+    }
+    // Compare as numbers.
+    return n1 - n2;
+
+}
+
 const sensing = {
 	sensing_timer(){
 		return (Date.now() - timer) * 0.001;
@@ -63,13 +87,13 @@ const operator = {
 		return toNumber(NUM1) / toNumber(NUM2);
 	},
 	operator_lt({OPERAND1, OPERAND2}){
-		//=====================================
+		return compare(OPERAND1, OPERAND2) < 0;
 	},
 	operator_equals({OPERAND1, OPERAND2}){
-		//=====================================
+		return compare(OPERAND1, OPERAND2) === 0;
 	},
 	operator_gt({OPERAND1, OPERAND2}){
-		//=====================================
+		return compare(OPERAND1, OPERAND2) > 0;
 	},
 	operator_and({OPERAND1, OPERAND2}){
 		return toBoolean(OPERAND1) && toBoolean(OPERAND2);

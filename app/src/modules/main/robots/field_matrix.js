@@ -89,6 +89,161 @@ overrideMethod(Blockly.FieldMatrix.prototype, 'showEditor_', oldFn => function()
 		}
 	}
 	this.updateMatrix_();
+
+	let buttonDiv = Blockly.DropDownDiv.getContentDiv().children[1];
+	buttonDiv.style = 'display: flex; justify-content: space-around; align-items: center;';
+
+	let iconList = FaceData[this._h + 'x' + this._w];
+	
+	if(this.wrapperList){
+		this.unbindWrapperList();
+	}else{
+		this.wrapperList = [];
+	}
+
+	for(let i=0; i<iconList.length; i+=2){
+		let iconDiv = document.createElement('div');
+		buttonDiv.insertBefore(iconDiv, buttonDiv.lastChild);
+		for(let j=0; j<2; ++j){
+			let icon = iconList[i+j];
+			if(!icon)continue;
+			let testBtn = this.createButton2(icon);
+			let testBtnDiv = document.createElement('div');
+			testBtnDiv.appendChild(testBtn);
+			iconDiv.appendChild(testBtnDiv);
+			this.wrapperList.push(
+				Blockly.bindEvent_(testBtn, 'mousedown', this, () => this.setValue(icon))
+			);
+		}
+	}
+});
+
+const FaceData = function(){
+	const IconList = [
+	[
+		' O O ',
+		'OOOOO',
+		'OOOOO',
+		' OOO ',
+		'  O  ',
+	],
+	[
+		' O O ',
+		'OOOOO',
+		'OOOOO',
+		' OOO ',
+		'  O  ',
+	],
+	[
+		' O O ',
+		'OOOOO',
+		'OOOOO',
+		' OOO ',
+		'  O  ',
+	],
+	[
+		' O O ',
+		'OOOOO',
+		'OOOOO',
+		' OOO ',
+		'  O  ',
+	],
+	[
+		' O O ',
+		'OOOOO',
+		'OOOOO',
+		' OOO ',
+		'  O  ',
+	],
+	[
+		' O O ',
+		'OOOOO',
+		'OOOOO',
+		' OOO ',
+		'  O  ',
+	],
+	[
+		' O O ',
+		'OOOOO',
+		'OOOOO',
+		' OOO ',
+		'  O  ',
+	],
+	[
+		' O O ',
+		'OOOOO',
+		'OOOOO',
+		' OOO ',
+		'  O  ',
+	],
+	];
+
+	function _replaceIcon(value){
+		return value === 'O' ? 1 : 0;
+	}
+
+	function createIcon(data, w, h){
+		let iconW = data[0].length;
+		let iconH = data.length;
+		let x = Math.floor((w - iconW) * 0.5);
+		let y = Math.floor((h - iconH) * 0.5);
+		let result = '';
+		for(let i=0; i<h; ++i){
+			if(i < y || i >= y+iconH){
+				result += '0'.repeat(w);
+				continue;
+			}
+			result += '0'.repeat(x) + data[i-y].replace(/[O\x20]/g, _replaceIcon) + '0'.repeat(w - x - iconW);
+		}
+		return result;
+	}
+
+	return {
+		'7x21':IconList.map(v => createIcon(v, 21, 7)),
+		'5x14':IconList.map(v => createIcon(v, 14, 5)),
+	};
+}();
+
+Blockly.FieldMatrix.prototype.createButton2 = function(icon) {
+	var nodeSize = 2;
+	var nodePad = 1;
+	var button = Blockly.utils.createSvgElement('svg', {
+		'xmlns': 'http://www.w3.org/2000/svg',
+		'xmlns:html': 'http://www.w3.org/1999/xhtml',
+		'xmlns:xlink': 'http://www.w3.org/1999/xlink',
+		'version': '1.1',
+		'height': calcSize(nodeSize, nodePad, this._h) + 'px',
+		'width': calcSize(nodeSize, nodePad, this._w) + 'px'
+	});
+	
+	for (var i = 0; i < this._h; i++) {
+		for (var n = 0; n < this._w; n++) {
+			let index = i * this._w + n;
+			let isOn = index < icon.length && icon.charAt(index) === '1';
+			Blockly.utils.createSvgElement('rect', {
+				'x': calcSize(nodeSize, nodePad, n),
+				'y': calcSize(nodeSize, nodePad, i),
+				'width': nodeSize, 'height': nodeSize,
+				'rx': nodePad, 'ry': nodePad,
+				'fill': (isOn ? '#FFFFFF' : this.sourceBlock_.colourSecondary_)
+			}, button);
+		}
+	}
+	return button;
+};
+
+Blockly.FieldMatrix.prototype.unbindWrapperList = function(){
+	for(let wrapper of this.wrapperList){
+		Blockly.unbindEvent_(wrapper);
+	}
+	this.wrapperList.length = 0;
+};
+
+overrideMethod(Blockly.FieldMatrix.prototype, 'dispose_', oldFn => function(){
+	return () => {
+		oldFn.call(this)();
+		this.unbindWrapperList();
+	};
 });
 
 Blockly.FieldMatrix.prototype.setValue = function(matrix){

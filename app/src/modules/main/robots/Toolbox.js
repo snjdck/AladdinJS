@@ -160,13 +160,13 @@ const sound = newCategory("%{BKY_CATEGORY_SOUND}", 'sound', Blockly.Colours.soun
 		newBlock("weeebot_led_matrix_bitmap_21x7", [
 			newNumberValue("X", 0, 'math_integer'),
 			newNumberValue("Y", 0, 'math_integer'),
-			newDropdownValue('MATRIX', '0101010101100010101000100', 'MATRIX@21*7')
+			newDropdownValue('MATRIX', '0', 'MATRIX@21*7')
 			//newXML("value", {"name":"LED_MATRIX_DATA"}, [newXML("shadow", {"type":"led_matrix_data"})])
 		]),
 		newBlock("weeebot_led_matrix_bitmap_14x5", [
 			newNumberValue("X", 0, 'math_integer'),
 			newNumberValue("Y", 0, 'math_integer'),
-			newDropdownValue('MATRIX', '0101010101100010101000100', 'MATRIX@14*5')
+			newDropdownValue('MATRIX', '0', 'MATRIX@14*5')
 			//newXML("value", {"name":"LED_MATRIX_DATA"}, [newXML("shadow", {"type":"led_matrix_data"})])
 		]),
 		newBlock("weeebot_led_matrix_pixel_show", [
