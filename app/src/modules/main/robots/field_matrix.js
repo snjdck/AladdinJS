@@ -101,11 +101,11 @@ overrideMethod(Blockly.FieldMatrix.prototype, 'showEditor_', oldFn => function()
 		this.wrapperList = [];
 	}
 
-	for(let i=0; i<iconList.length; i+=2){
+	for(let i=0, n=Math.ceil(iconList.length * 0.5); i<n; ++i){
 		let iconDiv = document.createElement('div');
 		buttonDiv.insertBefore(iconDiv, buttonDiv.lastChild);
 		for(let j=0; j<2; ++j){
-			let icon = iconList[i+j];
+			let icon = iconList[i+j*n];
 			if(!icon)continue;
 			let testBtn = this.createButton2(icon);
 			let testBtnDiv = document.createElement('div');
@@ -121,60 +121,57 @@ overrideMethod(Blockly.FieldMatrix.prototype, 'showEditor_', oldFn => function()
 const FaceData = function(){
 	const IconList = [
 	[
-		' O O ',
-		'OOOOO',
-		'OOOOO',
-		' OOO ',
-		'  O  ',
+		' OO      OO ',
+		'O  O    O  O',
+		'            ',
+		'    OOOO    ',
+		'     OO     ',
 	],
 	[
-		' O O ',
-		'OOOOO',
-		'OOOOO',
-		' OOO ',
-		'  O  ',
+		'OOO      OOO',
+		'O O      O O',
+		'OOO O  O OOO',
+		'     OO     ',
 	],
 	[
-		' O O ',
-		'OOOOO',
-		'OOOOO',
-		' OOO ',
-		'  O  ',
+		'O            O',
+		' O          O ',
+		'  O        O  ',
+		'   O      O   ',
+		'O   O    O   O',
 	],
 	[
-		' O O ',
-		'OOOOO',
-		'OOOOO',
-		' OOO ',
-		'  O  ',
+		'OOO      OOO',
+		' O   OO   O ',
+		' O  O  O  O ',
 	],
 	[
-		' O O ',
-		'OOOOO',
-		'OOOOO',
-		' OOO ',
-		'  O  ',
+		'O  O    O  O ',
+		'O O O O O O O',
+		'O  O    O  O ',
+		'O O   O O O  ',
+		'O OOO   O OOO',
 	],
 	[
-		' O O ',
-		'OOOOO',
-		'OOOOO',
-		' OOO ',
-		'  O  ',
+		'O  O O',
+		'O  O  ',
+		'OOOO O',
+		'O  O O',
+		'O  O O',
 	],
 	[
-		' O O ',
-		'OOOOO',
-		'OOOOO',
-		' OOO ',
-		'  O  ',
+		'OOOOOO ',
+		'  O O  ',
+		' O  O  ',
+		'O   O  ',
+		'    OOO',
 	],
 	[
-		' O O ',
-		'OOOOO',
-		'OOOOO',
-		' OOO ',
-		'  O  ',
+		'OOO  O  O',
+		'O O  O O ',
+		'O O  OO  ',
+		'O O  O O ',
+		'OOO  O  O',
 	],
 	];
 
@@ -185,8 +182,8 @@ const FaceData = function(){
 	function createIcon(data, w, h){
 		let iconW = data[0].length;
 		let iconH = data.length;
-		let x = Math.floor((w - iconW) * 0.5);
-		let y = Math.floor((h - iconH) * 0.5);
+		let x = Math.ceil((w - iconW) * 0.5);
+		let y = Math.ceil((h - iconH) * 0.5);
 		let result = '';
 		for(let i=0; i<h; ++i){
 			if(i < y || i >= y+iconH){
