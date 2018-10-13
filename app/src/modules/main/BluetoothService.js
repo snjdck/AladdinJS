@@ -10,9 +10,13 @@ class BluetoothService extends Service
 	constructor(){
 		super();
 		this.sender = new PoolSender(64, 20, 10, v => {
-			this.socket.send(v);
+			//this.socket.send(v);
+			window.bridge.callHandler('BluetoothSendData', btoa(v), responseData => {
+				console.log("JS received response:", responseData)
+			})
 			console.log('serial send:', v.length, v.toString());
 		});
+		/*
 		let socket = new WebSocket('ws://192.168.1.133:8081');
 		socket.addEventListener('open', function(){
 			console.log('socket open')
@@ -31,6 +35,22 @@ class BluetoothService extends Service
 		});
 
 		this.socket = socket;
+		*/
+
+		let recvBuff = "";
+		window.bridge.registerHandler('OnBluetoothRecvData', (data, responseCallback)=>{
+			recvBuff += data;
+			let rawData = atob(recvBuff);
+			let index = rawData.indexOf("\n");
+			if(index < 0){
+				return;
+			}
+			//console.log("OnBluetoothRecvData:", recvBuff);
+			let ret = rawData.trim().split(' ').pop();
+			this.sender.onRecv(parseInt(ret));
+			recvBuff = "";
+			responseCallback();
+		});
 	}
 
 	sendCmd(...args){
@@ -39,9 +59,10 @@ class BluetoothService extends Service
 	}
 
 	send(data){
+		/*
 		if(this.socket.readyState !== WebSocket.OPEN){
 			return;
-		}
+		}*/
 		return new Promise(resolve => {
 			this.sender.send(Buffer.from(data+'\n'), resolve, data.startsWith('M10 '));
 		});

@@ -1,5 +1,4 @@
 import Blockly from 'scratch-blocks';
-import './locale/en';
 import {message, Modal, Input} from 'antd';
 import React from 'react';
 import wrapFn from 'utils/function/overrideMethod';
@@ -18,6 +17,52 @@ copyProps(
 	Blockly.FieldDropdown.prototype,
 	['getOptions', 'onItemSelected', 'isOptionListDynamic']
 );
+/*
+Blockly.ScratchMsgs.translate = function(msgId, defaultMsg, useLocale){
+	let locale = useLocale || Blockly.ScratchMsgs.currentLocale_;
+	if(locale in Blockly.ScratchMsgs.locales){
+		let messages = Blockly.ScratchMsgs.locales[locale];
+		if(Object.keys(messages).includes(msgId)) {
+			return messages[msgId];
+		}
+	}
+	return defaultMsg;
+}
+
+wrapFn(Blockly.ScratchMsgs, 'translate', oldFn => function(key, defaultMsg, lang){
+	let result = oldFn.call(this, key, defaultMsg, lang);
+	if(lang !== 'en' && result === undefined){
+		result = oldFn.call(this, key, defaultMsg, 'en');
+	}
+	return result;
+});
+*/
+function translateLocale(value){
+	return value.replace(/%\{BKY_(\w+)\}/, function(match, p1){
+		return Blockly.ScratchMsgs.translate(p1);
+	});
+}
+
+wrapFn(Blockly.FieldDropdown.prototype, 'showEditor_', oldFn => function(){
+	oldFn.call(this);
+	let list = document.querySelectorAll("div.goog-menuitem-content");
+	for(let node of list){
+		let oldText = node.innerHTML;
+		let newText = translateLocale(oldText);
+		if(newText !== oldText){
+			node.innerHTML = newText;
+		}
+	}
+});
+
+wrapFn(Blockly.FieldDropdown.prototype, 'setValue', oldFn => function(newValue){
+	oldFn.call(this, newValue);
+	let newText = translateLocale(this.text_);
+	if(newText !== this.text_){
+		this.text_ = newText;
+		this.forceRerender();
+	}
+});
 
 wrapFn(Blockly.BlockDragger.prototype, 'pixelsToWorkspaceUnits_', oldFn => function(pt){
 	return pt ? oldFn.call(this, pt) : {x:0,y:0};
@@ -116,7 +161,43 @@ wrapFn(Blockly.WorkspaceSvg.prototype, 'recordDeleteAreas_', oldFn => function()
 		rect.width = 100;
 	}
 });
+/*
+wrapFn(Blockly.ScrollbarPair.prototype, 'resize', oldFn => function(){
+	return
+	var hostMetrics = this.workspace_.getMetrics();
+	console.log(hostMetrics);
+	oldFn.call(this);
+});
+*/
+wrapFn(Blockly.WorkspaceSvg, 'getTopLevelWorkspaceMetrics_', oldFn => function(){
+	let metrics = oldFn.call(this);
+	const delta = 400;
+	metrics.absoluteLeft -= delta;
+	metrics.toolboxWidth -= delta;
+	metrics.viewWidth += delta;
+	return metrics;
+});
+/*
+wrapFn(Blockly.WorkspaceSvg, 'getContentDimensionsBounded_', oldFn => function(ws, svgSize){
+	let content = Blockly.WorkspaceSvg.getContentDimensionsExact_(ws);
 
+	var viewWidth = svgSize.width;
+	var viewHeight = svgSize.height;
+	var halfWidth = 10;
+	var halfHeight = 10;
+	
+	let left = Math.min(content.left - halfWidth, content.right - viewWidth);
+	let top = Math.min(content.top - halfHeight, content.bottom - viewHeight);
+	let right = Math.max(content.right + halfWidth, content.left + viewWidth);
+	let bottom = Math.max(content.bottom + halfHeight, content.top + viewHeight);
+
+	return {
+		left, top,
+		width : right - left,
+		height: bottom - top
+	};
+});
+*/
 export {
 	showFlyout
 }

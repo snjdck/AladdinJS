@@ -4,7 +4,7 @@ import Blockly from 'scratch-blocks';
 import {Button, Modal} from 'antd';
 
 import {MsgNames} from './modules/main';
-import toolbox from './modules/main/robots';
+import {createToolbox} from './modules/main/robots';
 import MainModel from './modules/main/MainModel';
 import {ViewComponent, InjectTag} from 'mvc';
 
@@ -22,7 +22,7 @@ class CreateBlockView extends ViewComponent
 		const newMutation = this.mutationRoot ? this.mutationRoot.mutationToDom(true) : null;
 		this.callback(newMutation);
 		let workspace = this.model.workspace;
-		workspace.updateToolbox(toolbox);
+		workspace.updateToolbox(createToolbox());
 		
 	}
 
@@ -100,7 +100,7 @@ class CreateBlockView extends ViewComponent
 			onOk={this.onOk}
 			onCancel={this.onCancel}
 			>
-			<div id='blockDefDiv' style={{width:'400px',height:'300px'}}></div>
+			<div id='blockDefDiv' style={{width:'100%',height:'20rem'}}></div>
 			<div>
 				<Button onClick={this.handleAddBoolean}>add bool</Button>
 				<Button onClick={this.handleAddLabel}>add label</Button>

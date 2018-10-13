@@ -10,6 +10,8 @@ import {
 	newDropdownValue,
 	newLabel
 } from './utils/ToolboxUtil';
+
+import {info, board_elf, board_mini} from 'JavascriptBridge';
 //*/
 //A0 = 14
 //const PORTS = [0, 19, 18, 16, 15];
@@ -22,10 +24,21 @@ import {
 */
 //const BACK_LED_PORTS = [4,3,14,13];
 
-const others = newCategory("Others", 'others', Blockly.Colours.pen,[
+//单路巡线,单色led,土壤湿度,无mcu
+//光线,声音,ir,灯环
+
+
+const conditionNewBlock = (condition, ...args) => condition ? newBlock(...args) : "";
+
+
+function createToolbox(){
+	const board_type = info.board;
+	//console.log(board_type, board_elf, board_mini)
+/*
+const others = newCategory("%{BKY_CATEGORY_EXECUTE}", 'others', Blockly.Colours.pen,[
 		//newBlock("weeebot_program"),
 	   
-		/*newBlock("weeebot_steppermove", [
+		newBlock("weeebot_steppermove", [
 			newDropdownValue("MOTOR_PORT", 3),
 			newNumberValue("SPEED", 3000),
 			newNumberValue("DISTANCE", 1000)
@@ -34,7 +47,7 @@ const others = newCategory("Others", 'others', Blockly.Colours.pen,[
 			newDropdownValue("MOTOR_PORT", 3),
 			newNumberValue("SPEED", 100),
 			newNumberValue("DISTANCE", 1000)
-		]),*/
+		]),
 		
 	  
 	   
@@ -42,6 +55,7 @@ const others = newCategory("Others", 'others', Blockly.Colours.pen,[
 		newBlock("water_atomizer"),
 		
 	]);
+*/
 /*
 toolbox = create(["category", {"name":"WeeeBot\nMini", id:'sounds', "key":"WeeeBotMini", "colour":"#FF6680", "secondaryColour":"#FF3355"},
 	newBlock("on_board_servo", [
@@ -55,78 +69,109 @@ toolbox = create(["category", {"name":"WeeeBot\nMini", id:'sounds', "key":"WeeeB
 */
 //console.log(Blockly.Colours)
 //export const motion = create(["category", {"name":"%{BKY_CATEGORY_MOTION}", id:'motion', "colour":"#4C97FF", "secondaryColour":"#3373CC"},
-const motion = newCategory("%{BKY_CATEGORY_MOTION}", 'motion', Blockly.Colours.motion, [
-	 newBlock("weeebot_motor_dc", [
+const motion = newCategory("%{BKY_CATEGORY_EXECUTE}", 'motion', Blockly.Colours.motion, [
+		newBlock("dc_motor", [
 			newDropdownValue("SPEED", 100)
 		]),
-		newBlock("weeebot_motor_move", [
+		newBlock("robot_move", [
 			newDropdownValue("SPEED", 120)
 		]),
-		newBlock("weeebot_stop"),
-		newBlock("weeebot_motor_dc_130", [
+		newBlock("robot_stop"),
+		newBlock("dc_130_motor", [
 			newDropdownValue("SPEED", 0)
 		]),
-		newBlock("on_board_servo", [
+		/*conditionNewBlock(board_type == board_elf, "encoder_motor", [
+			newNumberValue("SPEED", 3000),
+			newNumberValue("DISTANCE", 1000)
+		]),
+		conditionNewBlock(board_type == board_elf, "stepper_motor", [
+			newNumberValue("SPEED", 100),
+			newNumberValue("DISTANCE", 1000)
+		]),*/
+		newBlock("servo", [
 			newDropdownValue("ANGLE", 90)
 		]),
+		newBlock("relay"),
+		newBlock("water_atomizer"),
 ]);
 
 //export const looks = create(["category", {"name":"%{BKY_CATEGORY_LOOKS}", id:'looks', "colour":"#9966FF", "secondaryColour":"#774DCB"},
 const looks = newCategory("%{BKY_CATEGORY_LOOKS}", 'looks', Blockly.Colours.looks, [
-	 newBlock("test_tone_note", [
+		newBlock("buzzer", [
 			newDropdownValue("TEST_TONE_NOTE_NOTE_OPTION", 262),
 			newDropdownValue("TEST_TONE_NOTE_BEAT_OPTION", 500)
 		]),
-	 newLabel('RGB'),
-		newBlock("weeebot_rgb", [
+		conditionNewBlock(board_type == board_elf, "weeebot_board_rgb", [
+			newXML("value", {"name":"COLOR"}, [newXML("shadow", {"type":"colour_picker"})])
+		]),
+		conditionNewBlock(board_type == board_elf, "weeebot_board_rgb3", [
+			newDropdownValue("R", 255, 'RGB_VALUE'),
+			newDropdownValue("G", 255, 'RGB_VALUE'),
+			newDropdownValue("B", 255, 'RGB_VALUE')
+		]),
+		conditionNewBlock(board_type == board_elf, "weeebot_pin_ring_rgb", [
 			newNumberValue("PIXEL", 0, 'math_whole_number'),
 			newXML("value", {"name":"COLOR"}, [newXML("shadow", {"type":"colour_picker"})])
 		]),
-		newBlock("weeebot_rgb3", [
+		conditionNewBlock(board_type == board_elf, "weeebot_pin_ring_rgb3", [
 			newNumberValue("PIXEL", 0, 'math_whole_number'),
 			newDropdownValue("R", 255, 'RGB_VALUE'),
 			newDropdownValue("G", 255, 'RGB_VALUE'),
 			newDropdownValue("B", 255, 'RGB_VALUE')
 		]),
-		newBlock("weeebot_rgb_RJ11", [
+	 //newLabel('RGB'),
+		newBlock("rgb_strip", [
 			newNumberValue("PIXEL", 0, 'math_whole_number'),
 			newXML("value", {"name":"COLOR"}, [newXML("shadow", {"type":"colour_picker"})])
 		]),
-		newBlock("weeebot_rgb3_RJ11", [
+		newBlock("rgb3_strip", [
 			newNumberValue("PIXEL", 0, 'math_whole_number'),
 			newDropdownValue("R", 255, 'RGB_VALUE'),
 			newDropdownValue("G", 255, 'RGB_VALUE'),
 			newDropdownValue("B", 255, 'RGB_VALUE')
 		]),
+		newBlock("rgb_RJ11", [
+			newNumberValue("PIXEL", 0, 'math_whole_number'),
+			newXML("value", {"name":"COLOR"}, [newXML("shadow", {"type":"colour_picker"})])
+		]),
+		newBlock("rgb3_RJ11", [
+			newNumberValue("PIXEL", 0, 'math_whole_number'),
+			newDropdownValue("R", 255, 'RGB_VALUE'),
+			newDropdownValue("G", 255, 'RGB_VALUE'),
+			newDropdownValue("B", 255, 'RGB_VALUE')
+		]),
+		/*
 		newBlock("led_strip", [
 			newNumberValue("PIXEL", 0, 'math_whole_number'),
 			newDropdownValue("R", 255, 'RGB_VALUE'),
 			newDropdownValue("G", 255, 'RGB_VALUE'),
 			newDropdownValue("B", 255, 'RGB_VALUE')
-		]),
-		 newLabel('ultrasonic'),
-	newBlock("ultrasonic_led", [
+		]),*/
+		// newLabel('ultrasonic'),
+		newBlock("ultrasonic_led"),
+		newBlock("ultrasonic_rgb", [
 			newXML("value", {"name":"COLOR"}, [newXML("shadow", {"type":"colour_picker"})])
 		]),
-		newBlock("ultrasonic_led_rgb", [
+		newBlock("ultrasonic_rgb3", [
 			newDropdownValue("R", 255, 'RGB_VALUE'),
 			newDropdownValue("G", 255, 'RGB_VALUE'),
 			newDropdownValue("B", 255, 'RGB_VALUE')
 		]),
-		newLabel('ir_avoid'),
-		newBlock("ir_avoid_led", [
+		//newLabel('ir_avoid'),
+		newBlock("ir_avoid_led"),
+		newBlock("ir_avoid_rgb", [
 			newXML("value", {"name":"COLOR"}, [newXML("shadow", {"type":"colour_picker"})])
 		]),
-		newBlock("ir_avoid_led_rgb", [
+		newBlock("ir_avoid_rgb3", [
 			newDropdownValue("R", 255, 'RGB_VALUE'),
 			newDropdownValue("G", 255, 'RGB_VALUE'),
 			newDropdownValue("B", 255, 'RGB_VALUE')
 		]),
-		newBlock("weeebot_single_led"),
-		newBlock("front_led_light"),
-		newBlock("back_led_light"),
+		newBlock("single_led"),
+		//newBlock("front_led_light"),
+		conditionNewBlock(board_type == board_mini, "weeebotMini_board_back_led"),
 		newBlock("led_button_light"),
-		newLabel('MP3'),
+		//newLabel('MP3'),
 		newBlock("mp3_play"),
 		newBlock("mp3_pause"),
 		newBlock("mp3_next_music"),
@@ -144,45 +189,45 @@ const looks = newCategory("%{BKY_CATEGORY_LOOKS}", 'looks', Blockly.Colours.look
 
 //export const sound = create(["category", {"name":"%{BKY_CATEGORY_SOUND}", id:'sound', "colour":"#D65CD6", "secondaryColour":"#BD42BD"},
 const sound = newCategory("%{BKY_CATEGORY_SOUND}", 'sound', Blockly.Colours.sounds, [
-		newLabel('led matrix'),
-		newBlock("weeebot_led_matrix_number", [
+		//newLabel('led matrix'),
+		newBlock("led_matrix_number", [
 			newNumberValue("NUM", 100)
 		]),
-		newBlock("weeebot_led_matrix_time", [
+		newBlock("led_matrix_time", [
 			newNumberValue("HOUR", 12, 'math_whole_number'),
 			newNumberValue("SECOND", 34, 'math_whole_number')
 		]),
-		newBlock("weeebot_led_matrix_string", [
+		newBlock("led_matrix_string", [
 			newNumberValue("X", 0, 'math_integer'),
 			newNumberValue("Y", 0, 'math_integer'),
 			newTextValue("STR", "Hi")
 		]),
-		newBlock("weeebot_led_matrix_bitmap_21x7", [
+		newBlock("led_matrix_bitmap_21x7", [
 			newNumberValue("X", 0, 'math_integer'),
 			newNumberValue("Y", 0, 'math_integer'),
 			newDropdownValue('MATRIX', '0', 'MATRIX@21*7')
 			//newXML("value", {"name":"LED_MATRIX_DATA"}, [newXML("shadow", {"type":"led_matrix_data"})])
 		]),
-		newBlock("weeebot_led_matrix_bitmap_14x5", [
+		newBlock("led_matrix_bitmap_14x5", [
 			newNumberValue("X", 0, 'math_integer'),
 			newNumberValue("Y", 0, 'math_integer'),
 			newDropdownValue('MATRIX', '0', 'MATRIX@14*5')
 			//newXML("value", {"name":"LED_MATRIX_DATA"}, [newXML("shadow", {"type":"led_matrix_data"})])
 		]),
-		newBlock("weeebot_led_matrix_pixel_show", [
+		newBlock("led_matrix_pixel_show", [
 			newNumberValue("X", 0, 'math_integer'),
 			newNumberValue("Y", 0, 'math_integer'),
 		]),
-		newBlock("weeebot_led_matrix_pixel_hide", [
+		newBlock("led_matrix_pixel_hide", [
 			newNumberValue("X", 0, 'math_integer'),
 			newNumberValue("Y", 0, 'math_integer'),
 		]),
-		newBlock("weeebot_led_matrix_clear"),
-		newLabel('seven_segment'),
+		newBlock("led_matrix_clear"),
+		//newLabel('seven_segment'),
 		newBlock("seven_segment", [
 			newNumberValue("NUM", 100)
 		]),
-		newLabel('oled'),
+		//newLabel('oled'),
 		newBlock("oled_set_size"),
 		newBlock("oled_show_string", [
 			newNumberValue("X", 0, 'math_integer'),
@@ -200,27 +245,31 @@ const sound = newCategory("%{BKY_CATEGORY_SOUND}", 'sound', Blockly.Colours.soun
 
 //export const sensing = create(["category", {"name":"%{BKY_CATEGORY_SENSING}", id:'sensing', "colour":"#4CBFE6", "secondaryColour":"#2E8EB8"},
 const sensing = newCategory("%{BKY_CATEGORY_SENSING}", 'sensing', Blockly.Colours.sensing, [
-		newBlock("color_sensor_white_balance"),
-		newBlock("color_sensor_light"),
 		newBlock("line_follower"),
 		newBlock("ultrasonic"),
-		newBlock("board_light_sensor"),
-		newBlock("board_sound_sensor"),
-		newBlock("weeebot_single_line_follower"),
+		conditionNewBlock(board_type == board_mini, "weeebotMini_board_light"),
+		conditionNewBlock(board_type == board_mini, "weeebotMini_board_sound"),
+		conditionNewBlock(board_type == board_elf, "weeebot_pin_light"),
+		conditionNewBlock(board_type == board_elf, "weeebot_pin_sound"),
+		newBlock("single_line_follower"),
 		newBlock("humiture_humidity"),
 		newBlock("humiture_temperature"),
 		newBlock("soil"),
 		newBlock("sliding_potentiometer"),
 		newBlock("potentiometer"),
 		newBlock("gas_sensor"),
+		newBlock("color_sensor_white_balance"),
+		newBlock("color_sensor_light"),
 		newBlock("color_sensor"),
 		newBlock("flame_sensor"),
 		newBlock("joystick"),
 		newBlock("compass"),
 		newBlock("gyro_gyration"),
 		newBlock("gyro_acceleration"),
-		newBlock("weeebot_infraread"),
-		newBlock("weeebot_ir_avoid"),
+		conditionNewBlock(board_type == board_elf, "weeebot_board_button"),
+		conditionNewBlock(board_type == board_elf, "weeebot_pin_ir"),
+		conditionNewBlock(board_type == board_mini, "weeebotMini_board_ir"),
+		newBlock("ir_avoid"),
 		newBlock("touch"),
 		newBlock("led_button"),
 		newBlock("pir"),
@@ -316,4 +365,6 @@ const operators = newCategory("%{BKY_CATEGORY_OPERATORS}", "operators", Blockly.
 	])
 ]);
 
-export default create(['xml', events, control, motion, looks, sound, sensing, operators, variable, procedure, others]);
+return create(['xml', events, control, motion, looks, sound, sensing, operators, variable, procedure]);
+}
+export default createToolbox;

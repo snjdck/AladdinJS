@@ -23,15 +23,15 @@ function fetchRGB(argValues){
     return {r, g, b};
 }
 
-function weeebot_motor_dc({SPEED, DC_MOTOR_INDEX}){
+export function dc_motor({SPEED, DC_MOTOR_INDEX}){
     this.net.sendCmd(200, DC_MOTOR_INDEX, SPEED);
 }
 
-function weeebot_motor_dc_130({SPEED, SENSOR_PORT}){
+export function dc_130_motor({SPEED, SENSOR_PORT}){
 	this.net.sendCmd(204, SENSOR_PORT, SPEED);
 }
 
-function weeebot_motor_move({SPEED, MOVE_DIRECTION}) {
+export function robot_move({SPEED, MOVE_DIRECTION}) {
     var spd = SPEED;
     var dir = MOVE_DIRECTION;
     var speeds;
@@ -45,15 +45,37 @@ function weeebot_motor_move({SPEED, MOVE_DIRECTION}) {
     this.net.sendCmd(201, ...speeds);
 }
 
-function on_board_servo({SENSOR_PORT, ANGLE}) {
+export function servo({SENSOR_PORT, ANGLE}) {
 	this.net.sendCmd(202, SENSOR_PORT, ANGLE);
 }
 
-function weeebot_stop(){
+export function robot_stop(){
 	this.net.sendCmd(102);
 }
 
-function weeebot_rgb(argValues, msgID=9) {
+export function weeebot_pin_ring_rgb(argValues){
+    argValues.SENSOR_PORT = 13;
+    rgb_strip.call(this, argValues);
+}
+
+export function weeebot_pin_ring_rgb3(argValues){
+    argValues.SENSOR_PORT = 13;
+    rgb3_strip.call(this, argValues);
+}
+
+export function weeebot_board_rgb(argValues){
+    argValues.SENSOR_PORT = 3;
+    argValues.PIXEL = 1;
+    rgb_strip.call(this, argValues);
+}
+
+export function weeebot_board_rgb3(argValues){
+    argValues.SENSOR_PORT = 3;
+    argValues.PIXEL = 1;
+    rgb3_strip.call(this, argValues);
+}
+
+export function rgb_strip(argValues, msgID=9) {
     var pin = argValues.SENSOR_PORT;
     var pix = argValues.PIXEL;
     var color = argValues.COLOR;
@@ -61,33 +83,44 @@ function weeebot_rgb(argValues, msgID=9) {
     this.net.sendCmd(msgID, pin, pix, color.r, color.g, color.b);
 }
 
-function weeebot_rgb3(argValues, msgID=9) {
+export function rgb3_strip(argValues, msgID=9) {
     var pin = argValues.SENSOR_PORT;
     var pix = argValues.PIXEL;
     var color = fetchRGB(argValues);
     this.net.sendCmd(msgID, pin, pix, color.r, color.g, color.b);
 }
 //*
-function weeebot_rgb_RJ11(argValues) {
-    weeebot_rgb.call(this, argValues, 13);
+export function rgb_RJ11(argValues) {
+    rgb_strip.call(this, argValues, 13);
 }
 //*/
-function weeebot_rgb3_RJ11(argValues) {
-    weeebot_rgb3.call(this, argValues, 13);
+export function rgb3_RJ11(argValues) {
+    rgb3_strip.call(this, argValues, 13);
 }
-
-function board_light_sensor(argValues) {
+export function weeebot_pin_light(argValues) {
+    var port = argValues.BOARD_PORT;
+    return this.net.sendCmd(8, port);
+}
+export function weeebotMini_board_light(argValues) {
     //var port = argValues.LIGHT_PORT;
-    return this.net.sendCmd(8, 21);
+   // return this.net.sendCmd(8, 21);
+    argValues.BOARD_PORT = 21;
+    return weeebot_pin_light.call(this, argValues);
 }
-
+/*
 function board_temperature_sensor(argValues) {
     var port = argValues.BOARD_PORT;
     return this.net.sendCmd( 12, port);
-}
-function board_sound_sensor(argValues){
+}*/
+export function weeebotMini_board_sound(argValues){
     //var port = argValues.SOUND_PORT;
-    return this.net.sendCmd( 11, 17);
+   // return this.net.sendCmd( 11, 17);
+    argValues.BOARD_PORT = 17;
+    return weeebot_pin_sound.call(this, argValues);
+}
+export function weeebot_pin_sound(argValues){
+    var port = argValues.BOARD_PORT;
+    return this.net.sendCmd( 11, port);
 }
 /*
 function weeebot_encoder_move(argValues) {
@@ -109,48 +142,64 @@ function weeebot_steppermove(argValues) {
     //util.ioQuery('serial', 'sendMsg', [cmd]);
 }
 */
-function weeebot_infraread(argValues) {
-    var port = 2;
+export function weeebot_pin_ir(argValues) {
+    var port = argValues.BOARD_PORT;
     var code = argValues.IR_CODE;
     return this.net.sendCmd( 7, port, code);
 }
-function weeebot_on_board_button(argValues){
-    var port = argValues.ON_BOARD_PORT;
+export function weeebotMini_board_ir(argValues) {
+    argValues.BOARD_PORT = 2;
+    return weeebot_pin_ir.call(this, argValues);
+}
+export function weeebot_board_button(argValues){
+    var port = 2;
     return this.net.sendCmd( 0, port);
 }
-function test_tone_note(argValues){
+export function buzzer(argValues){
     var note = argValues.TEST_TONE_NOTE_NOTE_OPTION;
     var hz = argValues.TEST_TONE_NOTE_BEAT_OPTION;
     return this.net.sendCmd( 10, note, hz);
 }
-function ultrasonic(argValues){
+export function ultrasonic(argValues){
     var port = argValues.SENSOR_PORT;
     return this.net.sendCmd( 110, port);
 }
-function ultrasonic_led(argValues){
+export function ultrasonic_led(argValues){
+    var port = argValues.SENSOR_PORT;
+    var index = argValues.ULTRASONIC_LED_INDEX;
+    var isOn = argValues.ON_OFF;
+    this.net.sendCmd( 127, port, index, isOn);
+}
+export function ultrasonic_rgb(argValues){
     var port = argValues.SENSOR_PORT;
     var index = argValues.ULTRASONIC_LED_INDEX;
     var color = hexToRgb(argValues.COLOR);
     this.net.sendCmd( 109, port, index, color.r, color.g, color.b);
 }
-function line_follower(argValues){
+export function ultrasonic_rgb3(argValues){
+    var port = argValues.SENSOR_PORT;
+    var index = argValues.ULTRASONIC_LED_INDEX;
+    var color = fetchRGB(argValues);
+    this.net.sendCmd( 109, port, index, color.r, color.g, color.b);
+}
+export function line_follower(argValues){
     var port = argValues.SENSOR_PORT;
     var index = argValues.LINE_FOLLOWER_INDEX;
     return this.net.sendCmd( 111, port, index);
 }
-function weeebot_led_matrix_number(argValues){
+export function led_matrix_number(argValues){
     var port = argValues.SENSOR_PORT;
     var num = argValues.NUM;
     this.net.sendCmd( 112, port, num);
 }
-function weeebot_led_matrix_time(argValues){
+export function led_matrix_time(argValues){
     var port = argValues.SENSOR_PORT
     var hour = argValues.HOUR;
     var second = argValues.SECOND;
     var showColon = argValues.SHOW_COLON;
     this.net.sendCmd( 113, port, hour, second, showColon);
 }
-function weeebot_led_matrix_string(argValues){
+export function led_matrix_string(argValues){
     var port = argValues.SENSOR_PORT;
     var x = argValues.X;
     var y = argValues.Y;
@@ -158,23 +207,25 @@ function weeebot_led_matrix_string(argValues){
     this.net.sendCmd( 114, port, x, y, str);
 }
 
-function weeebot_led_matrix_bitmap_21x7(argValues){
-    console.log(argValues)
+export function led_matrix_bitmap_21x7(argValues){
+    //console.log('21x7',argValues)
+    led_matrix_bitmap.call(this, argValues, 21, 7);
 }
 
-function weeebot_led_matrix_bitmap_14x5(argValues){
-    console.log(argValues)
+export function led_matrix_bitmap_14x5(argValues){
+    //console.log('14x5',argValues)
+    led_matrix_bitmap.call(this, argValues, 14, 5);
 }
 
-function weeebot_led_matrix_bitmap(argValues){
+function led_matrix_bitmap(argValues, w, h){
     var port = argValues.SENSOR_PORT;
     var x = argValues.X;
     var y = argValues.Y;
-    var data = JSON.parse(argValues.LED_MATRIX_DATA);
+    var data = argValues.MATRIX.split('');
     var bytes = [];
-    for(var j=0; j<14; ++j){
+    for(var j=0; j<w; ++j){
         bytes[j] = 0;
-        for(var i=0; i<5; ++i){
+        for(var i=0; i<h; ++i){
             if(data[i] & (1 << j)){
                 bytes[j] |= 1 << i;
             }
@@ -183,180 +234,182 @@ function weeebot_led_matrix_bitmap(argValues){
     this.net.sendCmd( 115, port, x, y, ...bytes);
 }
 
-function weeebot_led_matrix_pixel_show(argValues){
+export function led_matrix_pixel_show(argValues){
     var port = argValues.SENSOR_PORT;
     var x = argValues.X;
     var y = argValues.Y;
     this.net.sendCmd( 1, port, x, y);
 }
 
-function weeebot_led_matrix_pixel_hide(argValues){
+export function led_matrix_pixel_hide(argValues){
     var port = argValues.SENSOR_PORT;
     var x = argValues.X;
     var y = argValues.Y;
     this.net.sendCmd( 2, port, x, y);
 }
 
-function weeebot_led_matrix_clear(argValues){
+export function led_matrix_clear(argValues){
     var port = argValues.SENSOR_PORT;
     this.net.sendCmd( 3, port);
 }
 
-function weeebot_ir_avoid(argValues){
+export function ir_avoid(argValues){
     var port = argValues.SENSOR_PORT;
     return this.net.sendCmd( 117, port);
 }
 
-function weeebot_single_line_follower(argValues){
-    var port = argValues.SENSOR_PORT;
+export function single_line_follower(argValues){
+    var port = argValues.BOARD_PORT;
     return this.net.sendCmd( 116, port);
 }
-function ultrasonic_led_rgb(argValues){
+
+export function ir_avoid_led(argValues){
     var port = argValues.SENSOR_PORT;
     var index = argValues.ULTRASONIC_LED_INDEX;
-    var color = fetchRGB(argValues);
-    this.net.sendCmd( 109, port, index, color.r, color.g, color.b);
+    var isOn = argValues.ON_OFF;
+    this.net.sendCmd( 128, port, index, isOn);
 }
-function ir_avoid_led(argValues){
+export function ir_avoid_rgb(argValues){
     var port = argValues.SENSOR_PORT;
     var index = argValues.ULTRASONIC_LED_INDEX;
     var color = hexToRgb(argValues.COLOR);
     this.net.sendCmd( 118, port, index, color.r, color.g, color.b);
 }
-function ir_avoid_led_rgb(argValues){
+export function ir_avoid_rgb3(argValues){
     var port = argValues.SENSOR_PORT;
     var index = argValues.ULTRASONIC_LED_INDEX;
     var color = fetchRGB(argValues);
     this.net.sendCmd( 118, port, index, color.r, color.g, color.b);
 }
-function back_led_light(argValues){
+export function weeebotMini_board_back_led(argValues){
     let pin = argValues.BACK_LED_PORT;
     var on = argValues.ON_OFF;
     this.net.sendCmd( 119, pin, on);
 }
+/*
 function front_led_light(argValues){
     var pin = argValues.SENSOR_PORT;
     var index = argValues.ULTRASONIC_LED_INDEX;
     var on = argValues.ON_OFF;
     this.net.sendCmd( 120, pin, index, on);
-}
-function humiture_humidity(argValues){
+}*/
+export function humiture_humidity(argValues){
     var pin = argValues.SENSOR_PORT;
     return this.net.sendCmd( 122, pin, 1);
 }
-function humiture_temperature(argValues){
+export function humiture_temperature(argValues){
     var pin = argValues.SENSOR_PORT;
     return this.net.sendCmd( 122, pin, 0);
 }
-function touch(argValues){
+export function touch(argValues){
     var pin = argValues.SENSOR_PORT;
     return this.net.sendCmd( 121, pin);
 }
-function soil(argValues){
-    var pin = argValues.SENSOR_PORT;
+export function soil(argValues){
+    var pin = argValues.BOARD_PORT;
     return this.net.sendCmd( 124, pin);
 }
-function seven_segment(argValues){
+export function seven_segment(argValues){
     var pin = argValues.SENSOR_PORT;
     var num = argValues.NUM;
     this.net.sendCmd( 123, pin, num);
 }
-function weeebot_single_led(argValues){
+export function single_led(argValues){
     var port = argValues.SENSOR_PORT;
     var isOn = argValues.ON_OFF;
     return this.net.sendCmd( 125, port, isOn);
 }
 
-function sliding_potentiometer(argValues){
+export function sliding_potentiometer(argValues){
     var port = argValues.SENSOR_PORT;
     return this.net.sendCmd( 126, port);
 }
 
-function gas_sensor(argValues){
+export function gas_sensor(argValues){
     var port = argValues.SENSOR_PORT;
     return this.net.sendCmd( 126, port);
 }
 
-function potentiometer(argValues){
+export function potentiometer(argValues){
     var port = argValues.SENSOR_PORT;
     return this.net.sendCmd( 126, port);
 }
 
-function led_button_light(argValues){
+export function led_button_light(argValues){
     var port = argValues.SENSOR_PORT;
     var index = argValues.BUTTON_INDEX;
     var isOn = argValues.ON_OFF;
     this.net.sendCmd( 15, port, index, isOn);
 }
 
-function relay(argValues){
+export function relay(argValues){
     var port = argValues.SENSOR_PORT;
     var isOn = argValues.ON_OFF;
     this.net.sendCmd( 26, port, isOn);
 }
 
-function water_atomizer(argValues){
+export function water_atomizer(argValues){
     var port = argValues.SENSOR_PORT;
     var isOn = argValues.ON_OFF;
     this.net.sendCmd( 27, port, isOn);
 }
 
-function color_sensor_white_balance(argValues){
+export function color_sensor_white_balance(argValues){
     var port = argValues.SENSOR_PORT;
     this.net.sendCmd( 17, port);
 }
 
-function color_sensor_light(argValues){
+export function color_sensor_light(argValues){
     var port = argValues.SENSOR_PORT;
     var isOn = argValues.ON_OFF;
     this.net.sendCmd( 18, port, isOn);
 }
 
-function mp3_play(argValues){
+export function mp3_play(argValues){
     var port = argValues.SENSOR_PORT;
     this.net.sendCmd( 33, port);
 }
 
-function mp3_pause(argValues){
+export function mp3_pause(argValues){
     var port = argValues.SENSOR_PORT;
     this.net.sendCmd( 32, port);
 }
 
-function mp3_next_music(argValues){
+export function mp3_next_music(argValues){
     var port = argValues.SENSOR_PORT;
     this.net.sendCmd( 31, port);
 }
 
-function mp3_set_music(argValues){
+export function mp3_set_music(argValues){
     var port = argValues.SENSOR_PORT;
     var num = argValues.NUM;
     this.net.sendCmd( 28, port, num);
 }
 
-function mp3_set_volume(argValues){
+export function mp3_set_volume(argValues){
     var port = argValues.SENSOR_PORT;
     var num = argValues.NUM;
     this.net.sendCmd( 29, port, num);
 }
 
-function mp3_set_device(argValues){
+export function mp3_set_device(argValues){
     var port = argValues.SENSOR_PORT;
     var num = argValues.MP3_DEVICE_TYPE;
     this.net.sendCmd( 30, port, num);
 }
 
-function mp3_is_over(argValues){
+export function mp3_is_over(argValues){
     var port = argValues.SENSOR_PORT;
     return this.net.sendCmd( 34, port);
 }
 
-function oled_set_size(argValues){
+export function oled_set_size(argValues){
     var port = argValues.SENSOR_PORT;
     var size = argValues.OLED_SIZE;
     this.net.sendCmd( 35, port, size);
 }
 
-function oled_show_string(argValues){
+export function oled_show_string(argValues){
     var port = argValues.SENSOR_PORT;
     var x = argValues.X;
     var y = argValues.Y;
@@ -364,7 +417,7 @@ function oled_show_string(argValues){
     this.net.sendCmd( 37, port, x, y, str);
 }
 
-function oled_show_number(argValues){
+export function oled_show_number(argValues){
     var port = argValues.SENSOR_PORT;
     var x = argValues.X;
     var y = argValues.Y;
@@ -372,78 +425,70 @@ function oled_show_number(argValues){
     this.net.sendCmd( 36, port, x, y, num);
 }
 
-function oled_clear_screen(argValues){
+export function oled_clear_screen(argValues){
     var port = argValues.SENSOR_PORT;
     this.net.sendCmd( 38, port);
 }
 
-function color_sensor(argValues){
+export function color_sensor(argValues){
     var port = argValues.SENSOR_PORT;
     var type = argValues.COLOR_TYPE;
     return this.net.sendCmd( 19, port, type);
 }
 
-function flame_sensor(argValues){
+export function flame_sensor(argValues){
     var port = argValues.SENSOR_PORT;
     var index = argValues.FLAME_INDEX;
     return this.net.sendCmd( 20, port, index);
 }
 
-function joystick(argValues){
+export function joystick(argValues){
     var port = argValues.SENSOR_PORT;
     var axis = argValues.AXIS2;
     return this.net.sendCmd( 22, port, axis);
 }
 
-function limit_switch(argValues){
+export function limit_switch(argValues){
     var port = argValues.SENSOR_PORT;
     return this.net.sendCmd( 21, port);
 }
 
-function compass(argValues){
+export function compass(argValues){
     var port = argValues.SENSOR_PORT;
     var axis = argValues.AXIS3;
     return this.net.sendCmd( 23, port, axis);
 }
 
-function gyro_gyration(argValues){
+export function gyro_gyration(argValues){
     var port = argValues.SENSOR_PORT;
     var axis = argValues.AXIS3;
     return this.net.sendCmd( 24, port, axis);
 }
 
-function gyro_acceleration(argValues){
+export function gyro_acceleration(argValues){
     var port = argValues.SENSOR_PORT;
     var axis = argValues.AXIS3;
     return this.net.sendCmd( 24, port, parseInt(axis)+3);
 }
 
-function touch(argValues){
-    var port = argValues.SENSOR_PORT;
-    return this.net.sendCmd( 121, port);
-}
-
-function led_button(argValues){
+export function led_button(argValues){
     var port = argValues.SENSOR_PORT;
     var index = argValues.BUTTON_INDEX;
     return this.net.sendCmd( 14, port, index);
 }
 
-function pir(argValues){
+export function pir(argValues){
     var port = argValues.SENSOR_PORT;
     return this.net.sendCmd( 16, port);
 }
 
-function tilt(argValues){
+export function tilt(argValues){
     var port = argValues.SENSOR_PORT;
     var index = argValues.LINE_FOLLOWER_INDEX;
     return this.net.sendCmd( 25, port, index);
 }
 
-function led_strip(argValues){
-    weeebot_rgb3.call(this, argValues);
-}
-
+ /*
 export default {
         led_strip,
         weeebot_motor_dc,
@@ -518,4 +563,4 @@ export default {
         led_button,
         pir,
         tilt
-};
+};*/

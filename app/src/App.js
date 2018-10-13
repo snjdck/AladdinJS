@@ -39,10 +39,12 @@ class App extends ViewComponent {
 	render(){
 		let {codeRunFlag} = this.state;
 		return (
+			//<Button className='goBackBtn'>Go Back</Button>
+			//<Button className="runBtn" type={codeRunFlag ? "danger" :"primary"} onClick={this.runCode}>{codeRunFlag ? "Stop" :"Start"}</Button>
 			<div className="App">
 				<div id="blocklyDiv"></div>
-				<Button className='goBackBtn'>Go Back</Button>
-				<Button className="runBtn" type={codeRunFlag ? "danger" :"primary"} onClick={this.runCode}>{codeRunFlag ? "Stop" :"Start"}</Button>
+				<img className="runBtn" onClick={this.runCode} src={codeRunFlag ? "icons/pause.png" : "icons/play.png"}></img>
+				
 				<CreateBlockView />
 			</div>
 		);

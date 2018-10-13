@@ -1,5 +1,5 @@
 import {toNumber, toBoolean, isInt} from '../utils/typecast';
-import primitives from './Primitives';
+import * as primitives from './Primitives';
 
 const VAR_DICT = Object.create(null);
 const LIST_DICT = Object.create(null);

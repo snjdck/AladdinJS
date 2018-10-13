@@ -1,11 +1,7 @@
 import Blockly from 'scratch-blocks';
 
 import './field_matrix';
-import toolbox from './Toolbox';
-import blocks from './Blocks';
+import createToolbox from './Toolbox';
+import createBlocks from './Blocks';
 
-
-Object.assign(Blockly.Blocks, blocks());
-
-
-export default toolbox;
+export {createToolbox, createBlocks};
