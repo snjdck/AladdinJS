@@ -226,7 +226,7 @@ function led_matrix_bitmap(argValues, w, h){
     for(var j=0; j<w; ++j){
         bytes[j] = 0;
         for(var i=0; i<h; ++i){
-            if(data[i] & (1 << j)){
+            if(data[i*w+j] === '1'){
                 bytes[j] |= 1 << i;
             }
         }
@@ -312,7 +312,7 @@ export function soil(argValues){
 export function seven_segment(argValues){
     var pin = argValues.SENSOR_PORT;
     var num = argValues.NUM;
-    this.net.sendCmd( 123, pin, num);
+    this.net.sendCmd( 123, pin, Number(num));
 }
 export function single_led(argValues){
     var port = argValues.SENSOR_PORT;
@@ -373,6 +373,11 @@ export function mp3_play(argValues){
 export function mp3_pause(argValues){
     var port = argValues.SENSOR_PORT;
     this.net.sendCmd( 32, port);
+}
+
+export function mp3_prev_music(argValues){
+    var port = argValues.SENSOR_PORT;
+    this.net.sendCmd( 39, port);
 }
 
 export function mp3_next_music(argValues){

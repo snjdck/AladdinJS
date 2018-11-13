@@ -174,6 +174,7 @@ const looks = newCategory("%{BKY_CATEGORY_LOOKS}", 'looks', Blockly.Colours.look
 		//newLabel('MP3'),
 		newBlock("mp3_play"),
 		newBlock("mp3_pause"),
+		newBlock("mp3_prev_music"),
 		newBlock("mp3_next_music"),
 		newBlock("mp3_set_music", [
 			newNumberValue("NUM", 1, 'math_whole_number')
@@ -202,13 +203,13 @@ const sound = newCategory("%{BKY_CATEGORY_SOUND}", 'sound', Blockly.Colours.soun
 			newNumberValue("Y", 0, 'math_integer'),
 			newTextValue("STR", "Hi")
 		]),
-		newBlock("led_matrix_bitmap_21x7", [
+		conditionNewBlock(board_type == board_elf, "led_matrix_bitmap_21x7", [
 			newNumberValue("X", 0, 'math_integer'),
 			newNumberValue("Y", 0, 'math_integer'),
 			newDropdownValue('MATRIX', '0', 'MATRIX@21*7')
 			//newXML("value", {"name":"LED_MATRIX_DATA"}, [newXML("shadow", {"type":"led_matrix_data"})])
 		]),
-		newBlock("led_matrix_bitmap_14x5", [
+		conditionNewBlock(board_type == board_mini, "led_matrix_bitmap_14x5", [
 			newNumberValue("X", 0, 'math_integer'),
 			newNumberValue("Y", 0, 'math_integer'),
 			newDropdownValue('MATRIX', '0', 'MATRIX@14*5')

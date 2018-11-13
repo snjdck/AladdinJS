@@ -453,6 +453,7 @@ export default function (){
 	regBlock("color_sensor_light", '%{BKY_WB_COLOR_SENSOR_LIGHT}', [SENSOR_PORT, ON_OFF], null, 'colours_sensing');
 	regBlock("mp3_play", '%{BKY_WB_MP3_PLAY}', [SENSOR_PORT], null, 'colours_looks');
 	regBlock("mp3_pause", '%{BKY_WB_MP3_PAUSE}', [SENSOR_PORT], null, 'colours_looks');
+	regBlock("mp3_prev_music", '%{BKY_WB_MP3_PREV_MUSIC}', [SENSOR_PORT], null, 'colours_looks');
 	regBlock("mp3_next_music", '%{BKY_WB_MP3_NEXT_MUSIC}', [SENSOR_PORT], null, 'colours_looks');
 	regBlock("mp3_set_music", '%{BKY_WB_MP3_SET_MUSIC}', [SENSOR_PORT, "NUM"], null, 'colours_looks');
 	regBlock("mp3_set_volume", '%{BKY_WB_MP3_SET_VOLUME}', [SENSOR_PORT, "NUM"], null, 'colours_looks');
