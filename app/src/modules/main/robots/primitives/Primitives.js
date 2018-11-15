@@ -107,11 +107,10 @@ export function weeebotMini_board_light(argValues) {
     argValues.BOARD_PORT = 21;
     return weeebot_pin_light.call(this, argValues);
 }
-/*
-function board_temperature_sensor(argValues) {
-    var port = argValues.BOARD_PORT;
-    return this.net.sendCmd( 12, port);
-}*/
+
+export function temperature({SENSOR_PORT}) {
+    return this.net.sendCmd( 12, SENSOR_PORT);
+}
 export function weeebotMini_board_sound(argValues){
     //var port = argValues.SOUND_PORT;
    // return this.net.sendCmd( 11, 17);

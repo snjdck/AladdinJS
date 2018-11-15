@@ -474,6 +474,7 @@ export default function (){
 	regBlock("pir",  '%{BKY_WB_PIR}', [SENSOR_PORT], "Boolean", 'colours_sensing');
 	regBlock("tilt", '%{BKY_WB_TILT}', [SENSOR_PORT, LINE_FOLLOWER_INDEX], "Boolean", 'colours_sensing');
 	regBlock("limit_switch", '%{BKY_WB_LIMIT_SWITCH}', [SENSOR_PORT], "Boolean", 'colours_sensing');
+	regBlock("temperature", '%{BKY_WB_TEMPERATURE}', [SENSOR_PORT], "Number", 'colours_sensing');
 
 	return result;
 };

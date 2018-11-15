@@ -255,6 +255,7 @@ const sensing = newCategory("%{BKY_CATEGORY_SENSING}", 'sensing', Blockly.Colour
 		newBlock("single_line_follower"),
 		newBlock("humiture_humidity"),
 		newBlock("humiture_temperature"),
+		newBlock("temperature"),
 		newBlock("soil"),
 		newBlock("sliding_potentiometer"),
 		newBlock("potentiometer"),
