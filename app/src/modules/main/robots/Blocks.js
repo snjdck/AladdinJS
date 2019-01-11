@@ -226,7 +226,12 @@ export default function (){
 			['%{BKY_WB_PortC}', '16'],
 			['%{BKY_WB_PortD}', '15']
 		]), 3);
-		BOARD_PORT = SENSOR_PORT;
+		BOARD_PORT = defaultIndex(createDropDown('BOARD_PORT', [
+			['%{BKY_WB_PortA}', '19'],
+			['%{BKY_WB_PortB}', '18'],
+			['%{BKY_WB_PortC}', '16'],
+			['%{BKY_WB_PortD}', '15']
+		]), 3);
 		DC_MOTOR_INDEX = createDropDown('DC_MOTOR_INDEX', [
 			['M1', '1'],
 			['M2', '2']

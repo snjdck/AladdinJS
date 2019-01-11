@@ -184,7 +184,7 @@ export default {
 		return this.getVar(VALUE);
 	},
 	data_listcontents({LIST}){
-		console.log('LIST', LIST)
+		//console.log('LIST', LIST)
 		return 0;
 	},
 	data_variable({VARIABLE}){

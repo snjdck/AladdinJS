@@ -101,21 +101,20 @@ export function weeebot_pin_light(argValues) {
     var port = argValues.BOARD_PORT;
     return this.net.sendCmd(8, port);
 }
-export function weeebotMini_board_light(argValues) {
+export function weeebotMini_board_light() {
     //var port = argValues.LIGHT_PORT;
    // return this.net.sendCmd(8, 21);
-    argValues.BOARD_PORT = 21;
-    return weeebot_pin_light.call(this, argValues);
+    return weeebot_pin_light.call(this, {BOARD_PORT: 21});
 }
 
 export function temperature({SENSOR_PORT}) {
     return this.net.sendCmd( 12, SENSOR_PORT);
 }
-export function weeebotMini_board_sound(argValues){
+export function weeebotMini_board_sound(){
     //var port = argValues.SOUND_PORT;
    // return this.net.sendCmd( 11, 17);
-    argValues.BOARD_PORT = 17;
-    return weeebot_pin_sound.call(this, argValues);
+    //argValues.BOARD_PORT = 17;
+    return weeebot_pin_sound.call(this, {BOARD_PORT: 17});
 }
 export function weeebot_pin_sound(argValues){
     var port = argValues.BOARD_PORT;
@@ -192,7 +191,7 @@ export function led_matrix_number(argValues){
     this.net.sendCmd( 112, port, num);
 }
 export function led_matrix_time(argValues){
-    var port = argValues.SENSOR_PORT
+    var port = argValues.SENSOR_PORT;
     var hour = argValues.HOUR;
     var second = argValues.SECOND;
     var showColon = argValues.SHOW_COLON;
