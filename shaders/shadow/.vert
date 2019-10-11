@@ -9,6 +9,7 @@ uniform _ {
 	mat4 screenMatrix1;
 	vec4 cameraMatrix[4];
 	mat4 screenMatrix2;
+	vec4 viewportXYWH;
 };
 
 const float bias = 0.005;
@@ -21,5 +22,8 @@ void main(){
 	uv = vertex.zw;
 	mat4 cameraMatrix1 = cast2mat(cameraMatrix[0], cameraMatrix[1]);
 	mat4 cameraMatrix2 = cast2mat(cameraMatrix[2], cameraMatrix[3]);
-	matrix = clip2tex * screenMatrix2 * cameraMatrix2 * cameraMatrix1 * inverse(screenMatrix1) * tex2clip;
+	vec2 wh = 1.0 / viewportXYWH.zw;
+	vec2 xy = wh * -viewportXYWH.xy;
+	mat4 viewportMat = mat4(wh.x, 0, 0, 0, 0, wh.y, 0, 0, 0, 0, 1, 0, xy.x, xy.y, 0, 1);
+	matrix = clip2tex * screenMatrix2 * cameraMatrix2 * cameraMatrix1 * inverse(screenMatrix1) * viewportMat * tex2clip;
 }

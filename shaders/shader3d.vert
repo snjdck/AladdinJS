@@ -14,7 +14,7 @@ in ivec4 boneIndex;//multipy 2 already
 layout(location=3)
 in vec4 boneWeight;
 
-#define MAX_BONES ((gl_MaxVertexUniformVectors - 7) >> 1) << 1
+#define MAX_BONES ((gl_MaxVertexUniformVectors - 8) >> 1) << 1
 
 uniform _ {
 	mat4 screenMatrix;
@@ -22,6 +22,7 @@ uniform _ {
 	int InstanceIDBase;
 	int bindCount;
 	int boneCount;//multipy 2 already
+	vec4 viewportXYWH;
 	vec4 boneList[MAX_BONES];
 };
 
@@ -35,6 +36,8 @@ void main()
 	Position = worldPosition;
 	vec3 cameraPosition = transform2(cameraMatrix[0], cameraMatrix[1], worldPosition);
 	vec4 screenPosition = screenMatrix * vec4(cameraPosition, 1);
+
+	screenPosition.xy = screenPosition.xy * viewportXYWH.zw + viewportXYWH.xy;
 
 	gl_Position = screenPosition;
 	uv = inputUV;
