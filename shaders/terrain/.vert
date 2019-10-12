@@ -7,12 +7,15 @@ in vec2 inputPosition;
 
 #define MAX_TILES (gl_MaxVertexUniformVectors - 8)
 
-uniform _ {
+uniform MVP_BLOCK {
 	mat4 screenMatrix;
 	vec4 cameraMatrix[2];
+	vec4 viewportXYWH;
+};
+
+uniform _ {
 	int InstanceIDBase;
 	float tileSize;
-	vec4 viewportXYWH;
 	vec2 tileList[MAX_TILES];
 };
 

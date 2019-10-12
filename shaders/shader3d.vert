@@ -16,13 +16,16 @@ in vec4 boneWeight;
 
 #define MAX_BONES ((gl_MaxVertexUniformVectors - 8) >> 1) << 1
 
-uniform _ {
+uniform MVP_BLOCK {
 	mat4 screenMatrix;
 	vec4 cameraMatrix[2];
+	vec4 viewportXYWH;
+};
+
+uniform _ {
 	int InstanceIDBase;
 	int bindCount;
 	int boneCount;//multipy 2 already
-	vec4 viewportXYWH;
 	vec4 boneList[MAX_BONES];
 };
 
