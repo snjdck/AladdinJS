@@ -12,35 +12,47 @@ in vec4 inputMargin;
 
 flat out vec4 fgColor;
 
-struct Object {
-	mat3x2 worldMatrix;
-	vec4 textureMul;
-	vec4 textureAdd;
-	vec4 rectSize;		//w,rw,h,rh
-	vec4 scale9grid;	//lm,rm,tm,bm
-	vec4 fgColor;
-};
-
 #define MAX_OBJECTS (gl_MaxVertexUniformVectors - 1) / 7
 
 uniform _ {
 	vec2 screenMatrix;
 	int InstanceIDBase;
-	Object objectList[MAX_OBJECTS];
 };
 
-#define object objectList[gl_InstanceID]
+uniform WorldMatrix_BLOCK {
+	mat3x2 worldMatrix[MAX_OBJECTS];
+};
+
+uniform TextureMul_BLOCK {
+	vec4 textureMul[MAX_OBJECTS];
+};
+
+uniform TextureAdd_BLOCK {
+	vec4 textureAdd[MAX_OBJECTS];
+};
+
+uniform RectSize_BLOCK {
+	vec4 rectSize[MAX_OBJECTS];		//w,rw,h,rh
+};
+
+uniform Scale9grid_BLOCK {
+	vec4 scale9grid[MAX_OBJECTS];	//lm,rm,tm,bm
+};
+
+uniform Color_2D_BLOCK {
+	vec4 color[MAX_OBJECTS];
+};
 
 void main()
 {
-	vec4 margin = inputMargin * object.scale9grid;
+	vec4 margin = inputMargin * scale9grid[gl_InstanceID];
 	margin = margin.xxzz + margin.yyww;
 
-	vec4 xyuv = inputPosition.xxyy * object.rectSize + margin;
-	xyuv.yw /= object.rectSize.yw;
-	xyuv = xyuv.xzyw * object.textureMul + object.textureAdd;
+	vec4 xyuv = inputPosition.xxyy * rectSize[gl_InstanceID] + margin;
+	xyuv.yw /= rectSize[gl_InstanceID].yw;
+	xyuv = xyuv.xzyw * textureMul[gl_InstanceID] + textureAdd[gl_InstanceID];
 
-	xyuv.xy = object.worldMatrix * vec3(xyuv.xy, 1);
+	xyuv.xy = worldMatrix[gl_InstanceID] * vec3(xyuv.xy, 1);
 	Position = vec3(xyuv.xy, 0);
 	xyuv.xy *= screenMatrix.xy;
 	xyuv.xy += vec2(-1, 1);
@@ -49,5 +61,5 @@ void main()
 	uv = xyuv.zw;
 	InstanceID = gl_InstanceID;
 	InstanceIndex = InstanceIDBase + gl_InstanceID;
-	fgColor = object.fgColor;
+	fgColor = color[gl_InstanceID];
 }
