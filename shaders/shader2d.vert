@@ -4,12 +4,6 @@
 layout(row_major)
 uniform;
 
-layout(location=0)
-in vec2 inputPosition;
-
-layout(location=1)
-in vec4 inputMargin;
-
 flat out vec4 fgColor;
 
 #define MAX_OBJECTS (gl_MaxVertexUniformVectors - 1) / 7
@@ -45,6 +39,12 @@ uniform Color_2D_BLOCK {
 
 void main()
 {
+	vec2 inputPosition = vec2(gl_VertexID >> 1 & 1, gl_VertexID >> 3);
+	vec4 inputMargin = vec4(equal(
+		ivec2(gl_VertexID & 3, gl_VertexID >> 2).xxyy,
+		ivec2(1, 2).xyxy
+	));
+	inputMargin.yw = -inputMargin.yw;
 	vec4 margin = inputMargin * scale9grid[gl_InstanceID];
 	margin = margin.xxzz + margin.yyww;
 
