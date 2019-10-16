@@ -1,5 +1,5 @@
-#include <headers/Header>
-#include <headers/FragmentIn>
+#include <headers/HeaderFrag>
+#include <headers/Varying>
 
 uniform sampler2D sampler0;
 flat in vec4 fgColor;

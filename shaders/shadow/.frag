@@ -1,4 +1,4 @@
-#include <headers/Header>
+#include <headers/HeaderFrag>
 
 uniform sampler2D sampler1;
 uniform sampler2DShadow sampler0;

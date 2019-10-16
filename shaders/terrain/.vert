@@ -1,5 +1,5 @@
-#include <headers/Header>
-#include <headers/VertexOut>
+#include <headers/HeaderVert>
+#include <headers/Varying>
 #include <libs/quaternion>
 
 layout(location=0)
