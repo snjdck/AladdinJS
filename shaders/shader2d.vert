@@ -4,37 +4,29 @@
 layout(row_major)
 uniform;
 
-flat out vec4 fgColor;
-
-#define MAX_OBJECTS (gl_MaxVertexUniformVectors - 1) / 7
-
 uniform _ {
 	vec2 screenMatrix;
 	int InstanceIDBase;
 };
 
 uniform WorldMatrix_BLOCK {
-	mat3x2 worldMatrix[MAX_OBJECTS];
+	mat3x2 worldMatrix[MAX_2D_OBJECTS];
 };
 
 uniform TextureMul_BLOCK {
-	vec4 textureMul[MAX_OBJECTS];
+	vec4 textureMul[MAX_2D_OBJECTS];
 };
 
 uniform TextureAdd_BLOCK {
-	vec4 textureAdd[MAX_OBJECTS];
+	vec4 textureAdd[MAX_2D_OBJECTS];
 };
 
 uniform RectSize_BLOCK {
-	vec4 rectSize[MAX_OBJECTS];		//w,rw,h,rh
+	vec4 rectSize[MAX_2D_OBJECTS];		//w,rw,h,rh
 };
 
 uniform Scale9grid_BLOCK {
-	vec4 scale9grid[MAX_OBJECTS];	//lm,rm,tm,bm
-};
-
-uniform Color_2D_BLOCK {
-	vec4 color[MAX_OBJECTS];
+	vec4 scale9grid[MAX_2D_OBJECTS];	//lm,rm,tm,bm
 };
 
 void main()
@@ -61,5 +53,4 @@ void main()
 	uv = xyuv.zw;
 	InstanceID = gl_InstanceID;
 	InstanceIndex = InstanceIDBase + gl_InstanceID;
-	fgColor = color[gl_InstanceID];
 }
