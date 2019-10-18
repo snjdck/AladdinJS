@@ -2,7 +2,7 @@
 #include <headers/Varying>
 #include <libs/quaternion>
 
-layout(location=0)
+layout(location=auto)
 in vec2 inputPosition;
 
 #define MAX_TILES (gl_MaxVertexUniformVectors - 8)

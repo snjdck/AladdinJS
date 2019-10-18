@@ -2,16 +2,16 @@
 #include <headers/Varying>
 #include <libs/quaternion>
 
-layout(location=0)
+layout(location=auto)
 in vec3 inputPosition;
 
-layout(location=1)
+layout(location=auto)
 in vec2 inputUV;
 
-layout(location=2)
+layout(location=auto)
 in ivec4 boneIndex;//multipy 2 already
 
-layout(location=3)
+layout(location=auto)
 in vec4 boneWeight;
 
 #define MAX_BONES ((gl_MaxVertexUniformVectors - 8) >> 1) << 1
