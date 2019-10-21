@@ -13,8 +13,9 @@ uniform MVP_BLOCK {
 	vec4 viewportXYWH;
 };
 
+uniform int InstanceIDBase;
+
 uniform _ {
-	int InstanceIDBase;
 	float tileSize;
 	vec2 tileList[MAX_TILES];
 };

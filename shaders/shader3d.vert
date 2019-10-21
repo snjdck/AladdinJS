@@ -22,8 +22,10 @@ uniform MVP_BLOCK {
 	vec4 viewportXYWH;
 };
 
+uniform int InstanceIDBase;
+uniform ivec2 boneInfo;//[0]=bindCount, [1]=boneCount(multipy 2 already)
+
 uniform _ {
-	int InstanceIDBase;
 	int bindCount;
 	int boneCount;//multipy 2 already
 	vec4 boneList[MAX_BONES];
