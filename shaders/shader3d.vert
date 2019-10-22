@@ -46,6 +46,8 @@ void main()
 
 	gl_Position = screenPosition;
 	uv = inputUV;
+#ifdef PICKING_MODE_FLAG
 	InstanceID = gl_InstanceID;
 	InstanceIndex = InstanceIDBase + gl_InstanceID;
+#endif
 }

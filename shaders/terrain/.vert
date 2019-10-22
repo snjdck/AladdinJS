@@ -30,6 +30,6 @@ void main()
 
 	gl_Position = screenPosition;
 	uv = inputPosition * 0.5 + 0.5;
-	InstanceID = gl_InstanceID;
-	InstanceIndex = InstanceIDBase + gl_InstanceID;
+	//InstanceID = gl_InstanceID;
+	//InstanceIndex = InstanceIDBase + gl_InstanceID;
 }
