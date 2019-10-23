@@ -14,11 +14,8 @@ uniform MVP_BLOCK {
 };
 
 uniform int InstanceIDBase;
-
-uniform _ {
-	float tileSize;
-	vec2 tileList[MAX_TILES];
-};
+uniform float tileSize;
+uniform vec2 tileList[MAX_TILES];
 
 void main()
 {

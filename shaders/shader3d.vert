@@ -14,7 +14,7 @@ in ivec4 boneIndex;//multipy 2 already
 layout(location=auto)
 in vec4 boneWeight;
 
-#define MAX_BONES ((gl_MaxVertexUniformVectors - 8) >> 1) << 1
+#define MAX_BONES 1024
 
 uniform MVP_BLOCK {
 	mat4 screenMatrix;
@@ -23,13 +23,9 @@ uniform MVP_BLOCK {
 };
 
 uniform int InstanceIDBase;
-uniform ivec2 boneInfo;//[0]=bindCount, [1]=boneCount(multipy 2 already)
-
-uniform _ {
-	int bindCount;
-	int boneCount;//multipy 2 already
-	vec4 boneList[MAX_BONES];
-};
+uniform int bindCount;
+uniform int boneCount;//multipy 2 already
+uniform vec4 boneList[MAX_BONES];
 
 void main()
 {
