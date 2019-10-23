@@ -1,16 +1,14 @@
 #include <headers/HeaderVert>
 #include <headers/Varying>
 
-//column_major
-layout(row_major)
-uniform;
+//default column_major
+//layout(row_major)uniform;
 
-uniform vec2 screenMatrix;
+uniform vec2 screenWH;
 uniform int InstanceIDBase;
 
-uniform WorldMatrix_BLOCK {
-	mat3x2 worldMatrix[MAX_2D_OBJECTS];
-};
+layout(location=auto)
+in mat2x3 worldMatrix;
 
 layout(location=auto)
 in vec4 textureMul;
@@ -39,10 +37,9 @@ void main()
 	xyuv.yw /= rectSize.yw;
 	xyuv = xyuv.xzyw * textureMul + textureAdd;
 
-	xyuv.xy = worldMatrix[gl_InstanceID] * vec3(xyuv.xy, 1);
+	xyuv.xy = vec3(xyuv.xy, 1) * worldMatrix;
 	Position = vec3(xyuv.xy, 0);
-	xyuv.xy *= screenMatrix.xy;
-	xyuv.xy += vec2(-1, 1);
+	xyuv.xy = screenWH * vec2(xyuv) + vec2(-1, 1);
 
 	gl_Position = vec4(xyuv.xy, 0, 1);
 	uv = xyuv.zw;
