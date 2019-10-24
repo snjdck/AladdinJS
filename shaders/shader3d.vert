@@ -1,6 +1,7 @@
 #include <headers/HeaderVert>
 #include <headers/Varying>
 #include <libs/quaternion>
+#include <blocks/MVP_BLOCK>
 
 layout(location=auto)
 in vec3 inputPosition;
@@ -15,12 +16,6 @@ layout(location=auto)
 in vec4 boneWeight;
 
 #define MAX_BONES 1024
-
-uniform MVP_BLOCK {
-	mat4 screenMatrix;
-	vec4 cameraMatrix[2];
-	vec4 viewportXYWH;
-};
 
 uniform int InstanceIDBase;
 uniform int bindCount;
