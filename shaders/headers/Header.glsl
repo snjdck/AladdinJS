@@ -6,6 +6,7 @@
 precision highp float;
 precision highp int;
 
-precision lowp sampler2D;
-precision lowp samplerCube;
-precision lowp sampler2DShadow;
+precision highp sampler2D;
+precision highp sampler2DArray;
+precision highp samplerCube;
+precision highp sampler2DShadow;
