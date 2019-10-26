@@ -20,11 +20,15 @@ const {ColorMatrixFilter, BlurFilter} = require("opengl/filters");
 const WebGL = require('opengl/WebGL');
 const Clock = require('opengl/Clock');
 
+const world1objects = require('mu/world1objects');
+const readMapObj = require('mu/readMapObj');
+const mapTileList = require('mu/mapTileList');
+
 async function onInit(){
 	let canvas = document.getElementById("canvas")
 	var view3d = new View3D(canvas);
 	
-	const {gl, assetMgr} = WebGL;
+	const {gl, assetMgr, createTextureArray} = WebGL;
 	
 	console.log(gl.getSupportedExtensions());
 
@@ -56,7 +60,7 @@ async function onInit(){
 	let playerMesh = parse(await assetMgr.loadFile("player.bmd.mesh"));
 	let weaponMesh = parse(await assetMgr.loadFile("Spear10.bmd.mesh"));
 	let fileList = await assetMgr.loadFiles(["ArmorCls", "BootCls", "GloveCls","HelmCls","PantCls"].map(v => v + ".bmd.mesh"));
-	fileList = fileList.map(v => parse(v));
+	fileList = fileList.map(parse);
 
 	for(let i=0; i<3; ++i){
 		let castShadow = i % 2 == 0;
@@ -85,10 +89,11 @@ async function onInit(){
 	let bmp3d2 = new Bitmap3D(200, 300);
 	bmp3d2.x = 10;
 	bmp3d2.y = -10;
-	view3d.scene2d.root.addChild(bmp3d2);
+	//view3d.scene2d.root.addChild(bmp3d2);
 	bmp3d2.root3d.addChild(weapon2 = new MeshEntity(weaponMesh));
 
-	let terrainTexture = await createMapTexture(256, 256, 9);
+	
+	let terrainTexture = await createTextureArray(mapTileList.map(v => `../assets/World1/${v}.jpg`));
 	let terrain = new Terrain(new TerrainMaterial(terrainTexture));
 	view3d.scene3d.root.addChild(terrain);
 
@@ -117,6 +122,14 @@ async function onInit(){
 		view3d.scene3d.root.addChild(camera);
 	}
 	view3d.scene3d.root.addChild(new DirectionLight3D());
+
+	for(let {mesh, x, y} of readMapObj(1)){
+		let entity = new MeshEntity(mesh);
+		view3d.scene3d.root.addChild(entity);
+		entity.y = y / 128;
+		entity.x = x / 128;
+		entity.scale = 0.5
+	}
 //*/
 	let angle = 0;
 	Clock.on("enterFrame", function(){
@@ -130,50 +143,5 @@ async function onInit(){
 		weapon1.rotation = weapon1.rotation.fromEulerAngles(0, angle++ * Math.PI / 180, 0);
 	});
 }
-
-async function createMapTexture(width, height, depth){
-	const {gl} = WebGL;
-
-	//let nameList = ['TileGrass02.jpg', 'TileGround02.jpg'];
-	let nameList = ["TileGrass01", "TileGrass02", "TileGround01", "TileGround02", "TileGround03", "TileWater01", "TileWood01", "TileRock01", "TileRock02"];
-	var texture = gl.createTexture();
-	gl.bindTexture(gl.TEXTURE_2D_ARRAY, texture);
-	gl.texStorage3D(gl.TEXTURE_2D_ARRAY, 1, gl.RGB8, width, height, depth);
-	gl.texParameteri(gl.TEXTURE_2D_ARRAY, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-
-	var canvas = document.createElement("canvas");
-	canvas.width = width;
-	canvas.height = height;
-	let context = canvas.getContext('2d');
-
-	for(let i=0; i<nameList.length; ++i){
-		let image = await loadImage(`../assets/World1/${nameList[i]}.jpg`);
-		if(image.width != width){
-			context.drawImage(image, 0, 0, width, height);
-			image = canvas;
-		}
-		gl.texSubImage3D(gl.TEXTURE_2D_ARRAY, 0, 0, 0, i, width, height, 1, gl.RGB, gl.UNSIGNED_BYTE, image);
-	}
-	return texture;
-	/*
-
-const {width, height} = image;
-
-	var texture = gl.createTexture();
-	gl.bindTexture(gl.TEXTURE_2D, texture);
-	
-	gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGB8, width, height);
-	gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, width, height, gl.RGB, gl.UNSIGNED_BYTE, image);
-	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-	*/
-}
-
-async function loadImage(path){
-	let image = new Image();
-	image.src = path;
-	await image.decode();
-	return image;
-}
-
 
 //document.onmousemove = evt => console.log(evt.clientX, evt.clientY)
