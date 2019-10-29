@@ -7,26 +7,30 @@ layout(location=auto)
 in vec3 inputPosition;
 
 layout(location=auto)
+in vec3 inputNormal;
+
+layout(location=auto)
 in vec2 inputUV;
 
 layout(location=auto)
-in ivec4 boneIndex;//multipy 2 already
+in ivec4 boneIndex;
 
 layout(location=auto)
 in vec4 boneWeight;
 
+layout(location=auto)
+in ivec2 boneInfo;//[bindCount, boneCount]
+
 #define MAX_BONES 1024
 
 uniform int InstanceIDBase;
-uniform int bindCount;
-uniform int boneCount;//multipy 2 already
 uniform vec4 boneList[MAX_BONES];
 
 void main()
 {
 	vec3 worldPosition = vec3(0);
-	for(int i=0; i<bindCount; ++i){
-		int index = boneIndex[i] + boneCount * gl_InstanceID;
+	for(int i=0; i<boneInfo.x; ++i){
+		int index = (boneIndex[i] + boneInfo.y * gl_InstanceID) << 1;//every bone use two registers
 		worldPosition += transform2(boneList[index], boneList[index+1], inputPosition) * boneWeight[i];
 	}
 	Position = worldPosition;
