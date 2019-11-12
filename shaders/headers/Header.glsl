@@ -1,7 +1,7 @@
 //#version 300 es
 
-#pragma optimize(off)
-#pragma debug(on)
+#pragma optimize(on)
+#pragma debug(off)
 
 precision highp float;
 precision highp int;
