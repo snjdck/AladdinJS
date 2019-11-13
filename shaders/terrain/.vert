@@ -14,7 +14,7 @@ in vec2 map_layer;//layer0, layer1
 layout(location=auto)
 in vec2 map_layermix_height;//mix, z-height
 
-const float height_scale = 25.0;
+const float height_scale = 400.0;
 
 layout(location=auto)
 in vec4 map_light;
@@ -25,7 +25,7 @@ out vec4 light;
 void main()
 {
 	ivec2 vertex = ivec2(gl_VertexID % vertexCount.x, gl_VertexID / vertexCount.x);
-	vec3 worldPosition  = vec3(vec2(vertex - (vertexCount >> 1)) * tileSize, map_layermix_height.y * height_scale);
+	vec3 worldPosition  = vec3(vec2(vertex) * tileSize, map_layermix_height.y * height_scale);
 	vec3 cameraPosition = transform2(cameraMatrix[0], cameraMatrix[1], worldPosition);
 	vec4 screenPosition = screenMatrix * vec4(cameraPosition, 1);
 
