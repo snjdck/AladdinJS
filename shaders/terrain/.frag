@@ -3,7 +3,7 @@
 
 uniform sampler2DArray sampler0;
 
-flat in vec3 layer;
+in vec3 layer;
 in vec4 light;
 
 out vec4 color;

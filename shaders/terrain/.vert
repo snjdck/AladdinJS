@@ -19,7 +19,7 @@ const float height_scale = 400.0;
 layout(location=auto)
 in vec4 map_light;
 
-flat out vec3 layer;
+out vec3 layer;
 out vec4 light;
 
 void main()
